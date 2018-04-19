@@ -17,8 +17,9 @@ namespace MyStore.Infrastructure.EF
             {
                 return;
             }
-            var connectionString = "Server=localhost;User ID=SA;" +
-                                   "Password=Abcd1234!;Database=MyStore";
+
+            var dbHost = Environment.GetEnvironmentVariable("DB_HOST");
+            var connectionString = $"Server={dbHost};Database=MyStore;Trusted_Connection=True;MultipleActiveResultSets=true";
             optionsBuilder.UseSqlServer(connectionString, c => c.MigrationsAssembly("MyStore"));
         }
 
