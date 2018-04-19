@@ -1,8 +1,8 @@
 ﻿@model UserViewModel
 
+<br />
 <div class="row">
     <div class="col-md-6 col-lg-3">
-        <div asp-validation-summary="All"></div>
         <form asp-action="Register" method="post">
             <div class="form-group">
                 <label asp-for="Email">Email:</label>
@@ -26,5 +26,7 @@
             </div>
             <button type="submit" class="btn btn-success">Register</button>
         </form>
+        <br />
+        <div asp-validation-summary="All"></div>
     </div>
 </div>
