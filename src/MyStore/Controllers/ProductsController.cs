@@ -24,16 +24,22 @@ namespace MyStore.Controllers
         [HttpGet("browse")]
         public async Task<IActionResult> Browse(string name)
         {
+            Guid userGuid;
+            Guid.TryParse(this.User.FindFirstValue(ClaimTypes.NameIdentifier),  out userGuid);
+
             var products = await _productService.BrowseAsync(name);
             var viewModels = products.Select(p =>
                 new ProductViewModel
                 {
                     Id = p.Id,
+                    UserId = p.UserId,
                     Name = p.Name,
                     Category = p.Category,
                     Price = p.Price
                 });
-            
+            if (userGuid != Guid.Empty)
+                viewModels = viewModels.Where(c => c.UserId == userGuid);
+
             return View(viewModels);
         }
 

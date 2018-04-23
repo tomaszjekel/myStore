@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Net;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Mvc;
 using MyStore.Framework;
@@ -56,6 +57,13 @@ namespace MyStore.Controllers
                 viewModel.Password, viewModel.Role);
             TempData["message"] = "Account created";
 
+            return RedirectToAction("Index", "Home");
+        }
+
+        [HttpGet("logoff")]
+        public async Task<IActionResult> LogOff()
+        {
+            await _authenticator.SignOutAsync();
             return RedirectToAction("Index", "Home");
         }
     }
