@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication;
@@ -17,14 +18,15 @@ namespace MyStore.Framework
             _contextAccessor = contextAccessor;
         }
         
-        public async Task SignInAsync(string email, string role)
+        public async Task SignInAsync(Guid userId, string email, string role)
         {
             var claims = new List<Claim>
             {
                 new Claim(ClaimTypes.Name, email),
-                new Claim(ClaimTypes.Role, role)
+                new Claim(ClaimTypes.Role, role),
             };
             var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+            identity.AddClaim(new Claim("UserId", userId.ToString()));
             var principal = new ClaimsPrincipal(identity);
             await _contextAccessor.HttpContext.SignInAsync(principal);
         }

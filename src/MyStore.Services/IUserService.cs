@@ -7,6 +7,6 @@ namespace MyStore.Services
     {
         Task<UserDto> GetAsync(string email);
         Task RegisterAsync(string email, string password, string role);
-        Task LoginAsync(string email, string password);
+        Task<UserDto> LoginAsync(string email, string password);
     }
 }

@@ -32,7 +32,8 @@ namespace MyStore.Controllers
             }
             await _userService.LoginAsync(viewModel.Email, viewModel.Password);
             var user = await _userService.GetAsync(viewModel.Email);
-            await _authenticator.SignInAsync(user.Email, user.Role);
+
+            await _authenticator.SignInAsync(user.Id, user.Email, user.Role);
             
             return RedirectToAction("Index", "Home");
         }

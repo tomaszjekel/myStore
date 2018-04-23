@@ -37,10 +37,9 @@ namespace MyStore.Services
             return products.Select(_mapper.Map<ProductDto>);
         }
 
-        public async Task CreateAsync(Guid id, string userId, string name, string category, decimal price)
+        public async Task CreateAsync(Guid id, Guid userId, string name, string category, decimal price)
         {
-            var user = await _userRepository.GetAsync(userId);
-            var product = new Product(id, user.Id , name, category, price);
+            var product = new Product(id, userId, name, category, price);
             await _productRepository.CreateAsync(product);
         }
     }

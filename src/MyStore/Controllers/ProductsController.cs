@@ -1,6 +1,7 @@
 using System;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
@@ -75,10 +76,16 @@ namespace MyStore.Controllers
             {
                 return View(viewModel);
             }
-            var userId = User.Identity.Name;
-            await _productService.CreateAsync(Guid.NewGuid(),  userId, viewModel.Name,
-                viewModel.Category, viewModel.Price);
-
+            if (User.Identity != null && User.Identity.IsAuthenticated)
+            {
+                ClaimsIdentity claimsIdentity = User.Identity as ClaimsIdentity;
+                if (claimsIdentity != null && claimsIdentity.FindFirst("UserId").Value != null)
+                {
+                    Guid userId = new Guid(claimsIdentity.FindFirst("UserId").Value);
+                    await _productService.CreateAsync(Guid.NewGuid(), userId, viewModel.Name,
+                        viewModel.Category, viewModel.Price);
+                }
+            }
             return RedirectToAction(nameof(Browse));
         }
 
@@ -116,7 +123,7 @@ namespace MyStore.Controllers
     public class CreateProduct
     {
         [Required]
-        public string UserId { get; set; }
+        public Guid UserId { get; set; }
         public string Name { get; set; }
         public string Category { get; set; }
         public decimal Price { get; set; }

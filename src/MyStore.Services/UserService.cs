@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Identity;
 using MyStore.Domain;
 using MyStore.Domain.Repositories;
 using MyStore.Services.DTO;
+using Microsoft.AspNetCore.Authentication;
 
 namespace MyStore.Services
 {
@@ -13,6 +14,7 @@ namespace MyStore.Services
         private readonly IUserRepository _userRepository;
         private readonly IMapper _mapper;
         private readonly IPasswordHasher<User> _passwordHasher;
+
 
         public UserService(IUserRepository userRepository,
             IMapper mapper, IPasswordHasher<User> passwordHasher)
@@ -38,7 +40,7 @@ namespace MyStore.Services
             await _userRepository.CreateAsync(user);
         }
 
-        public async Task LoginAsync(string email, string password)
+        public async Task<UserDto> LoginAsync(string email, string password)
         {
             var user = await _userRepository.GetAsync(email);
             if (user == null)
@@ -49,7 +51,7 @@ namespace MyStore.Services
                 user.Password, password);
             if (passwordVerificationResult != PasswordVerificationResult.Failed)
             {
-                return;
+                return _mapper.Map<UserDto>(user);
             }
             throw new Exception("Invalid credentials.");
         }
