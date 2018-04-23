@@ -12,12 +12,14 @@ namespace MyStore.Services
     public class ProductService : IProductService
     {
         private readonly IProductRepository _productRepository;
+        private readonly IUserRepository _userRepository;
         private readonly IMapper _mapper;
 
-        public ProductService(IProductRepository productRepository,
+        public ProductService(IProductRepository productRepository, IUserRepository userRepository,
                 IMapper mapper)
         {
             _productRepository = productRepository;
+            _userRepository = userRepository;
             _mapper = mapper;
         }
         
@@ -35,9 +37,10 @@ namespace MyStore.Services
             return products.Select(_mapper.Map<ProductDto>);
         }
 
-        public async Task CreateAsync(Guid id, string name, string category, decimal price)
+        public async Task CreateAsync(Guid id, string userId, string name, string category, decimal price)
         {
-            var product = new Product(id, name, category, price);
+            var user = await _userRepository.GetAsync(userId);
+            var product = new Product(id, user.Id , name, category, price);
             await _productRepository.CreateAsync(product);
         }
     }

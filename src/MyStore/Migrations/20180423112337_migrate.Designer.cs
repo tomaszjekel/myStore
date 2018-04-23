@@ -11,8 +11,8 @@ using System;
 namespace MyStore.Migrations
 {
     [DbContext(typeof(MyStoreContext))]
-    [Migration("20180417144948_OrderFK")]
-    partial class OrderFK
+    [Migration("20180423112337_migrate")]
+    partial class migrate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -75,6 +75,8 @@ namespace MyStore.Migrations
                     b.Property<string>("Name");
 
                     b.Property<decimal>("Price");
+
+                    b.Property<Guid>("UserId");
 
                     b.HasKey("Id");
 

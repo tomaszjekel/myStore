@@ -60,6 +60,8 @@ namespace MyStore.Controllers
         [Authorize(AuthenticationSchemes = CookieAuthenticationDefaults.AuthenticationScheme)]
         public IActionResult Create()
         {
+
+            
             var viewModel = new CreateProductViewModel();
             
             return View(viewModel);
@@ -73,7 +75,8 @@ namespace MyStore.Controllers
             {
                 return View(viewModel);
             }
-            await _productService.CreateAsync(Guid.NewGuid(), viewModel.Name,
+            var userId = User.Identity.Name;
+            await _productService.CreateAsync(Guid.NewGuid(),  userId, viewModel.Name,
                 viewModel.Category, viewModel.Price);
 
             return RedirectToAction(nameof(Browse));
@@ -103,7 +106,7 @@ namespace MyStore.Controllers
         [ModelValidationFilter]
         public async Task<IActionResult> Post([FromBody] CreateProduct request)
         {
-            await _productService.CreateAsync(Guid.NewGuid(), request.Name,
+            await _productService.CreateAsync(Guid.NewGuid(), request.UserId, request.Name,
                 request.Category, request.Price);
 
             return Ok();
@@ -113,6 +116,7 @@ namespace MyStore.Controllers
     public class CreateProduct
     {
         [Required]
+        public string UserId { get; set; }
         public string Name { get; set; }
         public string Category { get; set; }
         public decimal Price { get; set; }

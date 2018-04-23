@@ -9,7 +9,7 @@ namespace MyStore.Services
     {
         Task<ProductDto> GetAsync(Guid id);
         Task<IEnumerable<ProductDto>> BrowseAsync(string name = "");
-        Task CreateAsync(Guid id, string name,
+        Task CreateAsync(Guid id, string userId, string name,
             string category, decimal price);
     }
 }

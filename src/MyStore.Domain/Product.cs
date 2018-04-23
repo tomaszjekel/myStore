@@ -5,25 +5,29 @@ namespace MyStore.Domain
     public class Product
     {
         public Guid Id { get; private set; }
+        public Guid UserId { get;set ;} 
         public string Name { get; private set; }
         public string Category { get; private set; }
         public string Description { get; private set; }
         public decimal Price { get; private set; }
+        
+
 
         private Product()
         {
         }
 
-        public Product(string name, string category, 
-            decimal price): this(Guid.NewGuid(), 
+        public Product(Guid userId , string name, string category, 
+            decimal price): this(userId, new Guid(),
             name, category, price)
         {
         }
 
-        public Product(Guid id, string name,
+        public Product(Guid id, Guid userId, string name,
             string category, decimal price)
         {
             Id = id;
+            UserId = userId;
             SetName(name);
             Category = category;
             SetPrice(price);

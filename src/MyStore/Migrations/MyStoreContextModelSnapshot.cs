@@ -75,6 +75,8 @@ namespace MyStore.Migrations
 
                     b.Property<decimal>("Price");
 
+                    b.Property<Guid>("UserId");
+
                     b.HasKey("Id");
 
                     b.ToTable("Products");

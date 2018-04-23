@@ -30,16 +30,51 @@
             </div>
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
+                    <li>
+                        <form class="navbar-form navbar-left">
+                            <div class="input-group">
+                                <input type="text" name="keyword" placeholder="search..." class="form-control">
+                                <span class="input-group-btn">
+                                    <button class="btn btn-default">Go</button>
+                                </span>
+                            </div>
+                        </form>
+
+                    </li>
+                    @*<li>
+
+                <div class="input-group">
+                    <input type="text" class="form-control" placeholder="Search" name="srch-term" id="srch-term" style="max-width: 100%; width: 100%;">
+                    <div class="input-group-btn">
+                        <button class="btn btn-default" style="background: rgb(72, 166, 72);" type="submit"><i class="glyphicon glyphicon-search"></i></button>
+                    </div>
+                </div>
+            </li>*@
                     <li><a asp-area="" asp-controller="Home" asp-action="Index">Home</a></li>
                     <li><a asp-area="" asp-controller="Home" asp-action="About">About</a></li>
                     <li><a asp-area="" asp-controller="Home" asp-action="Contact">Contact</a></li>
                 </ul>
-                <ul class="nav navbar-nav navbar-right">
+
+
+
+                @*<div class="col-md-6 col-sm-8 col-xs-11 navbar-left">
+            <div class="navbar-form " role="search">
+                <div class="input-group">
+                    <input type="text" class="form-control" placeholder="Search" name="srch-term" id="srch-term" style="max-width: 100%; width: 100%;">
+                    <div class="input-group-btn">
+                        <button class="btn btn-default" style="background: rgb(72, 166, 72);" type="submit"><i class="glyphicon glyphicon-search"></i></button>
+                    </div>
+                </div>
+            </div>
+        </div>*@
+
+
+                <ul  class="nav navbar-nav navbar-right">
                     <li><a asp-area="" asp-controller="Account" asp-action="login">Sign in</a></li>
                     <li><a asp-area="" asp-controller="Account" asp-action="register">Sign Up</a></li>
                 </ul>
             </div>
-        </div>
+            </div>
     </nav>
     <div class="container body-content">
         @RenderBody()

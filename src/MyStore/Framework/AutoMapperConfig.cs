@@ -11,6 +11,7 @@ namespace MyStore.Framework
             {
                 cfg.CreateMap<Product, ProductDto>();
                 cfg.CreateMap<User, UserDto>();
+               // cfg.CreateMap<Domain.Profile, ProfileDto>();
             }).CreateMapper();
     }
 }
