@@ -72,20 +72,10 @@ namespace MyStore.Controllers
         [Authorize(AuthenticationSchemes = CookieAuthenticationDefaults.AuthenticationScheme)]
         public async Task<IActionResult> Create(CreateProductViewModel viewModel)
         {
-            if (!ModelState.IsValid)
-            {
-                return View(viewModel);
-            }
-            if (User.Identity != null && User.Identity.IsAuthenticated)
-            {
-                ClaimsIdentity claimsIdentity = User.Identity as ClaimsIdentity;
-                if (claimsIdentity != null && claimsIdentity.FindFirst("UserId").Value != null)
-                {
-                    Guid userId = new Guid(claimsIdentity.FindFirst("UserId").Value);
-                    await _productService.CreateAsync(Guid.NewGuid(), userId, viewModel.Name,
-                        viewModel.Category, viewModel.Price);
-                }
-            }
+            Guid userId = new Guid(this.User.FindFirstValue(ClaimTypes.NameIdentifier));
+            await _productService.CreateAsync(Guid.NewGuid(), userId, viewModel.Name,
+                viewModel.Category, viewModel.Price);
+
             return RedirectToAction(nameof(Browse));
         }
 

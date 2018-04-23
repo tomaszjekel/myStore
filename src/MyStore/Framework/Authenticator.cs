@@ -24,9 +24,11 @@ namespace MyStore.Framework
             {
                 new Claim(ClaimTypes.Name, email),
                 new Claim(ClaimTypes.Role, role),
+                new Claim(ClaimTypes.NameIdentifier , userId.ToString())
+                 
             };
+          
             var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
-            identity.AddClaim(new Claim("UserId", userId.ToString()));
             var principal = new ClaimsPrincipal(identity);
             await _contextAccessor.HttpContext.SignInAsync(principal);
         }
