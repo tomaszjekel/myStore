@@ -131,6 +131,9 @@ namespace MyStore.Controllers
                         await file.CopyToAsync(fileStream);
                     }
                 }
+
+
+
             }
             return RedirectToAction(nameof(Create)); ;
         }

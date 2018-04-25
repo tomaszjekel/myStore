@@ -11,7 +11,7 @@ using System;
 namespace MyStore.Migrations
 {
     [DbContext(typeof(MyStoreContext))]
-    [Migration("20180425132940_initial")]
+    [Migration("20180425145800_initial")]
     partial class initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -28,15 +28,13 @@ namespace MyStore.Migrations
 
                     b.Property<DateTime>("Data");
 
-                    b.Property<Guid?>("FilesUploadId");
-
                     b.Property<string>("Name");
 
                     b.Property<Guid>("UserId");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("FilesUploadId");
+                    b.HasIndex("UserId");
 
                     b.ToTable("Files");
                 });
@@ -121,9 +119,10 @@ namespace MyStore.Migrations
 
             modelBuilder.Entity("MyStore.Domain.FilesUpload", b =>
                 {
-                    b.HasOne("MyStore.Domain.FilesUpload")
+                    b.HasOne("MyStore.Domain.User")
                         .WithMany()
-                        .HasForeignKey("FilesUploadId");
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("MyStore.Domain.Order", b =>
