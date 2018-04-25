@@ -119,21 +119,20 @@ namespace MyStore.Controllers
         }
 
         [HttpPost("Upload")]
-        public async Task<IActionResult> Index(ICollection<IFormFile> files)
+        public async Task<IActionResult> Upload(ICollection<IFormFile> files)
         {
             var filesPath = Environment.GetEnvironmentVariable("FILES_DIR");
-            var uploads = Path.Combine($"{filesPath}", "uploads");
             foreach (var file in files)
             {
                 if (file.Length > 0)
                 {
-                    using (var fileStream = new FileStream(Path.Combine(uploads, file.FileName), FileMode.Create))
+                    using (var fileStream = new FileStream(Path.Combine($"{filesPath}", file.FileName), FileMode.Create))
                     {
                         await file.CopyToAsync(fileStream);
                     }
                 }
             }
-            return View();
+            return RedirectToAction(nameof(Create)); ;
         }
 
 
