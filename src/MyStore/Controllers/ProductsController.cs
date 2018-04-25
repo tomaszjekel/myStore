@@ -1,10 +1,13 @@
 using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.IO;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using MyStore.Framework;
 using MyStore.Models;
@@ -114,6 +117,26 @@ namespace MyStore.Controllers
 
             return Ok();
         }
+
+        [HttpPost("Upload")]
+        public async Task<IActionResult> Index(ICollection<IFormFile> files)
+        {
+            var filesPath = Environment.GetEnvironmentVariable("FILES_DIR");
+            var uploads = Path.Combine($"{filesPath}", "uploads");
+            foreach (var file in files)
+            {
+                if (file.Length > 0)
+                {
+                    using (var fileStream = new FileStream(Path.Combine(uploads, file.FileName), FileMode.Create))
+                    {
+                        await file.CopyToAsync(fileStream);
+                    }
+                }
+            }
+            return View();
+        }
+
+
     }
 
     public class CreateProduct

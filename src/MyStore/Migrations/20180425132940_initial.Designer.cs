@@ -11,8 +11,8 @@ using System;
 namespace MyStore.Migrations
 {
     [DbContext(typeof(MyStoreContext))]
-    [Migration("20180423112337_migrate")]
-    partial class migrate
+    [Migration("20180425132940_initial")]
+    partial class initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -20,6 +20,26 @@ namespace MyStore.Migrations
             modelBuilder
                 .HasAnnotation("ProductVersion", "2.0.0-rtm-26452")
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+            modelBuilder.Entity("MyStore.Domain.FilesUpload", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<DateTime>("Data");
+
+                    b.Property<Guid?>("FilesUploadId");
+
+                    b.Property<string>("Name");
+
+                    b.Property<Guid>("UserId");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("FilesUploadId");
+
+                    b.ToTable("Files");
+                });
 
             modelBuilder.Entity("MyStore.Domain.Order", b =>
                 {
@@ -97,6 +117,13 @@ namespace MyStore.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Users");
+                });
+
+            modelBuilder.Entity("MyStore.Domain.FilesUpload", b =>
+                {
+                    b.HasOne("MyStore.Domain.FilesUpload")
+                        .WithMany()
+                        .HasForeignKey("FilesUploadId");
                 });
 
             modelBuilder.Entity("MyStore.Domain.Order", b =>

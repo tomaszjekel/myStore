@@ -4,10 +4,31 @@ using System.Collections.Generic;
 
 namespace MyStore.Migrations
 {
-    public partial class migrate : Migration
+    public partial class initial : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.CreateTable(
+                name: "Files",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
+                    Data = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    FilesUploadId = table.Column<Guid>(type: "uniqueidentifier", nullable: true),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: true),
+                    UserId = table.Column<Guid>(type: "uniqueidentifier", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Files", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Files_Files_FilesUploadId",
+                        column: x => x.FilesUploadId,
+                        principalTable: "Files",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
             migrationBuilder.CreateTable(
                 name: "Products",
                 columns: table => new
@@ -87,6 +108,11 @@ namespace MyStore.Migrations
                 });
 
             migrationBuilder.CreateIndex(
+                name: "IX_Files_FilesUploadId",
+                table: "Files",
+                column: "FilesUploadId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_OrderItems_OrderId",
                 table: "OrderItems",
                 column: "OrderId");
@@ -104,6 +130,9 @@ namespace MyStore.Migrations
 
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.DropTable(
+                name: "Files");
+
             migrationBuilder.DropTable(
                 name: "OrderItems");
 

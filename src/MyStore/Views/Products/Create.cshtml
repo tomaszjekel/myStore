@@ -7,12 +7,12 @@
         <form asp-action="Create" method="post">
             <div class="form-group">
                 <label asp-for="Name">Name:</label>
-                <input asp-for="Name" class="form-control"/>
+                <input asp-for="Name" class="form-control" />
                 <span asp-validation-for="Name" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="Price">Price:</label>
-                <input type="number" asp-for="Price" class="form-control"/>
+                <input type="number" asp-for="Price" class="form-control" />
                 <span asp-validation-for="Price" class="text-danger"></span>
             </div>
             <div class="form-group">
@@ -20,7 +20,19 @@
                 <select asp-for="Category" asp-items="Model.Categories" class="form-control"></select>
                 <span asp-validation-for="Category" class="text-danger"></span>
             </div>
-            <input type="submit" class="btn btn-success" value="Create"/>
+            <input type="submit" class="btn btn-success" value="Create" />
+        </form>
+        <br />
+
+        <form method="post" asp-action="Upload" asp-controller="Products" enctype="multipart/form-data">
+
+            <div class="form-group">
+                <input type="file" class="btn btn-default" name="file" />
+            </div>
+
+            <div class="form-group">
+                <input type="submit" class="btn btn-default" value="upload" />
+            </div>
         </form>
     </div>
 </div>

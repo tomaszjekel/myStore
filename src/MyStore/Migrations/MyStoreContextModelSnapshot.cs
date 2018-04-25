@@ -20,6 +20,26 @@ namespace MyStore.Migrations
                 .HasAnnotation("ProductVersion", "2.0.0-rtm-26452")
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+            modelBuilder.Entity("MyStore.Domain.FilesUpload", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd();
+
+                    b.Property<DateTime>("Data");
+
+                    b.Property<Guid?>("FilesUploadId");
+
+                    b.Property<string>("Name");
+
+                    b.Property<Guid>("UserId");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("FilesUploadId");
+
+                    b.ToTable("Files");
+                });
+
             modelBuilder.Entity("MyStore.Domain.Order", b =>
                 {
                     b.Property<Guid>("Id")
@@ -96,6 +116,13 @@ namespace MyStore.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Users");
+                });
+
+            modelBuilder.Entity("MyStore.Domain.FilesUpload", b =>
+                {
+                    b.HasOne("MyStore.Domain.FilesUpload")
+                        .WithMany()
+                        .HasForeignKey("FilesUploadId");
                 });
 
             modelBuilder.Entity("MyStore.Domain.Order", b =>

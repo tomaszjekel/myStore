@@ -10,6 +10,7 @@ namespace MyStore.Infrastructure.EF
         public DbSet<Order> Orders { get; set; }
         public DbSet<OrderItem> OrderItems { get; set; }
         public DbSet<User> Users { get; set; }
+        public DbSet<FilesUpload> Files { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -28,10 +29,15 @@ namespace MyStore.Infrastructure.EF
             var orderItemBuilder = builder.Entity<OrderItem>();
             orderItemBuilder.Property(x => x.ProductId).IsRequired();
             orderItemBuilder.HasOne<Product>().WithMany().HasForeignKey(x => x.ProductId);
-            
+
             var orderBuilder = builder.Entity<Order>();
             orderBuilder.Property(x => x.UserId).IsRequired();
-            orderBuilder.HasOne<User>().WithMany().HasForeignKey(x => x.UserId);            
+            orderBuilder.HasOne<User>().WithMany().HasForeignKey(x => x.UserId);
+
+
+            var filesBuilder = builder.Entity<FilesUpload>();
+            filesBuilder.Property(x => x.UserId).IsRequired();
+            filesBuilder.HasOne<FilesUpload>().WithMany();
         }
     }
     
