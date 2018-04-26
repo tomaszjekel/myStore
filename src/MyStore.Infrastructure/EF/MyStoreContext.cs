@@ -34,9 +34,14 @@ namespace MyStore.Infrastructure.EF
             orderBuilder.Property(x => x.UserId).IsRequired();
             orderBuilder.HasOne<User>().WithMany().HasForeignKey(x => x.UserId);
 
+            var productBuilder = builder.Entity<Product>();
+            productBuilder.Property(x => x.UserId).IsRequired();
+            productBuilder.HasOne<User>().WithMany().HasForeignKey(x => x.UserId);
+
             var filesBuilder = builder.Entity<FilesUpload>();
             filesBuilder.Property(x => x.UserId).IsRequired();
             filesBuilder.HasOne<User>().WithMany().HasForeignKey(x => x.UserId);
+
         }
     }
     

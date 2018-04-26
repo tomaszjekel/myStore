@@ -11,9 +11,10 @@ using System;
 namespace MyStore.Migrations
 {
     [DbContext(typeof(MyStoreContext))]
-    partial class MyStoreContextModelSnapshot : ModelSnapshot
+    [Migration("20180426095109_initial1")]
+    partial class initial1
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
