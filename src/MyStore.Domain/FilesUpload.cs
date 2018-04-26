@@ -15,6 +15,11 @@ namespace MyStore.Domain
         {
         }
 
+        public FilesUpload(Guid userId, string name,
+            DateTime data): this(new Guid(),userId, name, data)
+        {
+        }
+
         public FilesUpload(Guid id, Guid userId, string name, DateTime data)
         {
             Id = Guid.NewGuid();

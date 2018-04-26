@@ -45,10 +45,16 @@ namespace MyStore
             services.AddSingleton(appOptions);
             services.AddResponseCaching();
             services.AddSession();
+
             services.AddScoped<IProductRepository, EfProductRepository>();
             services.AddScoped<IProductService, ProductService>();
+
+            services.AddScoped<IFileRepository, EfFileRepository>();
+            services.AddScoped<IFileService, FileService>();
+
             services.AddScoped<IUserRepository, EfUserRepository>();
             services.AddScoped<IUserService, UserService>();
+
             services.AddSingleton<IPasswordHasher<User>, PasswordHasher<User>>();
             services.AddScoped<IAuthenticator, Authenticator>();
             services.AddSingleton(AutoMapperConfig.GetMapper());

@@ -18,10 +18,12 @@ namespace MyStore.Controllers
     public class ProductsController : BaseController
     {
         private readonly IProductService _productService;
+        private readonly IFileService _fileService;
 
-        public ProductsController(IProductService productService)
+        public ProductsController(IProductService productService, IFileService fileService)
         {
             _productService = productService;
+            _fileService = fileService;
         }
 
         [HttpGet("browse")]
@@ -121,21 +123,25 @@ namespace MyStore.Controllers
         [HttpPost("Upload")]
         public async Task<IActionResult> Upload(ICollection<IFormFile> files)
         {
+            Guid userGuid;
+            Guid.TryParse(this.User.FindFirstValue(ClaimTypes.NameIdentifier), out userGuid);
+
             var filesPath = Environment.GetEnvironmentVariable("FILES_DIR");
             foreach (var file in files)
             {
+                Guid fileNameGuid = Guid.NewGuid();
                 if (file.Length > 0)
                 {
-                    using (var fileStream = new FileStream(Path.Combine($"{filesPath}", file.FileName), FileMode.Create))
+                    //using (var fileStream = new FileStream(Path.Combine($"{filesPath}", file.FileName), FileMode.Create))
+                    using (var fileStream = new FileStream(Path.Combine($"{filesPath}", fileNameGuid.ToString()+ Path.GetExtension(file.FileName)), FileMode.Create))
                     {
                         await file.CopyToAsync(fileStream);
+                        await _fileService.CreateAsync(userGuid, file.FileName, DateTime.Now);
+                        
                     }
                 }
-
-
-
             }
-            return RedirectToAction(nameof(Create)); ;
+            return RedirectToAction(nameof(Create)); 
         }
 
 
