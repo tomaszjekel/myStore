@@ -148,20 +148,29 @@ namespace MyStore.Controllers
                 }
             }
 
-            foreach(var imageName in pathImage)
+            foreach (var imageName in pathImage)
             {
-                var stream = new FileStream(filesPath +"\\"+ imageName, FileMode.Open);
-
-                using (Image<Rgba32> image = SixLabors.ImageSharp.Image.Load(stream))
+                using (var stream = new FileStream(filesPath + "\\" + imageName, FileMode.Open))
                 {
-                    image.Mutate(x => x
-                         .Resize(image.Width / 2, image.Height / 2));
-                    using ( var minFileStream = new FileStream(filesPath + "\\" + "min_" + imageName, FileMode.Create))
+                    using (Image<Rgba32> image = SixLabors.ImageSharp.Image.Load(stream))
                     {
-                        image.SaveAsPng(minFileStream);
+                        if (image.Width > image.Height)
+                        {
+                            image.Mutate(x => x
+                             .Resize(120, 80));
+                        }
+                        else
+                        {
+                            image.Mutate(x => x
+                            .Resize(80, 120));
+                        }
+
+                        using (var minFileStream = new FileStream(filesPath + "\\" + "min_" + imageName, FileMode.Create))
+                        {
+                            image.SaveAsPng(minFileStream);
+                        }
                     }
                 }
-                
             }
 
             return RedirectToAction(nameof(Create)); 
