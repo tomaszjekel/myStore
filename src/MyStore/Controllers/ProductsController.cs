@@ -12,6 +12,12 @@ using Microsoft.AspNetCore.Mvc;
 using MyStore.Framework;
 using MyStore.Models;
 using MyStore.Services;
+using SixLabors.ImageSharp;
+using SixLabors.ImageSharp.PixelFormats;
+using SixLabors.ImageSharp.Processing;
+using SixLabors.ImageSharp.Processing.Filters;
+using SixLabors.ImageSharp.Processing.Transforms;
+
 
 namespace MyStore.Controllers
 {
@@ -125,6 +131,7 @@ namespace MyStore.Controllers
         {
             Guid userGuid;
             Guid.TryParse(this.User.FindFirstValue(ClaimTypes.NameIdentifier), out userGuid);
+            List<string> pathImage = new List<string>();
 
             var filesPath = Environment.GetEnvironmentVariable("FILES_DIR");
             foreach (var file in files)
@@ -133,18 +140,32 @@ namespace MyStore.Controllers
                 if (file.Length > 0)
                 {
                     //using (var fileStream = new FileStream(Path.Combine($"{filesPath}", file.FileName), FileMode.Create))
-                    using (var fileStream = new FileStream(Path.Combine($"{filesPath}", fileNameGuid.ToString()+ Path.GetExtension(file.FileName)), FileMode.Create))
+                    using (var fileStream = new FileStream(Path.Combine($"{filesPath}", fileNameGuid.ToString() + Path.GetExtension(file.FileName)), FileMode.OpenOrCreate))
                     {
-                        await file.CopyToAsync(fileStream);
-                        await _fileService.CreateAsync(userGuid, file.FileName, DateTime.Now);
-                        
+                        pathImage.Add(fileNameGuid.ToString() + Path.GetExtension(file.FileName));
+                        await file.CopyToAsync(fileStream);    
                     }
                 }
             }
+
+            foreach(var imageName in pathImage)
+            {
+                var stream = new FileStream(filesPath +"\\"+ imageName, FileMode.Open);
+
+                using (Image<Rgba32> image = SixLabors.ImageSharp.Image.Load(stream))
+                {
+                    image.Mutate(x => x
+                         .Resize(image.Width / 2, image.Height / 2));
+                    using ( var minFileStream = new FileStream(filesPath + "\\" + "min_" + imageName, FileMode.Create))
+                    {
+                        image.SaveAsPng(minFileStream);
+                    }
+                }
+                
+            }
+
             return RedirectToAction(nameof(Create)); 
         }
-
-
     }
 
     public class CreateProduct
