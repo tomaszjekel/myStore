@@ -8,6 +8,7 @@ namespace MyStore.Domain
     {
         public Guid Id { get; private set; }
         public Guid UserId { get; private set; }
+        public Guid? ProductId { get; set; }
         public string Name { get; private set; }
         public DateTime Data { get; private set; }
 
@@ -15,15 +16,16 @@ namespace MyStore.Domain
         {
         }
 
-        public FilesUpload(Guid userId, string name,
-            DateTime data): this(new Guid(),userId, name, data)
+        public FilesUpload(Guid userId, Guid? productId, string name,
+            DateTime data): this(new Guid(),userId,productId, name, data)
         {
         }
 
-        public FilesUpload(Guid id, Guid userId, string name, DateTime data)
+        public FilesUpload(Guid id, Guid userId, Guid? productId, string name, DateTime data)
         {
             Id = Guid.NewGuid();
             UserId = userId;
+            ProductId = productId;
             Name = name;
             Data = data;
         }

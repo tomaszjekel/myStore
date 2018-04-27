@@ -31,16 +31,16 @@ namespace MyStore.Services
             return _mapper.Map<FileDto>(file);
         }
 
-        public async Task<IEnumerable<FileDto>> BrowseAsync(string name = "")
+        public async Task<IEnumerable<FileDto>> BrowseAsync(Guid userId)
         {
-            var file = await _fileRepository.BrowseAsync(name);
+            var file = await _fileRepository.BrowseAsync(userId);
 
             return file.Select(_mapper.Map<FileDto>);
         }
 
-        public async Task CreateAsync(Guid userId, string name,DateTime data)
+        public async Task CreateAsync(Guid userId, Guid? productId, string name , DateTime data)
         {
-            var fu = new FilesUpload(userId, name, data);
+            var fu = new FilesUpload(userId, productId, name, data);
             await _fileRepository.CreateAsync(fu);
         }
 

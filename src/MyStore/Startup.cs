@@ -99,7 +99,6 @@ namespace MyStore
             app.UseStaticFiles();
             app.UseSession();
             app.UseAuthentication();
-
             // app.Use(async (ctx, next) =>
             // {
             //     //Console.WriteLine($"Path: {ctx.Request.Path.ToString()}");

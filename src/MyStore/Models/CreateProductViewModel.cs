@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using MyStore.Services.DTO;
 
 namespace MyStore.Models
 {
@@ -25,5 +26,7 @@ namespace MyStore.Models
                 new SelectListItem { Text = "Tools", Value = "Tools"},
                 new SelectListItem { Text = "Cars", Value = "Cars"}
             };
+
+        public List<FileDto> Files { get; set; }
     }
 }

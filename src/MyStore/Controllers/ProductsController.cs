@@ -9,9 +9,11 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using MyStore.Domain;
 using MyStore.Framework;
 using MyStore.Models;
 using MyStore.Services;
+using MyStore.Services.DTO;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.PixelFormats;
 using SixLabors.ImageSharp.Processing;
@@ -76,11 +78,14 @@ namespace MyStore.Controllers
 
         [HttpGet("create")]
         [Authorize(AuthenticationSchemes = CookieAuthenticationDefaults.AuthenticationScheme)]
-        public IActionResult Create()
+        public async Task<IActionResult> Create()
         {
+            Guid userGuid;
+            Guid.TryParse(this.User.FindFirstValue(ClaimTypes.NameIdentifier), out userGuid);
+            var fileList = await _fileService.BrowseAsync(userGuid);
 
-            
-            var viewModel = new CreateProductViewModel();
+
+            var viewModel = new CreateProductViewModel() { Files=fileList.ToList() };
             
             return View(viewModel);
         }
@@ -143,7 +148,8 @@ namespace MyStore.Controllers
                     using (var fileStream = new FileStream(Path.Combine($"{filesPath}", fileNameGuid.ToString() + Path.GetExtension(file.FileName)), FileMode.OpenOrCreate))
                     {
                         pathImage.Add(fileNameGuid.ToString() + Path.GetExtension(file.FileName));
-                        await file.CopyToAsync(fileStream);    
+                        await file.CopyToAsync(fileStream);
+                        await _fileService.CreateAsync(userGuid, null, fileNameGuid.ToString() + Path.GetExtension(file.FileName), DateTime.Now);
                     }
                 }
             }

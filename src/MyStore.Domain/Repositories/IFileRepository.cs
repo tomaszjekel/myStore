@@ -8,7 +8,7 @@ namespace MyStore.Domain.Repositories
     public interface IFileRepository
     {
         Task<FilesUpload> GetAsync(Guid id);
-        Task<IEnumerable<FilesUpload>> BrowseAsync(string name = "");
+        Task<IEnumerable<FilesUpload>> BrowseAsync(Guid userId);
         Task CreateAsync(FilesUpload fu);
     }
 }

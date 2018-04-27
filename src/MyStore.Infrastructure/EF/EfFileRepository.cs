@@ -21,12 +21,12 @@ namespace MyStore.Infrastructure.EF
         public async Task<FilesUpload> GetAsync(Guid id)
             => await _context.Files.SingleOrDefaultAsync(p => p.Id == id);
 
-        public async Task<IEnumerable<FilesUpload>> BrowseAsync(string name)
+        public async Task<IEnumerable<FilesUpload>> BrowseAsync(Guid userId)
         {
             var files = _context.Files.AsQueryable();
-            if (!string.IsNullOrWhiteSpace(name))
+            if (Guid.Empty != userId)
             {
-                files = files.Where(x => x.Name.Contains(name));
+                files = files.Where(x => x.UserId ==userId);
             }
 
             return await files.ToListAsync();

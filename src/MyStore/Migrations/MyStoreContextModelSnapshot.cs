@@ -29,6 +29,8 @@ namespace MyStore.Migrations
 
                     b.Property<string>("Name");
 
+                    b.Property<Guid?>("ProductId");
+
                     b.Property<Guid>("UserId");
 
                     b.HasKey("Id");

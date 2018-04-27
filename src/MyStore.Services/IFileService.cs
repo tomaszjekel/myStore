@@ -11,7 +11,7 @@ namespace MyStore.Services
     public interface IFileService
     {
         Task<FileDto> GetAsync(Guid id);
-        Task<IEnumerable<FileDto>> BrowseAsync(string name = "");
-        Task CreateAsync(Guid userId, string name, DateTime date);
+        Task<IEnumerable<FileDto>> BrowseAsync(Guid UserId);
+        Task CreateAsync(Guid userId, Guid? productId, string name, DateTime date);
     }
 }

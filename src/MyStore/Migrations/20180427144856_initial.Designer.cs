@@ -11,7 +11,7 @@ using System;
 namespace MyStore.Migrations
 {
     [DbContext(typeof(MyStoreContext))]
-    [Migration("20180425145800_initial")]
+    [Migration("20180427144856_initial")]
     partial class initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -29,6 +29,8 @@ namespace MyStore.Migrations
                     b.Property<DateTime>("Data");
 
                     b.Property<string>("Name");
+
+                    b.Property<Guid?>("ProductId");
 
                     b.Property<Guid>("UserId");
 
@@ -98,6 +100,8 @@ namespace MyStore.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("UserId");
+
                     b.ToTable("Products");
                 });
 
@@ -142,6 +146,14 @@ namespace MyStore.Migrations
                     b.HasOne("MyStore.Domain.Product")
                         .WithMany()
                         .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("MyStore.Domain.Product", b =>
+                {
+                    b.HasOne("MyStore.Domain.User")
+                        .WithMany()
+                        .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 #pragma warning restore 612, 618
