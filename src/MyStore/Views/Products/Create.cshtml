@@ -1,51 +1,67 @@
 ﻿@model CreateProductViewModel
 @{
-        var filesPath = Environment.GetEnvironmentVariable("FILES_DIR");
-    }
+    var filesPath = Environment.GetEnvironmentVariable("FILES_DIR");
+}
 <h1>Create product</h1>
-<div class="row">
-    <div class="col-lg-3 col-sm-6">
-        <div asp-validation-summary="All"></div>
-        <form asp-action="Create" method="post">
-            <div class="form-group">
-                <label asp-for="Name">Name:</label>
-                <input asp-for="Name" class="form-control" />
-                <span asp-validation-for="Name" class="text-danger"></span>
+
+
+
+
+
+
+
+
+
+
+
+ 
+
+
+    @foreach (var product in Model.Files)
+    {
+
+        var path = product.Name;
+
+        <div class="col-lg-3 col-sm-6">
+
+            <div class="caption">
+                <img class="img-responsive" src="../images/min_@path" alt="Chania">
             </div>
-            <div class="form-group">
-                <label asp-for="Price">Price:</label>
-                <input type="number" asp-for="Price" class="form-control" />
-                <span asp-validation-for="Price" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Category">Category:</label>
-                <select asp-for="Category" asp-items="Model.Categories" class="form-control"></select>
-                <span asp-validation-for="Category" class="text-danger"></span>
-            </div>
-            <input type="submit" class="btn btn-success" value="Create" />
-        </form>
-        <br />
+        </div>
 
-        <form method="post" asp-action="Upload" asp-controller="Products" enctype="multipart/form-data">
+    }
+      
 
-            <div class="form-group">
-                <input type="file" name="files" class="btn btn-default" multiple />
-            </div>
+            <div class="col-lg-3 col-sm-6">
 
-            <div class="form-group">
-                <input type="submit" class="btn btn-default" value="upload" />
-            </div>
-        </form>
+                <form asp-action="Create" method="post">
+                    <div asp-validation-summary="All"></div>
+                    <div class="form-group">
+                        <label asp-for="Name">Name:</label>
+                        <input asp-for="Name" class="form-control" />
+                        <span asp-validation-for="Name" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Price">Price:</label>
+                        <input type="number" asp-for="Price" class="form-control" />
+                        <span asp-validation-for="Price" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="Category">Category:</label>
+                        <select asp-for="Category" asp-items="Model.Categories" class="form-control"></select>
+                        <span asp-validation-for="Category" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <input type="submit" class="btn btn-success" value="Create" />
+                    </div>
+                </form>
 
-        <br />
+          
 
-        @foreach (var product in Model.Files)
-        {
 
-            var path = filesPath + "\\" + product.Name;
-                <div class="form-group">
-                    <img class="img-responsive" src="@path" alt="Chania">
-                </div>
-        }
-    </div>
-</div>
+
+        </div>
+
+
+
+

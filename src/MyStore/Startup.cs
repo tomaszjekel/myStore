@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication.Cookies;
@@ -10,6 +11,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using MyStore.Domain;
@@ -99,6 +101,16 @@ namespace MyStore
             app.UseStaticFiles();
             app.UseSession();
             app.UseAuthentication();
+            app.UseStaticFiles(); // For the wwwroot folder
+
+            app.UseFileServer(new FileServerOptions
+            {
+                FileProvider = new PhysicalFileProvider(
+                    Path.Combine(Directory.GetCurrentDirectory(), "C:\\upload\\")),
+                RequestPath = "/images",
+                EnableDirectoryBrowsing = true
+            });
+
             // app.Use(async (ctx, next) =>
             // {
             //     //Console.WriteLine($"Path: {ctx.Request.Path.ToString()}");
