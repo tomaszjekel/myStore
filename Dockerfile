@@ -6,7 +6,7 @@ COPY src/MyStore/*.csproj ./
 RUN dotnet restore
 
 # Copy everything else and build
-COPY src/MyStore/. ./
+COPY src/. ./
 RUN dotnet publish . -c Release -o out
 
 # Build runtime image
