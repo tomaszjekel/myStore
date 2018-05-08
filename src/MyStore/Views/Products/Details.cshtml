@@ -1,3 +1,32 @@
 ﻿@model ProductViewModel
 
 @Model.Id
+
+<div class="container-fluid">
+    <div class="row content">
+
+        <div class="col-sm-3">
+
+            @foreach (var file in Model.Files)
+    {
+
+
+
+        <img class="img-responsive" src="../../images/min_@file.Name" />
+
+
+}
+        </div>
+            <div class="col-sm-9">
+                <h1>
+                    @Model.Name
+                </h1>
+                <br />
+                <h3>
+                    @Model.Description
+                </h3>
+
+            </div>
+
+        </div>
+        </div>

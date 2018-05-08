@@ -9,6 +9,8 @@ namespace MyStore.Domain.Repositories
     {
         Task<FilesUpload> GetAsync(Guid id);
         Task<IEnumerable<FilesUpload>> BrowseAsync(Guid userId);
+        Task<IEnumerable<FilesUpload>> BrowseByProductAsync(Guid userId, Guid productId);
         Task CreateAsync(FilesUpload fu);
+        Task UpdateAsync(Guid productId);
     }
 }

@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.Drawing;
+using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
 using System.Security.Claims;
@@ -14,12 +16,13 @@ using MyStore.Framework;
 using MyStore.Models;
 using MyStore.Services;
 using MyStore.Services.DTO;
+using QRCoder;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.PixelFormats;
 using SixLabors.ImageSharp.Processing;
 using SixLabors.ImageSharp.Processing.Filters;
 using SixLabors.ImageSharp.Processing.Transforms;
-
+using UnityEngine;
 
 namespace MyStore.Controllers
 {
@@ -48,7 +51,8 @@ namespace MyStore.Controllers
                     UserId = p.UserId,
                     Name = p.Name,
                     Category = p.Category,
-                    Price = p.Price
+                    Price = p.Price,
+                    Description = p.Description
                 });
             if (userGuid != Guid.Empty)
                 viewModels = viewModels.Where(c => c.UserId == userGuid);
@@ -65,12 +69,16 @@ namespace MyStore.Controllers
                 return NotFound();
             }
 
+            var fileList = await _fileService.BrowseByProductAsync(product.UserId, product.Id);
+
             var viewModel = new ProductViewModel
             {
                 Id = product.Id,
                 Name = product.Name,
                 Category = product.Category,
-                Price = product.Price
+                Price = product.Price,
+                Files = fileList.ToList(),
+                Description = product.Description
             };
 
             return View(viewModel);
@@ -80,10 +88,20 @@ namespace MyStore.Controllers
         [Authorize(AuthenticationSchemes = CookieAuthenticationDefaults.AuthenticationScheme)]
         public async Task<IActionResult> Create()
         {
+          //  QRCodeGenerator qrGenerator = new QRCodeGenerator();
+            System.Random rnd = new System.Random();
+
+            QRCodeData qrCodeData = new QRCodeGenerator().CreateQrCode("your nr->" + rnd.Next(0, 100), QRCodeGenerator.ECCLevel.Q);
+            Bitmap qrCodeImage = new QRCode(qrCodeData).GetGraphic(20, "#ffffff", "#4d004d");
+            using (var qr = new FileStream("c:\\upload\\img" + DateTime.Now.Millisecond + ".jpg", FileMode.Create))
+            {
+                qrCodeImage.Save(qr, ImageFormat.Jpeg);
+            }
+
+
             Guid userGuid;
             Guid.TryParse(this.User.FindFirstValue(ClaimTypes.NameIdentifier), out userGuid);
             var fileList = await _fileService.BrowseAsync(userGuid);
-
 
             var viewModel = new CreateProductViewModel() { Files=fileList.ToList() };
             
@@ -95,9 +113,15 @@ namespace MyStore.Controllers
         public async Task<IActionResult> Create(CreateProductViewModel viewModel)
         {
             Guid userId = new Guid(this.User.FindFirstValue(ClaimTypes.NameIdentifier));
-            await _productService.CreateAsync(Guid.NewGuid(), userId, viewModel.Name,
-                viewModel.Category, viewModel.Price);
+            var newId = Guid.NewGuid();
+            await _productService.CreateAsync(newId, userId, viewModel.Name,
+            viewModel.Category, viewModel.Price, viewModel.Description);
 
+            //QRCodeGenerator qrGenerator = new QRCodeGenerator();
+            //QRCodeData qrCodeData = qrGenerator.CreateQrCode("The text which should be encoded.", QRCodeGenerator.ECCLevel.Q);
+            //QRCode qrCode = new QRCode(qrCodeData);
+            //Bitmap qrCodeImage = qrCode.GetGraphic(20);
+            //wwait _fileService.UpdateAsync(newId);
             return RedirectToAction(nameof(Browse));
         }
 
@@ -126,7 +150,7 @@ namespace MyStore.Controllers
         public async Task<IActionResult> Post([FromBody] CreateProduct request)
         {
             await _productService.CreateAsync(Guid.NewGuid(), request.UserId, request.Name,
-                request.Category, request.Price);
+                request.Category, request.Price, request.Description);
 
             return Ok();
         }
@@ -138,7 +162,8 @@ namespace MyStore.Controllers
             Guid.TryParse(this.User.FindFirstValue(ClaimTypes.NameIdentifier), out userGuid);
             List<string> pathImage = new List<string>();
 
-            var filesPath = Environment.GetEnvironmentVariable("FILES_DIR");
+            //var filesPath = Environment.GetEnvironmentVariable("FILES_DIR");
+            var filesPath = "C:\\upload\\";
             foreach (var file in files)
             {
                 Guid fileNameGuid = Guid.NewGuid();
@@ -178,7 +203,6 @@ namespace MyStore.Controllers
                     }
                 }
             }
-
             return RedirectToAction(nameof(Create)); 
         }
     }
@@ -190,6 +214,7 @@ namespace MyStore.Controllers
         public string Name { get; set; }
         public string Category { get; set; }
         public decimal Price { get; set; }
+        public string Description { get; set; }
     }
 
     public class BrowseProducts

@@ -7,9 +7,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+
 namespace MyStore.Infrastructure.EF
 {
-    public class EfFileRepository: IFileRepository
+    public class EfFileRepository : IFileRepository
     {
         private readonly MyStoreContext _context;
 
@@ -19,14 +20,25 @@ namespace MyStore.Infrastructure.EF
         }
 
         public async Task<FilesUpload> GetAsync(Guid id)
-            => await _context.Files.SingleOrDefaultAsync(p => p.Id == id);
+            => await _context.Files.SingleOrDefaultAsync(p => p.Id == id) ;
 
         public async Task<IEnumerable<FilesUpload>> BrowseAsync(Guid userId)
         {
             var files = _context.Files.AsQueryable();
             if (Guid.Empty != userId)
             {
-                files = files.Where(x => x.UserId ==userId);
+                files = files.Where(x => x.UserId == userId&& x.ProductId==null);
+            }
+
+            return await files.ToListAsync();
+        }
+
+        public async Task<IEnumerable<FilesUpload>> BrowseByProductAsync(Guid userId, Guid productId)
+        {
+            var files = _context.Files.AsQueryable();
+            if (Guid.Empty != userId)
+            {
+                files = files.Where(x => x.UserId == userId && x.ProductId == productId);
             }
 
             return await files.ToListAsync();
@@ -36,6 +48,14 @@ namespace MyStore.Infrastructure.EF
         {
             await _context.Files.AddAsync(files);
             await _context.SaveChangesAsync();
+        }
+
+        public async Task UpdateAsync(Guid productId)
+        {
+            //var u = _context.Files.Where(c => c.ProductId == null);
+            //await u.ForEachAsync(b => b.ProductId = productId);
+            ////await _context.AddAsync(t);
+            //await _context.SaveChangesAsync();
         }
     }
 }

@@ -33,8 +33,22 @@ namespace MyStore.Infrastructure.EF
 
         public async Task CreateAsync(Product product)
         {
-            await _context.Products.AddAsync(product);
-            await _context.SaveChangesAsync();
+            try
+            {
+                await _context.Products.AddAsync(product);
+
+                var files = _context.Files.Where(c => c.ProductId == null && c.UserId == product.UserId);
+                await files.ForEachAsync(b => b.ProductId = product.Id);
+
+            }
+            catch
+            {
+                ;
+            }
+            finally
+            {
+                await _context.SaveChangesAsync();
+            }
         }
     }
 }

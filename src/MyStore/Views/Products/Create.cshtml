@@ -1,67 +1,63 @@
 ﻿@model CreateProductViewModel
 @{
-    var filesPath = Environment.GetEnvironmentVariable("FILES_DIR");
+    //var filesPath = Environment.GetEnvironmentVariable("FILES_DIR");
+    var filesPath = "C:\\upload\\";
 }
 <h1>Create product</h1>
-
-
-
-
-
-
-
-
-
-
-
- 
-
-
+<div class="row">
+    <div class="col-lg-1 col-sm-6">
+        <form method="post" asp-action="Upload" asp-controller="Products" enctype="multipart/form-data">
+            <div class="form-group">
+                <input type="file" name="files" class="btn btn-info" onchange="submit()" multiple />
+            </div>
+        </form>
+    </div>
+</div>
+<div class="row">
     @foreach (var product in Model.Files)
     {
 
         var path = product.Name;
 
-        <div class="col-lg-3 col-sm-6">
-
+        <div class="col-lg-1 col-sm-4">
             <div class="caption">
-                <img class="img-responsive" src="../images/min_@path" alt="Chania">
+                <img class="img-responsive" src="../images/min_@(path)" alt="Chania">
+
             </div>
         </div>
 
     }
-      
+</div>
 
-            <div class="col-lg-3 col-sm-6">
+<div class="row">
+    <div class="col-lg-4 col-sm-4">
+        <form asp-action="Create" method="post">
+            <div asp-validation-summary="All"></div>
+            <div class="form-group">
+                <label asp-for="Name">Name:</label>
+                <input asp-for="Name" class="form-control" />
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
 
-                <form asp-action="Create" method="post">
-                    <div asp-validation-summary="All"></div>
-                    <div class="form-group">
-                        <label asp-for="Name">Name:</label>
-                        <input asp-for="Name" class="form-control" />
-                        <span asp-validation-for="Name" class="text-danger"></span>
-                    </div>
-                    <div class="form-group">
-                        <label asp-for="Price">Price:</label>
-                        <input type="number" asp-for="Price" class="form-control" />
-                        <span asp-validation-for="Price" class="text-danger"></span>
-                    </div>
-                    <div class="form-group">
-                        <label asp-for="Category">Category:</label>
-                        <select asp-for="Category" asp-items="Model.Categories" class="form-control"></select>
-                        <span asp-validation-for="Category" class="text-danger"></span>
-                    </div>
-                    <div class="form-group">
-                        <input type="submit" class="btn btn-success" value="Create" />
-                    </div>
-                </form>
+            <div class="form-group">
+                <label asp-for="Description">Description:</label>
+                <textarea  asp-for="Description" class="form-control" rows="5"></textarea>
+                <span asp-validation-for="Description" class="text-danger"></span>
+            </div>
 
-          
-
-
-
-        </div>
-
-
-
-
+            <div class="form-group">
+                <label asp-for="Price">Price:</label>
+                <input type="number" asp-for="Price" class="form-control" />
+                <span asp-validation-for="Price" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Category">Category:</label>
+                <select asp-for="Category" asp-items="Model.Categories" class="form-control"></select>
+                <span asp-validation-for="Category" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" class="btn btn-success" value="Create" />
+            </div>
+        </form>
+    </div>
+</div>

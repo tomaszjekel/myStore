@@ -31,6 +31,7 @@ namespace MyStore.Infrastructure
         {
             await Task.CompletedTask;
             _products.Add(product);
+
         }
     }
 }

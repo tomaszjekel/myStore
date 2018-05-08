@@ -18,19 +18,21 @@ namespace MyStore.Domain
         }
 
         public Product(Guid userId , string name, string category, 
-            decimal price): this(userId, new Guid(),
-            name, category, price)
+            decimal price, string description): this(userId, new Guid(),
+            name, category, price, description)
         {
         }
 
         public Product(Guid id, Guid userId, string name,
-            string category, decimal price)
+            string category, decimal price, string description)
         {
             Id = id;
             UserId = userId;
             SetName(name);
             Category = category;
             SetPrice(price);
+            Description = description;
+            
         }
 
         public void SetName(string name)

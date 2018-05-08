@@ -38,10 +38,21 @@ namespace MyStore.Services
             return file.Select(_mapper.Map<FileDto>);
         }
 
+        public async Task<IEnumerable<FileDto>> BrowseByProductAsync(Guid userId, Guid productId)
+        {
+            var file = await _fileRepository.BrowseByProductAsync(userId, productId);
+
+            return file.Select(_mapper.Map<FileDto>);
+        }
+
         public async Task CreateAsync(Guid userId, Guid? productId, string name , DateTime data)
         {
             var fu = new FilesUpload(userId, productId, name, data);
             await _fileRepository.CreateAsync(fu);
+        }
+        public async Task UpdateAsync(Guid productId)
+        {
+            await _fileRepository.UpdateAsync(productId);
         }
 
     }

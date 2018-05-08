@@ -10,5 +10,6 @@ namespace MyStore.Domain.Repositories
         Task<Product> GetAsync(Guid id);
         Task<IEnumerable<Product>> BrowseAsync(string name);
         Task CreateAsync(Product product);
+
     }
 }

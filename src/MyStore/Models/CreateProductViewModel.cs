@@ -28,5 +28,7 @@ namespace MyStore.Models
             };
 
         public List<FileDto> Files { get; set; }
+
+        public string Description { get; set; }
     }
 }
