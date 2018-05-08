@@ -54,8 +54,26 @@ namespace MyStore.Controllers
                     Price = p.Price,
                     Description = p.Description
                 });
-            if (userGuid != Guid.Empty)
+            if (userGuid != Guid.Empty && name !="all")
                 viewModels = viewModels.Where(c => c.UserId == userGuid);
+
+            return View(viewModels);
+        }
+
+        [HttpGet("browseAll")]
+        public async Task<IActionResult> BrowseAll(string name)
+        {
+            var products = await _productService.BrowseAsync(name);
+            var viewModels = products.Select(p =>
+                new ProductViewModel
+                {
+                    Id = p.Id,
+                    UserId = p.UserId,
+                    Name = p.Name,
+                    Category = p.Category,
+                    Price = p.Price,
+                    Description = p.Description
+                });
 
             return View(viewModels);
         }
