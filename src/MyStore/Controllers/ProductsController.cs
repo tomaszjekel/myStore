@@ -111,7 +111,7 @@ namespace MyStore.Controllers
 
             QRCodeData qrCodeData = new QRCodeGenerator().CreateQrCode("your nr->" + rnd.Next(0, 100), QRCodeGenerator.ECCLevel.Q);
             Bitmap qrCodeImage = new QRCode(qrCodeData).GetGraphic(20, "#ffffff", "#4d004d");
-            using (var qr = new FileStream("c:\\upload\\img" + DateTime.Now.Millisecond + ".jpg", FileMode.Create))
+            using (var qr = new FileStream("/Upload" + DateTime.Now.Millisecond + ".jpg", FileMode.Create))
             {
                 qrCodeImage.Save(qr, ImageFormat.Jpeg);
             }
@@ -181,7 +181,7 @@ namespace MyStore.Controllers
             List<string> pathImage = new List<string>();
 
             //var filesPath = Environment.GetEnvironmentVariable("FILES_DIR");
-            var filesPath = "C:\\upload\\";
+            var filesPath = "/Upload/";
             foreach (var file in files)
             {
                 Guid fileNameGuid = Guid.NewGuid();
@@ -199,7 +199,7 @@ namespace MyStore.Controllers
 
             foreach (var imageName in pathImage)
             {
-                using (var stream = new FileStream(filesPath + "\\" + imageName, FileMode.Open))
+                using (var stream = new FileStream(filesPath + "/" + imageName, FileMode.Open))
                 {
                     using (Image<Rgba32> image = SixLabors.ImageSharp.Image.Load(stream))
                     {
@@ -214,7 +214,7 @@ namespace MyStore.Controllers
                             .Resize(80, 120));
                         }
 
-                        using (var minFileStream = new FileStream(filesPath + "\\" + "min_" + imageName, FileMode.Create))
+                        using (var minFileStream = new FileStream(filesPath + "/" + "min_" + imageName, FileMode.Create))
                         {
                             image.SaveAsPng(minFileStream);
                         }

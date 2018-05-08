@@ -106,7 +106,7 @@ namespace MyStore
             app.UseFileServer(new FileServerOptions
             {
                 FileProvider = new PhysicalFileProvider(
-                    Path.Combine(Directory.GetCurrentDirectory(), "C:\\upload\\")),
+                    Path.Combine(Directory.GetCurrentDirectory(), "/Upload")),
                 RequestPath = "/images",
                 EnableDirectoryBrowsing = true
             });
