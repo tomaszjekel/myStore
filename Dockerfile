@@ -16,4 +16,5 @@ WORKDIR /app
 COPY --from=build-env /app/out .
 ENV ASPNETCORE_URLS http://*:5000
 ENV ASPNETCORE_ENVIRONMENT production
-ENTRYPOINT dotnet src/MyStore/out/MyStore.dll
+RUN pwd
+ENTRYPOINT dotnet MyStore/out/MyStore.dll
