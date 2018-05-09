@@ -3,9 +3,9 @@ WORKDIR /app
 
 # Copy csproj and restore as distinct layers
 COPY src/MyStore/*.csproj ./
-COPY MyStore.Domain/*.csproj ./
-COPY MyStore.Infrastructure/*.csproj ./
-COPY MyStore.Services/*.csproj ./
+COPY src/MyStore.Domain/*.csproj ./
+COPY src/MyStore.Infrastructure/*.csproj ./
+COPY src/MyStore.Services/*.csproj ./
 
 RUN dotnet restore
 
