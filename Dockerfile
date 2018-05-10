@@ -1,18 +1,12 @@
-FROM microsoft/aspnetcore-build:2.0 AS build-env
-WORKDIR /app
+FROM microsoft/dotnet:latest
+COPY . /tomo
+WORKDIR /tomo
 
-# Copy csproj and restore as distinct layers
-COPY myStore/src/MyStore/*.csproj ./
-RUN dotnet restore
+RUN ["dotnet", "restore"]
+RUN ["dotnet", "build"]
 
-# Copy everything else and build
-COPY myStore/src/MyStore/. ./
-RUN dotnet publish -c Release -o out
-
-# Build runtime image
-FROM microsoft/aspnetcore:2.0
-WORKDIR /app
-COPY --from=build-env /app/out .
+EXPOSE 5000/tcp
 ENV ASPNETCORE_URLS http://*:5000
+RUN dotnet publish . -c Release -o out
 ENV ASPNETCORE_ENVIRONMENT production
-ENTRYPOINT dotnet myStore/src/MyStore.dll
+ENTRYPOINT ["dotnet", "/tomo/src/MyStore/out/MyStore.dll"]

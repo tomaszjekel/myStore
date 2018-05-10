@@ -1,7 +1,12 @@
-﻿FROM microsoft/aspnetcore
-WORKDIR /app
+﻿FROM microsoft/dotnet:latest
+COPY . /tomo
+WORKDIR /tomo
+
+RUN ["dotnet", "restore"]
+RUN ["dotnet", "build"]
+
+EXPOSE 5000/tcp
 ENV ASPNETCORE_URLS http://*:5000
-ENV ASPNETCORE_ENVIR0NMENT docker
-ENTRYPOINT dotnet MyStore.sln
-
-
+RUN dotnet publish . -c Release -o out
+ENV ASPNETCORE_ENVIRONMENT production
+ENTRYPOINT ["dotnet", "/tomo/src/MyStore/out/MyStore.dll"]
