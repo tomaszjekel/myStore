@@ -19,9 +19,11 @@ namespace MyStore.Infrastructure.EF
                 return;
             }
 
-            var dbHost = Environment.GetEnvironmentVariable("DB_HOST");
-            var connectionString = $"Server={dbHost};Database=MyStore;Trusted_Connection=True;MultipleActiveResultSets=true";
-            //      var conn = "Server=tcp:tomodb.database.windows.net,1433;Initial Catalog=tomoDB;Persist Security Info=False;User ID={your_username};Password={your_password};MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;"
+            var DB_HOST = Environment.GetEnvironmentVariable("DB_HOST");
+            var USER_NAME = Environment.GetEnvironmentVariable("USER_NAME");
+            var PASS = Environment.GetEnvironmentVariable("PASS");
+            //var connectionString = $"Server={dbHost};Database=MyStore;Trusted_Connection=True;MultipleActiveResultSets=true";
+            var connectionString = $"Server={DB_HOST},1433;Initial Catalog=tomoDB;Persist Security Info=False;User ID={USER_NAME};Password={PASS};MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;";
             optionsBuilder.UseSqlServer(connectionString, c => c.MigrationsAssembly("MyStore"));
         }
 
