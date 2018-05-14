@@ -108,14 +108,14 @@ namespace MyStore.Controllers
         {
             var location = Environment.GetEnvironmentVariable("UPLOAD_DIR");
           //  QRCodeGenerator qrGenerator = new QRCodeGenerator();
-            System.Random rnd = new System.Random();
+            //System.Random rnd = new System.Random();
 
-            QRCodeData qrCodeData = new QRCodeGenerator().CreateQrCode("your nr->" + rnd.Next(0, 100), QRCodeGenerator.ECCLevel.Q);
-            Bitmap qrCodeImage = new QRCode(qrCodeData).GetGraphic(20, "#ffffff", "#4d004d");
-            using (var qr = new FileStream(location + DateTime.Now.Millisecond + ".jpg", FileMode.Create))
-            {
-                qrCodeImage.Save(qr, ImageFormat.Jpeg);
-            }
+            //QRCodeData qrCodeData = new QRCodeGenerator().CreateQrCode("your nr->" + rnd.Next(0, 100), QRCodeGenerator.ECCLevel.Q);
+            //Bitmap qrCodeImage = new QRCode(qrCodeData).GetGraphic(20, "#ffffff", "#4d004d");
+            //using (var qr = new FileStream(location + DateTime.Now.Millisecond + ".jpg", FileMode.Create))
+            //{
+            //    qrCodeImage.Save(qr, ImageFormat.Jpeg);
+            //}
 
 
             Guid userGuid;
