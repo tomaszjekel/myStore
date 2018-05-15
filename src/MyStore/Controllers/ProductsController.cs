@@ -192,11 +192,14 @@ namespace MyStore.Controllers
                     using (var fileStream = new FileStream(Path.Combine($"{filesPath}", fileNameGuid.ToString() + Path.GetExtension(file.FileName)), FileMode.OpenOrCreate))
                     {
                         pathImage.Add(fileNameGuid.ToString() + Path.GetExtension(file.FileName));
+
                         await file.CopyToAsync(fileStream);
                         await _fileService.CreateAsync(userGuid, null, fileNameGuid.ToString() + Path.GetExtension(file.FileName), DateTime.Now);
                     }
                 }
             }
+
+
 
             foreach (var imageName in pathImage)
             {
@@ -207,12 +210,12 @@ namespace MyStore.Controllers
                         if (image.Width > image.Height)
                         {
                             image.Mutate(x => x
-                             .Resize(120, 80));
+                             .Resize(720, 480));
                         }
                         else
                         {
                             image.Mutate(x => x
-                            .Resize(80, 120));
+                            .Resize(480, 720));
                         }
 
                         using (var minFileStream = new FileStream(filesPath + "/" + "min_" + imageName, FileMode.Create))
