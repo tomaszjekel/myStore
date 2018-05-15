@@ -1,36 +1,61 @@
 ﻿@model ProductViewModel
 
-@Model.Id
+<br />
+<div class="container">
+    <div class="row">
+        <div class="col-sm-8">
+            <div id="myCarousel" class="carousel slide" data-ride="carousel">
+                <!-- Indicators -->
+                <ol class="carousel-indicators">
+                
+                @{int num = 0; }
+                @foreach (var file in Model.Files)
+                {
+                    <li data-target="#myCarousel" data-slide-to="@num"></li>
+                }
+                </ol>
 
-<div class="container-fluid">
-    <div class="row content">
 
-        <div class="col-sm-3">
+                <!-- Wrapper for slides -->
+                <div class="carousel-inner" role="listbox">
+                  
+                  @{var classActive = "active"; }
+                  
+                  @foreach (var file in Model.Files)
+                  {
+                    <div class="item @classActive">
+                        <img src="../../images/@file.Name" alt="Image">
+                        <div class="carousel-caption">
+                            @*<h3>Sell $</h3>
+                            <p>Money Money.</p>*@
+                        </div>
+                    </div>
+                   classActive = "";
+                  }
+                </div>
 
-            @foreach (var file in Model.Files)
-    {
-
-
-
-        <img class="img-responsive" src="../../images/min_@file.Name" />
-
-
-}
-        </div>
-            <div class="col-sm-9">
-                <h1>
-                    @Model.Name
-                </h1>
-                <h2>
-                    continuous deployment - Test 
-                </h2>
-
-                <br />
-                <h3>
-                    @Model.Description
-                </h3>
-
+                <!-- Left and right controls -->
+                <a class="left carousel-control" href="#myCarousel" role="button" data-slide="prev">
+                    <span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span>
+                    <span class="sr-only">Previous</span>
+                </a>
+                <a class="right carousel-control" href="#myCarousel" role="button" data-slide="next">
+                    <span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span>
+                    <span class="sr-only">Next</span>
+                </a>
             </div>
-
         </div>
+        <div class="col-sm-4">
+            <div class="well">
+                <p><h3> @Model.Name </h3> </p>
+            </div>
+            <div class="well">
+                <p><h3>Description</h3> <br /> @Model.Description</p>
+            </div>
+            <div class="well">
+                <p><h3>Price</h3> @Model.Price</p>
+            </div>
         </div>
+    </div>
+    <hr>
+</div>
