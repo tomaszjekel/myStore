@@ -1,4 +1,6 @@
 ﻿@model ProductViewModel
+@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer LocString
 
 <br />
 <div class="container">
@@ -7,32 +9,32 @@
             <div id="myCarousel" class="carousel slide" data-ride="carousel">
                 <!-- Indicators -->
                 <ol class="carousel-indicators">
-                
-                @{int num = 0; }
-                @foreach (var file in Model.Files)
-                {
-                    <li data-target="#myCarousel" data-slide-to="@num"></li>
-                    num++;
-                }
+
+                    @{int num = 0; }
+                    @foreach (var file in Model.Files)
+                    {
+                        <li data-target="#myCarousel" data-slide-to="@num"></li>
+                        num++;
+                    }
                 </ol>
 
 
                 <!-- Wrapper for slides -->
                 <div class="carousel-inner" role="listbox">
-                  
-                  @{var classActive = "active"; }
-                  
-                  @foreach (var file in Model.Files)
-                  {
-                    <div class="item @classActive">
-                        <img src="../../images/min_@file.Name" alt="Image">
-                        <div class="carousel-caption">
-                            @*<h3>Sell $</h3>
-                            <p>Money Money.</p>*@
+
+                    @{var classActive = "active"; }
+
+                    @foreach (var file in Model.Files)
+                    {
+                        <div class="item @classActive">
+                            <img src="../../images/min_@file.Name" alt="Image">
+                            <div class="carousel-caption">
+                                @*<h3>Sell $</h3>
+                                    <p>Money Money.</p>*@
+                            </div>
                         </div>
-                    </div>
-                   classActive = "";
-                  }
+                        classActive = "";
+                    }
                 </div>
 
                 <!-- Left and right controls -->
@@ -48,13 +50,13 @@
         </div>
         <div class="col-sm-4">
             <div class="well">
-                <p><h3> @Model.Name </h3> </p>
+                <p><h3>@LocString["Name"]</h3> <br /> <h1> @Model.Name </h1> </p>
             </div>
             <div class="well">
-                <p><h3>Description</h3> <br /> @Model.Description</p>
+                <p><h3>@LocString["Description"]</h3> <br /> @Model.Description</p>
             </div>
             <div class="well">
-                <p><h3>Price</h3> @Model.Price</p>
+                <p><h3>@LocString["Price"]</h3> @Model.Price $ </p>
             </div>
         </div>
     </div>

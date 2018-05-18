@@ -1,21 +1,23 @@
 ﻿@model UserViewModel
+@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer LocString
 
 <br />
 <div class="row">
     <div class="col-md-6 col-lg-3">
         <form asp-action="Register" method="post">
             <div class="form-group">
-                <label asp-for="Email">Email:</label>
+                <label asp-for="Email">@LocString["Email"]:</label>
                 <input asp-for="Email" class="form-control" />
                 <span asp-validation-for="Email" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Password">Password:</label>
+                <label asp-for="Password">@LocString["Password"]:</label>
                 <input asp-for="Password" class="form-control" />
                 <span asp-validation-for="Password" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="PasswordConfirmation">Confirm password:</label>
+                <label asp-for="PasswordConfirmation">@LocString["ConfirmPassword"]:</label>
                 <input asp-for="PasswordConfirmation" class="form-control" />
                 <span asp-validation-for="PasswordConfirmation" class="text-danger"></span>
             </div>
@@ -24,7 +26,7 @@
                 <select asp-for="Role" asp-items="Model.Roles" class="form-control"></select>
                 <span asp-validation-for="Role" class="text-danger"></span>
             </div>
-            <button type="submit" class="btn btn-success">Register</button>
+            <button type="submit" class="btn btn-success">@LocString["Register"]</button>
         </form>
         <br />
         <div asp-validation-summary="All"></div>
