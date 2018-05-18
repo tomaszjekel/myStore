@@ -1,9 +1,11 @@
 ﻿@model CreateProductViewModel
+@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer LocString
 @{
     //var filesPath = Environment.GetEnvironmentVariable("FILES_DIR");
 
 }
-<h1>Create product</h1>
+<h1>@LocString["CreateProduct"]</h1>
 <div class="row">
     <div class="col-lg-1 col-sm-6">
         <form method="post" asp-action="Upload" asp-controller="Products" enctype="multipart/form-data">
@@ -34,29 +36,29 @@
         <form asp-action="Create" method="post">
             <div asp-validation-summary="All"></div>
             <div class="form-group">
-                <label asp-for="Name">Name:</label>
+                <label asp-for="Name">@LocString["Name"]:</label>
                 <input asp-for="Name" class="form-control" />
                 <span asp-validation-for="Name" class="text-danger"></span>
             </div>
 
             <div class="form-group">
-                <label asp-for="Description">Description:</label>
-                <textarea  asp-for="Description" class="form-control" rows="5"></textarea>
+                <label asp-for="Description">@LocString["Description"]:</label>
+                <textarea asp-for="Description" class="form-control" rows="5"></textarea>
                 <span asp-validation-for="Description" class="text-danger"></span>
             </div>
 
             <div class="form-group">
-                <label asp-for="Price">Price:</label>
+                <label asp-for="Price">@LocString["Price"]:</label>
                 <input type="number" asp-for="Price" class="form-control" />
                 <span asp-validation-for="Price" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Category">Category:</label>
+                <label asp-for="Category">@LocString["Category"]:</label>
                 <select asp-for="Category" asp-items="Model.Categories" class="form-control"></select>
                 <span asp-validation-for="Category" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <input type="submit" class="btn btn-success" value="Create" />
+                <input type="submit" class="btn btn-success" value="@LocString["Create"]" />
             </div>
         </form>
     </div>

@@ -1,6 +1,9 @@
 @model IEnumerable<ProductViewModel>
 
-<h1>Products</h1>
+@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer LocString
+
+<h1>@LocString["Products"]</h1>
 
 <div class="row">
     @foreach (var product in Model)
@@ -11,8 +14,10 @@
                     <h4>@product.Name</h4>
                     <p>@product.Category</p>
                     <p>@product.Price $</p>
-                    <p><a asp-action="Details" asp-route-id="@product.Id" 
-                          class="btn btn-primary" role="button">Details</a></p> 
+                    <p>
+                        <a asp-action="Details" asp-route-id="@product.Id"
+                           class="btn btn-primary" role="button">@LocString["Details"]</a>
+                    </p>
                 </div>
             </div>
         </div>

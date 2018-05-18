@@ -1,7 +1,10 @@
 ﻿using System.Net;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Localization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Localization;
+using Microsoft.Extensions.Localization;
 using MyStore.Framework;
 using MyStore.Models;
 using MyStore.Services;
@@ -12,18 +15,28 @@ namespace MyStore.Controllers
     {
         private readonly IAuthenticator _authenticator;
         private readonly IUserService _userService;
+        private readonly IStringLocalizer<AccountController> _localizer;
+
 
         public AccountController(IAuthenticator authenticator,
-            IUserService userService)
+            IUserService userService, IStringLocalizer<AccountController> localize) 
         {
             _authenticator = authenticator;
             _userService = userService;
+            _localizer = localize;
         }
-        
+
         [HttpGet("login")]
         public IActionResult Login()
-            => View();
-        
+        {
+            //var rqf = Request.HttpContext.Features.Get<IRequestCultureFeature>();
+            //var culture = rqf.RequestCulture.Culture;
+            //System.Console.WriteLine($"Culture: {culture}");
+            //Test
+            var lang = _localizer["signIn"];
+            return View();
+        }
+
         [HttpPost("login")]
         public async Task<IActionResult> Login(LoginViewModel viewModel)
         {
@@ -34,7 +47,6 @@ namespace MyStore.Controllers
             await _userService.LoginAsync(viewModel.Email, viewModel.Password);
             var user = await _userService.GetAsync(viewModel.Email);
             await _authenticator.SignInAsync(user.Id, user.Email, user.Role);
-            
             return RedirectToAction("Index", "Home");
         }
         

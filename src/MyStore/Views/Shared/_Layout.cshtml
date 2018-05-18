@@ -1,4 +1,7 @@
 ﻿<!DOCTYPE html>
+@using Microsoft.AspNetCore.Mvc.Localization
+
+@inject IViewLocalizer LocString
 <html>
 <head>
     <meta charset="utf-8" />
@@ -30,57 +33,57 @@
             </div>
 
             @if (User.Identity.IsAuthenticated)
-    {
-        <div class="navbar-collapse collapse">
-            <ul class="nav navbar-nav">
-                <li>
-                    <form class="navbar-form navbar-left">
-                        <div class="input-group">
-                            <input type="text" name="keyword" placeholder="search..." class="form-control">
-                            <span class="input-group-btn">
-                                <button class="btn btn-default">Go</button>
-                            </span>
-                        </div>
-                    </form>
-                </li>
-                <li><a asp-area="" asp-controller="Products" asp-action="browse" asp-route-name="all">Browse</a></li>
-            </ul>
-            <ul class="nav navbar-nav navbar-right">
-                <li><a asp-area="" asp-controller="Products" asp-action="create"> New </a> </li>
-                <li><a asp-area="" asp-controller="Products" asp-action="browse"> Products </a> </li>
-                <li><a asp-area="" asp-controller="Account" asp-action="logoff">Sign out</a></li>
-            </ul>
-        </div>
-}
-else
-{
-        <div class="navbar-collapse collapse">
-            <ul class="nav navbar-nav">
-                <li>
-                    <form class="navbar-form navbar-left">
-                        <div class="input-group">
-                            <input type="text" name="keyword" placeholder="search..." class="form-control">
-                            <span class="input-group-btn">
-                                <button class="btn btn-default">Go</button>
-                            </span>
-                        </div>
-                    </form>
+            {
+                <div class="navbar-collapse collapse">
+                    <ul class="nav navbar-nav">
+                        <li>
+                            <form class="navbar-form navbar-left">
+                                <div class="input-group">
+                                    <input type="text" name="keyword" placeholder="search..." class="form-control">
+                                    <span class="input-group-btn">
+                                        <button class="btn btn-default">Go</button>
+                                    </span>
+                                </div>
+                            </form>
+                        </li>
+                        <li><a asp-area="" asp-controller="Products" asp-action="browse" asp-route-name="all">@LocString["Browse"]</a></li>
+                    </ul>
+                    <ul class="nav navbar-nav navbar-right">
+                        <li><a asp-area="" asp-controller="Products" asp-action="create"> @LocString["New"] </a> </li>
+                        <li><a asp-area="" asp-controller="Products" asp-action="browse"> @LocString["Products"] </a> </li>
+                        <li><a asp-area="" asp-controller="Account" asp-action="logoff">@LocString["SignOut"]</a></li>
+                    </ul>
+                </div>
+            }
+            else
+            {
+                <div class="navbar-collapse collapse">
+                    <ul class="nav navbar-nav">
+                        <li>
+                            <form class="navbar-form navbar-left">
+                                <div class="input-group">
+                                    <input type="text" name="keyword" placeholder="search..." class="form-control">
+                                    <span class="input-group-btn">
+                                        <button class="btn btn-default">Go</button>
+                                    </span>
+                                </div>
+                            </form>
 
-                </li>
+                        </li>
 
-                <li><a asp-area="" asp-controller="Products" asp-action="browse">Browse</a></li>
-                @*<li><a asp-area="" asp-controller="Home" asp-action="About">About</a></li>
-                <li><a asp-area="" asp-controller="Home" asp-action="Contact">Contact</a></li>*@
-            </ul>
-            <ul class="nav navbar-nav navbar-right">
+                        <li><a asp-area="" asp-controller="Products" asp-action="browse">@LocString["Browse"]</a></li>
+                        @*<li><a asp-area="" asp-controller="Home" asp-action="About">About</a></li>
+                            <li><a asp-area="" asp-controller="Home" asp-action="Contact">Contact</a></li>*@
+                    </ul>
+                    <ul class="nav navbar-nav navbar-right">
 
-                <li><a asp-area="" asp-controller="Account" asp-action="login">Sign in</a></li>
-               <li><a asp-area="" asp-controller="Account" asp-action="register">Sign Up</a></li>
+                        <li><a asp-area="" asp-controller="Account" asp-action="login">@LocString["SignIn"]</a></li>
+                        <li><a asp-area="" asp-controller="Account" asp-action="register">@LocString["SignUp"]</a></li>
 
-            </ul>
-        </div>
+                    </ul>
+                </div>
 
-}
+            }
         </div>
     </nav>
     <div class="container body-content">
