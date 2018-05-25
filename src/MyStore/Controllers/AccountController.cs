@@ -1,9 +1,11 @@
-﻿using System.Net;
+﻿using System.Collections.Generic;
+using System.Net;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Localization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Localization;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Localization;
 using MyStore.Framework;
 using MyStore.Models;
@@ -54,6 +56,11 @@ namespace MyStore.Controllers
         public IActionResult Register()
         {
             var viewModel = new UserViewModel();
+            viewModel.Roles = new List<SelectListItem>
+            {
+                new SelectListItem {Value = "user", Text =  _localizer["renter"]},
+                new SelectListItem {Value = "admin", Text = _localizer["owner"]}
+            };
 
             return View(viewModel);
         }
@@ -63,10 +70,17 @@ namespace MyStore.Controllers
         {
             if (!ModelState.IsValid)
             {
+                viewModel.Roles = new List<SelectListItem>
+            {
+                new SelectListItem {Value = "user", Text =  _localizer["renter"]},
+                new SelectListItem {Value = "admin", Text = _localizer["owner"]}
+            };
                 return View(viewModel);
             }
+
             await _userService.RegisterAsync(viewModel.Email,
                 viewModel.Password, viewModel.Role);
+
             TempData["message"] = "Account created";
 
             return RedirectToAction("Index", "Home");

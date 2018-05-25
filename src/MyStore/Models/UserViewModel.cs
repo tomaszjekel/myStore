@@ -23,11 +23,6 @@ namespace MyStore.Models
         [Required]
         public string Role { get; set; }
 
-        public List<SelectListItem> Roles { get; } =
-            new List<SelectListItem>
-            {
-                new SelectListItem {Value = "user", Text = "user"},
-                new SelectListItem {Value = "admin", Text = "admin"}
-            };
+        public List<SelectListItem> Roles { get; set; }
     }
 }
