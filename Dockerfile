@@ -1,17 +1,4 @@
-FROM debian:latest
-
-#### install packages needed
-RUN apt update
-RUN apt install -y sudo wget gpg apt-transport-https git screen
-
-#### install dotnet
-RUN wget -qO- https://packages.microsoft.com/keys/microsoft.asc | gpg --dearmor > microsoft.asc.gpg
-RUN sudo mv microsoft.asc.gpg /etc/apt/trusted.gpg.d/
-RUN wget -q https://packages.microsoft.com/config/debian/9/prod.list
-RUN sudo mv prod.list /etc/apt/sources.list.d/microsoft-prod.list
-RUN sudo apt-get update
-RUN apt install -y  dotnet-sdk-2.0.0
-####
+FROM aspnetcoremvc/deb
 
 RUN mkdir /Upload
 
