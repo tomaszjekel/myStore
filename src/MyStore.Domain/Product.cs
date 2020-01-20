@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 
 namespace MyStore.Domain
 {
@@ -10,7 +11,8 @@ namespace MyStore.Domain
         public string Category { get; private set; }
         public string Description { get; private set; }
         public decimal Price { get; private set; }
-        
+        public List<FilesUpload> Files { get; set; }
+
 
 
         private Product()

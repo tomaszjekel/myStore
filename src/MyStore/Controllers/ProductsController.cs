@@ -50,10 +50,12 @@ namespace MyStore.Controllers
                     Name = p.Name,
                     Category = p.Category,
                     Price = p.Price,
-                    Description = p.Description
+                    Description = p.Description,
+                    Files= p.Files
                 });
             if (userGuid != Guid.Empty && name !="all")
                 viewModels = viewModels.Where(c => c.UserId == userGuid);
+            
 
             return View(viewModels);
         }
@@ -72,6 +74,8 @@ namespace MyStore.Controllers
                     Price = p.Price,
                     Description = p.Description
                 });
+
+
 
             return View(viewModels);
         }
@@ -93,7 +97,7 @@ namespace MyStore.Controllers
                 Name = product.Name,
                 Category = product.Category,
                 Price = product.Price,
-                Files = fileList.ToList(),
+                Files = product.Files,
                 Description = product.Description
             };
 

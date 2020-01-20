@@ -18,17 +18,17 @@ namespace MyStore.Infrastructure.EF
         }
 
         public async Task<Product> GetAsync(Guid id)
-            => await _context.Products.SingleOrDefaultAsync(p => p.Id == id);
+            => await _context.Products.Include(x=>x.Files).SingleOrDefaultAsync(p => p.Id == id);
 
         public async Task<IEnumerable<Product>> BrowseAsync(string name)
         {
-            var products = _context.Products.AsQueryable();
+            var products = _context.Products.Include(x => x.Files).AsQueryable();
             if (!string.IsNullOrWhiteSpace(name))
             {
                 products = products.Where(x => x.Name.Contains(name));
             }
 
-            return await products.ToListAsync();
+            return await products.ToArrayAsync();
         }
 
         public async Task CreateAsync(Product product)

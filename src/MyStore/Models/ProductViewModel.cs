@@ -1,3 +1,4 @@
+using MyStore.Domain;
 using MyStore.Services.DTO;
 using System;
 using System.Collections.Generic;
@@ -12,6 +13,6 @@ namespace MyStore.Models
         public string Category { get; set; }
         public decimal Price { get; set; }
         public string Description { get; set; }
-        public List<FileDto> Files { get; set; }
+        public List<FilesUpload> Files { get; set; }
     }
 }
