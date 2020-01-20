@@ -22,8 +22,9 @@ namespace MyStore.Infrastructure.EF
             var DB_HOST = Environment.GetEnvironmentVariable("DB_HOST");
             var USER_NAME = Environment.GetEnvironmentVariable("USER_NAME");
             var PASS = Environment.GetEnvironmentVariable("PASS");
-            //var connectionString = $"Server={dbHost};Database=MyStore;Trusted_Connection=True;MultipleActiveResultSets=true";
-            var connectionString = $"Server={DB_HOST},1433;Initial Catalog=tomoDB;Persist Security Info=False;User ID={USER_NAME};Password={PASS};MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;";
+            var dbHost = "DESKTOP-60038OD\\SQLEXPRESS";
+            var connectionString = $"Server={dbHost};Database=MyStore;Trusted_Connection=True;MultipleActiveResultSets=true";
+            //var connectionString = $"Server={DB_HOST},1433;Initial Catalog=tomoDB;Persist Security Info=False;User ID={USER_NAME};Password={PASS};MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;";
             optionsBuilder.UseSqlServer(connectionString, c => c.MigrationsAssembly("MyStore"));
         }
 

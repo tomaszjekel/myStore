@@ -19,7 +19,6 @@ using MyStore.Domain.Repositories;
 using MyStore.Framework;
 using MyStore.Infrastructure.EF;
 using MyStore.Services;
-using SixLabors.ImageSharp.Web.DependencyInjection;
 
 namespace MyStore
 {
@@ -68,7 +67,6 @@ namespace MyStore
             services.AddDbContext<MyStoreContext>();
             services.AddMemoryCache();
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
-            services.AddImageSharp();
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
                 .AddCookie(o =>
                 {

@@ -20,8 +20,6 @@ using QRCoder;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.PixelFormats;
 using SixLabors.ImageSharp.Processing;
-using SixLabors.ImageSharp.Processing.Filters;
-using SixLabors.ImageSharp.Processing.Transforms;
 using UnityEngine;
 
 namespace MyStore.Controllers

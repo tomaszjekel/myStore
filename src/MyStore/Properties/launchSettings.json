@@ -1,27 +1,29 @@
 {
-    "iisSettings": {
-      "windowsAuthentication": false,
-      "anonymousAuthentication": true,
-      "iisExpress": {
-        "applicationUrl": "http://localhost:5000/",
-        "sslPort": 0
+  "iisSettings": {
+    "windowsAuthentication": false,
+    "anonymousAuthentication": true,
+    "iisExpress": {
+      "applicationUrl": "http://localhost:5000/",
+      "sslPort": 0
+    }
+  },
+  "profiles": {
+    "IIS Express": {
+      "commandName": "IISExpress",
+      "launchBrowser": true,
+      "environmentVariables": {
+        "UPLOAD_DIR": "C:\\Users\\A669802\\upload",
+        "Key": "Value",
+        "ASPNETCORE_ENVIRONMENT": "local"
       }
     },
-    "profiles": {
-      "IIS Express": {
-        "commandName": "IISExpress",
-        "launchBrowser": true,
-        "environmentVariables": {
-          "ASPNETCORE_ENVIRONMENT": "local"
-        }
+    "MyStore": {
+      "commandName": "Project",
+      "launchBrowser": true,
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "local"
       },
-      "MyStore": {
-        "commandName": "Project",
-        "launchBrowser": true,
-        "environmentVariables": {
-          "ASPNETCORE_ENVIRONMENT": "local"
-        },
-        "applicationUrl": "http://localhost:5000/"
-      }
+      "applicationUrl": "http://localhost:5000/"
     }
   }
+}
