@@ -34,12 +34,16 @@ namespace MyStore.Services
             {
                 throw new Exception($"Email: {email} already in use.");
             }
-            user = new User(email, role);
+            user = new User(email, role, "");
             var passwordHash = _passwordHasher.HashPassword(user, password);
             user.SetPassword(passwordHash);
             await _userRepository.CreateAsync(user);
         }
 
+        public async Task<string> Confirmation(string userId, string confirmationId)
+        {
+            return await _userRepository.Confirmation(userId, confirmationId);
+        }
         public async Task<UserDto> LoginAsync(string email, string password)
         {
             var user = await _userRepository.GetAsync(email);

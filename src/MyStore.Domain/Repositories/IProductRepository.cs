@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace MyStore.Domain.Repositories
@@ -8,7 +9,7 @@ namespace MyStore.Domain.Repositories
     {
         //CQS - Command & Query separation
         Task<Product> GetAsync(Guid id);
-        Task<IEnumerable<Product>> BrowseAsync(string name);
+        Task<IQueryable<Product>> BrowseAsync(string name);
         Task CreateAsync(Product product);
 
     }

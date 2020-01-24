@@ -8,16 +8,18 @@ namespace MyStore.Domain
         public string Email { get; private set; }
         public string Password { get; private set; }
         public string Role { get; private set; }
+        public string EmailConfirmation { get; set; }
 
         private User()
         {
         }
 
-        public User(string email, string role = "user")
+        public User(string email, string role = "user", string v = null)
         {
             Id = Guid.NewGuid();
             Email = email.ToLowerInvariant();
             Role = role.ToLowerInvariant();
+            EmailConfirmation = Guid.NewGuid().ToString();
         }
 
         public void SetPassword(string password)

@@ -8,5 +8,6 @@ namespace MyStore.Services
         Task<UserDto> GetAsync(string email);
         Task RegisterAsync(string email, string password, string role);
         Task<UserDto> LoginAsync(string email, string password);
+        Task<string> Confirmation(string userId, string confirmationId);
     }
 }

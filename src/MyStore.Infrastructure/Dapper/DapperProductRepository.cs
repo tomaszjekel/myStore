@@ -5,16 +5,18 @@ using System.Threading.Tasks;
 using MyStore.Domain;
 using MyStore.Domain.Repositories;
 using Dapper;
+using System.Linq;
 
 namespace MyStore.Infrastructure.Dapper
 {
     public class DapperProductRepository : IProductRepository
     {
-        public async Task<IEnumerable<Product>> BrowseAsync(string name)
+
+        public async Task<IQueryable<Product>> BrowseAsync(string name)
         {
             using (var connection = new SqlConnection())
             {
-                return await connection.QueryAsync<Product>("select * from Products");
+                return connection.Query<Product>("select * from Products").AsQueryable() ;
             }
         }
 

@@ -5,7 +5,7 @@
   <ItemGroup>
     <PackageReference Include="AutoMapper" Version="6.2.2" />
     <PackageReference Include="Microsoft.AspNetCore.All" Version="2.0.0" />
-    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.0.3" />
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.0.4" />
     <PackageReference Include="QRCoder" Version="1.3.3" />
     <PackageReference Include="SixLabors.ImageSharp" Version="1.0.0-beta0006" />
 
@@ -17,5 +17,8 @@
     <ProjectReference Include="..\MyStore.Infrastructure\MyStore.Infrastructure.csproj" />
     <ProjectReference Include="..\MyStore.Services\MyStore.Services.csproj" />
     <DotNetCliToolReference Include="Microsoft.EntityFrameworkCore.Tools.DotNet" Version="2.0.0" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Migrations\" />
   </ItemGroup>
 </Project>

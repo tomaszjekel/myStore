@@ -86,6 +86,15 @@ namespace MyStore.Controllers
             return RedirectToAction("Index", "Home");
         }
 
+        [HttpGet("confirmation")]
+        public async Task<IActionResult> Confirmation(string userId, string confirmationId)
+        {
+            ConfirmationViewModel model = new ConfirmationViewModel();
+           model.Message = await _userService.Confirmation(userId,confirmationId);
+            //return Ok("User is activate");
+            return View(model);
+        }
+
         [HttpGet("logoff")]
         public async Task<IActionResult> LogOff()
         {

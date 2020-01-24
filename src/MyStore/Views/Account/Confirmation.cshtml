@@ -1,0 +1,24 @@
+﻿
+@{
+    ViewData["Title"] = "Confirmation";
+}
+
+<h2>Confirmation</h2>
+
+@model ConfirmationViewModel
+@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer LocString
+
+<br />
+<div class="row">
+    <div class="col-md-6 col-lg-3">
+
+        <div class="form-group">
+            <label asp-for="Message">@Model.Message</label>
+            <br />
+           <a href="login" <button  class="btn btn-success">Login</button> </a>
+            
+        </div>
+    </div>
+    </div>
+

@@ -20,15 +20,15 @@ namespace MyStore.Infrastructure.EF
         public async Task<Product> GetAsync(Guid id)
             => await _context.Products.Include(x=>x.Files).SingleOrDefaultAsync(p => p.Id == id);
 
-        public async Task<IEnumerable<Product>> BrowseAsync(string name)
+        public async Task<IQueryable<Product>> BrowseAsync(string name)
         {
-            var products = _context.Products.Include(x => x.Files).AsQueryable();
+            var products = _context.Products.Include(x => x.Files).AsNoTracking();
             if (!string.IsNullOrWhiteSpace(name))
             {
                 products = products.Where(x => x.Name.Contains(name));
             }
 
-            return await products.ToArrayAsync();
+            return products;
         }
 
         public async Task CreateAsync(Product product)

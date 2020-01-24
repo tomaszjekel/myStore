@@ -1,4 +1,4 @@
-@model IEnumerable<ProductViewModel>
+@model ProductNewViewModel
 
 @using Microsoft.AspNetCore.Mvc.Localization
 @inject IViewLocalizer LocString
@@ -6,13 +6,13 @@
 <h1>@LocString["Products"]</h1>
 
 <div class="row">
-    @foreach (var product in Model)
+    @foreach (var product in Model.Products)
     {
 
-    
-            var path = product.Files.FirstOrDefault().Name;
-        
-  
+
+        var path = product.Files.FirstOrDefault().Name;
+
+
         <div class="col-lg-3 col-sm-6">
             <div class="thumbnail">
                 <img class="img-responsive" src="../images/min_@(path)" alt="Chania">
@@ -28,4 +28,32 @@
             </div>
         </div>
     }
+    @{
+        var prevDisabled = !Model.HasPreviousPage ? "disabled" : "";
+        var nextDisabled = !Model.HasNextPage ? "disabled" : "";
+    }
+
 </div>
+<a asp-route-pageIndex="@(Model.PageIndex - 1)"
+   class="btn btn-default @prevDisabled">
+    Previous
+</a>
+
+@for (int page = 1; page <= Model.TotalPages; page++)
+{
+    @if (page == Model.PageIndex)
+    {
+
+<a asp-route-pageIndex="@(page)"> &nbsp; <u> @(page) </u> &nbsp; </a>
+    }
+    else
+    {
+        <a asp-route-pageIndex="@(page)"> @(page) </a>
+    }
+
+}
+
+<a asp-route-pageIndex="@(Model.PageIndex + 1)"
+   class="btn btn-default @nextDisabled">
+    Next
+</a>

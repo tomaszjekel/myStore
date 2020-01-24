@@ -9,5 +9,6 @@ namespace MyStore.Domain.Repositories
         Task<User> GetAsync(string email);
         //User GetUserId(string email);
         Task CreateAsync(User user);
+        Task<string> Confirmation(string userId, string confirmationId);
     }
 }

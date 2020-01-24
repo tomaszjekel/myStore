@@ -16,15 +16,15 @@ namespace MyStore.Infrastructure
             => await Task.FromResult(_products
                 .SingleOrDefault(p => p.Id == id));
 
-        public async Task<IEnumerable<Product>> BrowseAsync(string name)
+        public async Task<IQueryable<Product>> BrowseAsync(string name)
         {
             await Task.CompletedTask;
             if (!string.IsNullOrWhiteSpace(name))
             {
-                return _products.Where(x => x.Name.Contains(name));
+                return _products.Where(x => x.Name.Contains(name)).AsQueryable();
             }
 
-            return _products;
+            return _products.AsQueryable();
         }
 
         public async Task CreateAsync(Product product)
