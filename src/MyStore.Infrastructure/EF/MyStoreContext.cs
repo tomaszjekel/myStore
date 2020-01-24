@@ -6,6 +6,12 @@ namespace MyStore.Infrastructure.EF
 {
     public class MyStoreContext : DbContext
     {
+
+        public MyStoreContext(DbContextOptions<MyStoreContext> options)
+     : base(options)
+        {
+        }
+
         public DbSet<Product> Products { get; set; }
         public DbSet<Order> Orders { get; set; }
         public DbSet<OrderItem> OrderItems { get; set; }
@@ -25,7 +31,7 @@ namespace MyStore.Infrastructure.EF
             var dbHost = "DESKTOP-60038OD\\SQLEXPRESS";
             var connectionString = $"Server={dbHost};Database=MyStore;Trusted_Connection=True;MultipleActiveResultSets=true";
             //var connectionString = $"Server={DB_HOST},1433;Initial Catalog=tomoDB;Persist Security Info=False;User ID={USER_NAME};Password={PASS};MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;";
-            optionsBuilder.UseSqlServer(connectionString, c => c.MigrationsAssembly("MyStore"));
+            //optionsBuilder.UseSqlServer(connectionString, c => c.MigrationsAssembly("MyStore"));
         }
 
         protected override void OnModelCreating(ModelBuilder builder)

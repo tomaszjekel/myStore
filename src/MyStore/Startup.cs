@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Localization;
 using Microsoft.AspNetCore.Mvc.Razor;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
@@ -63,8 +64,10 @@ namespace MyStore
             services.AddSingleton<IPasswordHasher<User>, PasswordHasher<User>>();
             services.AddScoped<IAuthenticator, Authenticator>();
             services.AddSingleton(AutoMapperConfig.GetMapper());
-            services.AddEntityFrameworkSqlServer();
-            services.AddDbContext<MyStoreContext>();
+
+            var connMySql = "server=localhost;port=3306;uid=root;password=;database=MyStore;";
+            services.AddDbContext<MyStoreContext>(options => options.UseMySql(connMySql));
+
             services.AddMemoryCache();
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
@@ -91,12 +94,6 @@ namespace MyStore
                 app.UseExceptionHandler("/Home/Error");
             }
 
-            //            using (var serviceScope = app.ApplicationServices
-            //                .GetService<IServiceScopeFactory>().CreateScope())
-            //            {
-            //                var context = serviceScope.ServiceProvider.GetService<MyStoreContext>();
-            //                context.Database.Migrate(); 
-            //            }
             app.UseResponseCaching();
 
             app.UseSession();
@@ -106,20 +103,10 @@ namespace MyStore
             {
 
                 FileProvider = new PhysicalFileProvider(
-                    Path.Combine(Directory.GetCurrentDirectory(),Environment.GetEnvironmentVariable("UPLOAD_DIR"))),
+                    Path.Combine(Directory.GetCurrentDirectory(), Environment.GetEnvironmentVariable("UPLOAD_DIR"))),
                 RequestPath = "/images",
                 EnableDirectoryBrowsing = true
             });
-
-            // app.Use(async (ctx, next) =>
-            // {
-            //     //Console.WriteLine($"Path: {ctx.Request.Path.ToString()}");
-            //     Console.WriteLine("Before next");
-            //     await next();
-            //     Console.WriteLine("After next");
-            // });
-
-            // app.Run(async ctx => Console.WriteLine("Run")); 
 
             //app.UseMiddleware(typeof(ErrorHandlerMiddleware));
             app.UseMiddleware<ErrorHandlerMiddleware>();
