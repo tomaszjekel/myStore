@@ -167,20 +167,20 @@ namespace MyStore.Controllers
             return Ok(products);
         }
 
-        [HttpGet("{id}")]
-        public async Task<IActionResult> Get(Guid id)
-        {
-            var product = await _productService.GetAsync(id);
-            if (product != null)
-            {
-                return Ok(product);
-            }
+        //[HttpGet("{id}")]
+        //public async Task<IActionResult> Get(Guid id)
+        //{
+        //    var product = await _productService.GetAsync(id);
+        //    if (product != null)
+        //    {
+        //        return Ok(product);
+        //    }
 
-            return NotFound();
-        }
+        //    return NotFound();
+        //}
 
         
-        [HttpGet("update/{id}")]
+        [HttpGet("{id}")]
         public async Task<IActionResult> Edit(Guid id)
         {
             var product = await _productService.GetAsync(id);
@@ -202,7 +202,7 @@ namespace MyStore.Controllers
             return NotFound();
         }
 
-        [HttpPost("update/{id}")]
+        [HttpPost("{id}")]
         public async Task<IActionResult> Edit(EditProductViewModel editModel)
         {
             if (!ModelState.IsValid)
@@ -215,7 +215,7 @@ namespace MyStore.Controllers
                 await _productService.UpdateProduct(editModel.Id,editModel.Name, editModel.Price, editModel.Category,editModel.Description);
 
                 //return View(edit);
-                return RedirectToAction(editModel.Id.ToString(), "Products/Update");
+                return RedirectToAction(editModel.Id.ToString(), "Products");
             }
 
             return NotFound();
@@ -228,8 +228,8 @@ namespace MyStore.Controllers
             await _productService.DeleteImageFromProduct(productId ,imageId, userId);
 
             //return RedirectToAction( productId.ToString(),"Products" );
-            return RedirectToAction(productId.ToString(),"Products/Update");
-
+           return RedirectToAction(productId.ToString(), "Products");
+        
         }
 
         [HttpGet("/DeleteImage/{imageId}")]
@@ -263,14 +263,13 @@ namespace MyStore.Controllers
             if (action_name == "create")
             {
                 await _productService.UploadandResize(files, userGuid, productId);
-                return RedirectToAction(nameof(Create));
+               return RedirectToAction("create");
             }
             else
             {
                 await _productService.UploadandResize(files, userGuid, productId );
-                return RedirectToAction(productId.ToString(), "Products/Update");
+               return RedirectToAction(productId.ToString(), "Products");
             }
-            
         }
     }
 
