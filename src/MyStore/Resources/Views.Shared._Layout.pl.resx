@@ -120,6 +120,9 @@
   <data name="Browse" xml:space="preserve">
     <value>Przeglądaj</value>
   </data>
+  <data name="MyProducts" xml:space="preserve">
+    <value>Moje Producty</value>
+  </data>
   <data name="New" xml:space="preserve">
     <value>Dodaj</value>
   </data>

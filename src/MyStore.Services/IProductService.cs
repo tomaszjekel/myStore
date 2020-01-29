@@ -12,6 +12,7 @@ namespace MyStore.Services
         Task<ProductDto> GetAsync(Guid id);
          Task<IEnumerable<ProductDto>> BrowseAsync(string name = "");
         Task<PaginatedList<Product>> BrowseAsync1(string name, int? pageIndex);
+        Task<PaginatedList<Product>> BrowseByUserId(string name, int? pageIndex, Guid userId);
         Task CreateAsync(Guid id, Guid userId, string name,
             string category, decimal price, string description);
         Task DeleteImageFromProduct(Guid productId,Guid imageId, Guid userId);

@@ -36,17 +36,19 @@ namespace MyStore.Controllers
         }
 
         [HttpGet("browse")]
-        public async Task<IActionResult> Browse(string name, int? pageIndex)
+        public async Task<IActionResult> Browse(string name, int? pageIndex, Guid userId)
         {
             Guid userGuid;
             Guid.TryParse(this.User.FindFirstValue(ClaimTypes.NameIdentifier),  out userGuid);
+            var products = await _productService.BrowseByUserId(name, pageIndex,userId);
+           
 
-            var products = await _productService.BrowseAsync1(name, pageIndex);
             var viewModels = products.Select(p =>
                 new ProductViewModel
                 {
                     Id = p.Id,
-                    UserId = p.UserId,
+                    UserId = userGuid,
+                    ProductUserId = p.UserId,
                     Name = p.Name,
                     Category = p.Category,
                     Price = p.Price,
@@ -54,7 +56,7 @@ namespace MyStore.Controllers
                     Files= p.Files
                 });
             if (userGuid != Guid.Empty && name !="all")
-                viewModels = viewModels.Where(c => c.UserId == userGuid);
+                viewModels = viewModels.Where(c => c.ProductUserId == userGuid);
 
             ProductNewViewModel newModel = new ProductNewViewModel();
             newModel.Products =  viewModels.ToList();
@@ -74,7 +76,7 @@ namespace MyStore.Controllers
                 new ProductViewModel
                 {
                     Id = p.Id,
-                    UserId = p.UserId,
+                    ProductUserId = p.UserId,
                     Name = p.Name,
                     Category = p.Category,
                     Price = p.Price,

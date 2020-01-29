@@ -10,6 +10,7 @@ namespace MyStore.Models
     {
         public Guid Id { get; set; }
         public Guid UserId { get; set; }
+        public Guid ProductUserId { get; set; }
         public string Name { get; set; }
         public string Category { get; set; }
         public decimal Price { get; set; }

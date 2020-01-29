@@ -20,9 +20,9 @@ namespace MyStore.Models
         [DataType(DataType.Password)]
         public string PasswordConfirmation { get; set; }
 
-        [Required]
-        public string Role { get; set; }
+        //[Required]
+        //public string Role { get; set; }
 
-        public List<SelectListItem> Roles { get; set; }
+        //public List<SelectListItem> Roles { get; set; }
     }
 }

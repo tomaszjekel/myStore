@@ -20,6 +20,11 @@ namespace MyStore.Infrastructure.Dapper
             }
         }
 
+        public Task<IQueryable<Product>> BrowseByUserId(string name, int? pageIndex, Guid userId)
+        {
+            throw new NotImplementedException();
+        }
+
         public async Task CreateAsync(Product product)
         {
             throw new NotImplementedException();

@@ -32,6 +32,28 @@ namespace MyStore.Infrastructure.EF
             return products;
         }
 
+        public async Task<IQueryable<Product>> BrowseByUserId(string name, int? pageIndex, Guid userId)
+        {
+            if (userId != new Guid("00000000-0000-0000-0000-000000000000"))
+            {
+                var products = _context.Products.Where(x => x.UserId == userId).Include(x => x.Files).AsNoTracking();
+                if (!string.IsNullOrWhiteSpace(name))
+                {
+                    products = products.Where(x => x.Name.Contains(name));
+                }
+                return products;
+            }
+            else
+            {
+                var products = _context.Products.Include(x => x.Files).AsNoTracking();
+                if (!string.IsNullOrWhiteSpace(name))
+                {
+                    products = products.Where(x => x.Name.Contains(name));
+                }
+                return products;
+            }
+        }
+
         public async Task CreateAsync(Product product)
         {
             try

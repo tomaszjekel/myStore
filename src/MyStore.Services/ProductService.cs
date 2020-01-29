@@ -57,8 +57,19 @@ namespace MyStore.Services
                 UserId = x.UserId
             }).ToList();
         }
+        public async Task<PaginatedList<Product>> BrowseByUserId(string name, int? pageIndex, Guid userId)
+        {
+            var products = await _productRepository.BrowseByUserId(name, pageIndex, userId);
+            int pageSize = 6;
 
-        public async Task<PaginatedList<Product>> BrowseAsync1(string name, int? pageIndex)
+            var Products = await PaginatedList<Product>.CreateAsync(
+                  products, pageIndex ?? 1, pageSize);
+
+            return Products;
+
+        }
+
+        public async Task<PaginatedList<Product>> BrowseAsync1(string name, int? pageIndex, Guid userId)
         {
             var products = await _productRepository.BrowseAsync(name);
             int pageSize = 3;
@@ -146,6 +157,11 @@ namespace MyStore.Services
         public async Task UpdateProduct(Guid id, string name, decimal price, string category, string description)
         {
           await  _productRepository.UpdateProduct(id, name, price, category, description);
+        }
+
+        public Task<PaginatedList<Product>> BrowseAsync1(string name, int? pageIndex)
+        {
+            throw new NotImplementedException();
         }
     }
 }

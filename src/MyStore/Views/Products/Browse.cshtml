@@ -23,9 +23,11 @@
                     <p>
                         <a asp-action="Details" asp-route-id="@product.Id"
                            class="btn btn-primary" role="button">@LocString["Details"]</a>
-                   
+                   @if (product.UserId == product.ProductUserId)
+                   {
                         <a asp-action="Edit" asp-route-id="@product.Id"
                            class="btn btn-primary" role="button">Edit</a>
+                   }
                     </p>
                 </div>
             </div>

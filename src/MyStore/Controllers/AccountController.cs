@@ -56,11 +56,11 @@ namespace MyStore.Controllers
         public IActionResult Register()
         {
             var viewModel = new UserViewModel();
-            viewModel.Roles = new List<SelectListItem>
-            {
-                new SelectListItem {Value = "user", Text =  _localizer["renter"]},
-                new SelectListItem {Value = "admin", Text = _localizer["owner"]}
-            };
+            //viewModel.Roles = new List<SelectListItem>
+            //{
+            //    new SelectListItem {Value = "user", Text =  _localizer["renter"]},
+            //    new SelectListItem {Value = "admin", Text = _localizer["owner"]}
+            //};
 
             return View(viewModel);
         }
@@ -70,16 +70,16 @@ namespace MyStore.Controllers
         {
             if (!ModelState.IsValid)
             {
-                viewModel.Roles = new List<SelectListItem>
-            {
-                new SelectListItem {Value = "user", Text =  _localizer["renter"]},
-                new SelectListItem {Value = "admin", Text = _localizer["owner"]}
-            };
+            //    viewModel.Roles = new List<SelectListItem>
+            //{
+            //    new SelectListItem {Value = "user", Text =  _localizer["renter"]},
+            //    new SelectListItem {Value = "admin", Text = _localizer["owner"]}
+            //};
                 return View(viewModel);
             }
 
             await _userService.RegisterAsync(viewModel.Email,
-                viewModel.Password, viewModel.Role);
+                viewModel.Password, null);
 
             TempData["message"] = "Account created";
 

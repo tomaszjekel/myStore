@@ -34,6 +34,9 @@
 
             @if (User.Identity.IsAuthenticated)
             {
+                Guid userGuid;
+                Guid.TryParse(User.Claims.LastOrDefault().Value, out userGuid);
+
                 <div class="navbar-collapse collapse">
                     <ul class="nav navbar-nav">
                         <li>
@@ -46,11 +49,11 @@
                                 </div>
                             </form>
                         </li>
-                        <li><a asp-area="" asp-controller="Products" asp-action="browse" asp-route-name="all">@LocString["Browse"]</a></li>
+                        <li><a asp-area="" asp-controller="Products" asp-action="browse">@LocString["Browse"]</a></li>
                     </ul>
                     <ul class="nav navbar-nav navbar-right">
                         <li><a asp-area="" asp-controller="Products" asp-action="create"> @LocString["New"] </a> </li>
-                        <li><a asp-area="" asp-controller="Products" asp-action="browse"> @LocString["Products"] </a> </li>
+                        <li><a asp-area="" asp-controller="Products" asp-action="browse"asp-route-userId="@userGuid"> @LocString["MyProducts"] </a> </li>
                         <li><a asp-area="" asp-controller="Account" asp-action="logoff">@LocString["SignOut"]</a></li>
                     </ul>
                 </div>

@@ -34,7 +34,7 @@ namespace MyStore.Services
             {
                 throw new Exception($"Email: {email} already in use.");
             }
-            user = new User(email, role, "");
+            user = new User(email, "", "");
             var passwordHash = _passwordHasher.HashPassword(user, password);
             user.SetPassword(passwordHash);
             await _userRepository.CreateAsync(user);
