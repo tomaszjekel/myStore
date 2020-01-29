@@ -25,7 +25,37 @@ namespace MyStore.Infrastructure.Dapper
             throw new NotImplementedException();
         }
 
+        public Task DeleteImage(Guid imageId, Guid userId)
+        {
+            throw new NotImplementedException();
+        }
+
         public async Task<Product> GetAsync(Guid id)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task UpdateProduct(Guid id, string name, decimal price, string category, string description)
+        {
+            throw new NotImplementedException();
+        }
+
+        Task<IQueryable<Product>> IProductRepository.BrowseAsync(string name)
+        {
+            throw new NotImplementedException();
+        }
+
+        Task IProductRepository.CreateAsync(Product product)
+        {
+            throw new NotImplementedException();
+        }
+
+        Task IProductRepository.DeleteImageFromProduct(Guid productId, Guid imageId, Guid userId)
+        {
+            throw new NotImplementedException();
+        }
+
+        Task<Product> IProductRepository.GetAsync(Guid id)
         {
             throw new NotImplementedException();
         }

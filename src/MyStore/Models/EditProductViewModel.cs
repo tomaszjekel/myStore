@@ -1,22 +1,24 @@
-﻿using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using Microsoft.AspNetCore.Mvc.Rendering;
+﻿using Microsoft.AspNetCore.Mvc.Rendering;
 using MyStore.Services.DTO;
+using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace MyStore.Models
 {
-    public class CreateProductViewModel
+    public class EditProductViewModel
     {
-        [RegularExpression(@".\S+.", ErrorMessage = "No white space allowed")]
-        [Required(AllowEmptyStrings = false)]
+        public Guid Id { get; set; }
+
+        [Required(ErrorMessage = "Missing name")]
         [StringLength(50, MinimumLength = 3)]
         public string Name { get; set; }
-        
+
         [Required]
         public string Category { get; set; }
-        
+
         [Required]
-        [Range(1,100000)]
+        [Range(1, 100000)]
         //[DataType(DataType.Currency)]
         public decimal Price { get; set; }
 
@@ -27,8 +29,6 @@ namespace MyStore.Models
                 new SelectListItem { Text = "Tools", Value = "Tools"},
                 new SelectListItem { Text = "Cars", Value = "Cars"}
             };
-
-
 
         public List<FileDto> Files { get; set; }
 

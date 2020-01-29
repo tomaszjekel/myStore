@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
@@ -50,5 +51,40 @@ namespace MyStore.Infrastructure.EF
                 await _context.SaveChangesAsync();
             }
         }
+
+        public async Task DeleteImageFromProduct(Guid productId, Guid imageId, Guid userId)
+        {
+            var image = _context.Files.Where(x => x.ProductId == productId && x.UserId == userId && x.Id == imageId).FirstOrDefault();
+            _context.Files.Remove(image);
+            _context.SaveChanges();
+
+            var filesPath = Environment.GetEnvironmentVariable("UPLOAD_DIR");
+            File.Delete(Path.Combine(filesPath, imageId.ToString()));
+            File.Delete(Path.Combine(filesPath, "min_" + imageId));
+        }
+
+        public async Task DeleteImage(Guid imageId, Guid userId)
+        {
+            var image = _context.Files.Where(x => x.UserId == userId && x.Id == imageId).FirstOrDefault();
+            _context.Files.Remove(image);
+            _context.SaveChanges();
+
+            var filesPath = Environment.GetEnvironmentVariable("UPLOAD_DIR");
+            File.Delete(Path.Combine(filesPath, imageId.ToString()));
+            File.Delete(Path.Combine(filesPath, "min_" + imageId));
+        }
+
+        public async Task UpdateProduct(Guid id, string name, decimal price, string category, string description)
+        {
+           var product = _context.Products.Where(x => x.Id == id).FirstOrDefault();
+            product.Name = name;
+            product.Price = price;
+            product.Description = description;
+            product.Category = category;
+
+            _context.Entry(product).State = EntityState.Modified;
+            _context.SaveChanges();
+        }
     }
+
 }

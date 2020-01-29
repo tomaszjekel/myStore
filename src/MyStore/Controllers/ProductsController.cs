@@ -114,7 +114,6 @@ namespace MyStore.Controllers
         [Authorize(AuthenticationSchemes = CookieAuthenticationDefaults.AuthenticationScheme)]
         public async Task<IActionResult> Create()
         {
-            var location = Environment.GetEnvironmentVariable("UPLOAD_DIR");
           //  QRCodeGenerator qrGenerator = new QRCodeGenerator();
             //System.Random rnd = new System.Random();
 
@@ -139,6 +138,12 @@ namespace MyStore.Controllers
         [Authorize(AuthenticationSchemes = CookieAuthenticationDefaults.AuthenticationScheme)]
         public async Task<IActionResult> Create(CreateProductViewModel viewModel)
         {
+            if (!ModelState.IsValid)
+            {
+                return View(Create());
+
+            }
+
             Guid userId = new Guid(this.User.FindFirstValue(ClaimTypes.NameIdentifier));
             var newId = Guid.NewGuid();
             await _productService.CreateAsync(newId, userId, viewModel.Name,
@@ -172,6 +177,71 @@ namespace MyStore.Controllers
             return NotFound();
         }
 
+        
+        [HttpGet("update/{id}")]
+        public async Task<IActionResult> Edit(Guid id)
+        {
+            var product = await _productService.GetAsync(id);
+            if (product != null)
+            {
+                EditProductViewModel edit = new EditProductViewModel
+                {
+                    Id= product.Id,
+                    Name = product.Name,
+                    Description = product.Description,
+                    Price = product.Price,
+                    Files = product.Files.Select(x => new FileDto {Id= x.Id, Name = x.Name, ProductId = x.ProductId }).ToList(),
+                    Category= product.Category
+                };
+
+                return View(edit);
+            }
+
+            return NotFound();
+        }
+
+        [HttpPost("update/{id}")]
+        public async Task<IActionResult> Edit(EditProductViewModel editModel)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(Edit(editModel.Id));
+
+            }
+            if (editModel != null)
+            {
+                await _productService.UpdateProduct(editModel.Id,editModel.Name, editModel.Price, editModel.Category,editModel.Description);
+
+                //return View(edit);
+                return RedirectToAction(editModel.Id.ToString(), "Products/Update");
+            }
+
+            return NotFound();
+        }
+
+        [HttpGet("/Delete/{imageId}/{productId}")]
+        public async Task<IActionResult> Delete(Guid imageId, Guid productId)
+        {
+            Guid userId = new Guid(this.User.FindFirstValue(ClaimTypes.NameIdentifier));
+            await _productService.DeleteImageFromProduct(productId ,imageId, userId);
+
+            //return RedirectToAction( productId.ToString(),"Products" );
+            return RedirectToAction(productId.ToString(),"Products/Update");
+
+        }
+
+        [HttpGet("/DeleteImage/{imageId}")]
+        public async Task<IActionResult> DeleteImage(Guid imageId, Guid productId)
+        {
+            Guid userId = new Guid(this.User.FindFirstValue(ClaimTypes.NameIdentifier));
+            await _productService.DeleteImage(imageId, userId);
+
+            //return RedirectToAction( productId.ToString(),"Products" );
+            return RedirectToAction("create");
+
+        }
+
+
         [HttpPost]
         [ModelValidationFilter]
         public async Task<IActionResult> Post([FromBody] CreateProduct request)
@@ -182,58 +252,23 @@ namespace MyStore.Controllers
             return Ok();
         }
 
-        [HttpPost("Upload")]
-        public async Task<IActionResult> Upload(ICollection<IFormFile> files)
+        [HttpPost("Upload/{action_name}/{productId}")]
+        public async Task<IActionResult> Upload(ICollection<IFormFile> files, string action_name, Guid productId)
         {
             Guid userGuid;
             Guid.TryParse(this.User.FindFirstValue(ClaimTypes.NameIdentifier), out userGuid);
-            List<string> pathImage = new List<string>();
-
-            var filesPath = Environment.GetEnvironmentVariable("UPLOAD_DIR");
-
-            foreach (var file in files)
+            
+            if (action_name == "create")
             {
-                Guid fileNameGuid = Guid.NewGuid();
-                if (file.Length > 0)
-                {
-                    //using (var fileStream = new FileStream(Path.Combine($"{filesPath}", file.FileName), FileMode.Create))
-                    using (var fileStream = new FileStream(Path.Combine($"{filesPath}", fileNameGuid.ToString() + Path.GetExtension(file.FileName)), FileMode.OpenOrCreate))
-                    {
-                        pathImage.Add(fileNameGuid.ToString() + Path.GetExtension(file.FileName));
-
-                        await file.CopyToAsync(fileStream);
-                        await _fileService.CreateAsync(userGuid, null, fileNameGuid.ToString() + Path.GetExtension(file.FileName), DateTime.Now);
-                    }
-                }
+                await _productService.UploadandResize(files, userGuid, productId);
+                return RedirectToAction(nameof(Create));
             }
-
-
-
-            foreach (var imageName in pathImage)
+            else
             {
-                using (var stream = new FileStream(filesPath + "/" + imageName, FileMode.Open))
-                {
-                    using (Image<Rgba32> image = SixLabors.ImageSharp.Image.Load(stream))
-                    {
-                        if (image.Width > image.Height)
-                        {
-                            image.Mutate(x => x
-                             .Resize(720, 480));
-                        }
-                        else
-                        {
-                            image.Mutate(x => x
-                            .Resize(480, 720));
-                        }
-
-                        using (var minFileStream = new FileStream(filesPath + "/" + "min_" + imageName, FileMode.Create))
-                        {
-                            image.SaveAsPng(minFileStream);
-                        }
-                    }
-                }
+                await _productService.UploadandResize(files, userGuid, productId );
+                return RedirectToAction(productId.ToString(), "Products/Update");
             }
-            return RedirectToAction(nameof(Create)); 
+            
         }
     }
 

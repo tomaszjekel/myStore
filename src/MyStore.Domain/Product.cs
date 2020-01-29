@@ -5,12 +5,12 @@ namespace MyStore.Domain
 {
     public class Product
     {
-        public Guid Id { get; private set; }
+        public Guid Id { get;  set; }
         public Guid UserId { get;set ;} 
-        public string Name { get; private set; }
-        public string Category { get; private set; }
-        public string Description { get; private set; }
-        public decimal Price { get; private set; }
+        public string Name { get;  set; }
+        public string Category { get;  set; }
+        public string Description { get;  set; }
+        public decimal Price { get;  set; }
         public List<FilesUpload> Files { get; set; }
 
 

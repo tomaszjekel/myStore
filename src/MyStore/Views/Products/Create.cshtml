@@ -8,7 +8,7 @@
 <h1>@LocString["CreateProduct"]</h1>
 <div class="row">
     <div class="col-lg-1 col-sm-6">
-        <form method="post" asp-action="Upload" asp-controller="Products" enctype="multipart/form-data">
+        <form method="post" asp-action="Upload" asp-route-action_name="create" asp-route-productId="00000000-0000-0000-0000-000000000000" asp-controller="Products" enctype="multipart/form-data">
             <div class="form-group">
                 <input type="file" name="files" class="btn btn-info" onchange="submit()" multiple />
             </div>
@@ -16,14 +16,15 @@
     </div>
 </div>
 <div class="row">
-    @foreach (var product in Model.Files)
+    @foreach (var file in Model.Files)
     {
 
-        var path = product.Name;
+        var path = file.Name;
 
         <div class="col-lg-1 col-sm-4">
             <div class="caption">
                 <img class="img-responsive" src="../images/min_@(path)" alt="Chania">
+                <a asp-action="DeleteImage" asp-route-imageId="@file.Id" class="btn btn-primary" role="button">Delete</a>
 
             </div>
         </div>

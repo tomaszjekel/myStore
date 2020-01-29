@@ -1,0 +1,91 @@
+﻿@model EditProductViewModel
+@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer LocString
+@{
+    ViewBag.Title = "Edit";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Edit</h2>
+
+
+<div class="row">
+    <div class="col-lg-1 col-sm-6">
+        <form method="post" asp-action="Upload" asp-route-action_name="edit" asp-route-productId="@Model.Id" asp-controller="Products" enctype="multipart/form-data">
+            <div class="form-group">
+                <input type="file" name="files" class="btn btn-info" onchange="submit()" multiple />
+            </div>
+        </form>
+    </div>
+</div>
+<div class="row">
+    @foreach (var image in Model.Files)
+    {
+
+        var path = image.Name;
+
+        <div class="col-lg-1 col-sm-4">
+            <div class="caption">
+                <img id="@image.Id" class="img-responsive" src="../../images/min_@(path)" alt="Chania">
+                <a asp-action="Delete" asp-route-productId="@Model.Id" asp-route-imageId="@image.Id" class="btn btn-primary" role="button">Delete</a>
+
+            </div>
+        </div>
+
+    }
+</div>
+
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-horizontal">
+        <h4>Product Edit</h4>
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Name, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                <input asp-for="Name" class="form-control" />
+                @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.Description, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                <textarea asp-for="Description" class="form-control" rows="5"></textarea>
+                @Html.ValidationMessageFor(model => model.Description, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label asp-for="Price" class="control-label col-md-2">@LocString["Price"]: </label>
+            <div class="col-md-10">
+                @Html.EditorFor(model => model.Price, new { htmlAttributes = new { @class = "form-control" } })
+                <span asp-validation-for="Price" class="text-danger"></span>
+            </div>
+
+        </div>
+
+
+        <div class="form-group">
+            <label asp-for="Category" class="control-label col-md-2">@LocString["Category"]:</label>
+            <div class="col-md-10">
+                <select asp-for="Category" asp-items="Model.Categories" class="form-control"></select>
+                <span asp-validation-for="Category" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Save" class="btn btn-default" />
+            </div>
+        </div>
+    </div>
+}
+
+<div>
+    @Html.ActionLink("Back to List", "Index")
+</div>
