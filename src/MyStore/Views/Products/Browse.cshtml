@@ -19,7 +19,7 @@
                 <div class="caption">
                     <h4>@product.Name</h4>
                     <p>@product.Category</p>
-                    <p>@product.Price $</p>
+                    <p>@(String.Format("{0:0.##}", product.Price)) @LocString["Currency"]</p>
                     <p>
                         <a asp-action="Details" asp-route-id="@product.Id"
                            class="btn btn-primary" role="button">@LocString["Details"]</a>

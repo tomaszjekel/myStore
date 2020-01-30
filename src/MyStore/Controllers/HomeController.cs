@@ -26,8 +26,9 @@ namespace MyStore.Controllers
         public IActionResult Index()
         {
             var message = TempData["message"];
-            
-            return View();
+
+            //return View();
+            return RedirectToAction("browse", "Products");
         }
 
         public IActionResult About()

@@ -39,7 +39,7 @@ namespace MyStore.Infrastructure.EF
                 var products = _context.Products.Where(x => x.UserId == userId).Include(x => x.Files).AsNoTracking();
                 if (!string.IsNullOrWhiteSpace(name))
                 {
-                    products = products.Where(x => x.Name.Contains(name));
+                    products = products.Where(x => x.Name.Contains(name) && x.UserId == userId).Include(x => x.Files).AsNoTracking();
                 }
                 return products;
             }
@@ -48,7 +48,7 @@ namespace MyStore.Infrastructure.EF
                 var products = _context.Products.Include(x => x.Files).AsNoTracking();
                 if (!string.IsNullOrWhiteSpace(name))
                 {
-                    products = products.Where(x => x.Name.Contains(name));
+                    products = products.Where(x => x.Name.Contains(name)).Include(x => x.Files).AsNoTracking();
                 }
                 return products;
             }

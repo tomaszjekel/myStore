@@ -60,7 +60,7 @@ namespace MyStore.Services
         public async Task<PaginatedList<Product>> BrowseByUserId(string name, int? pageIndex, Guid userId)
         {
             var products = await _productRepository.BrowseByUserId(name, pageIndex, userId);
-            int pageSize = 6;
+            int pageSize = 8;
 
             var Products = await PaginatedList<Product>.CreateAsync(
                   products, pageIndex ?? 1, pageSize);

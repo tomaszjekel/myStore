@@ -36,11 +36,11 @@ namespace MyStore.Controllers
         }
 
         [HttpGet("browse")]
-        public async Task<IActionResult> Browse(string name, int? pageIndex, Guid userId)
+        public async Task<IActionResult> Browse(string keyword, int? pageIndex, Guid userId)
         {
             Guid userGuid;
             Guid.TryParse(this.User.FindFirstValue(ClaimTypes.NameIdentifier),  out userGuid);
-            var products = await _productService.BrowseByUserId(name, pageIndex,userId);
+            var products = await _productService.BrowseByUserId(keyword, pageIndex,userId);
            
 
             var viewModels = products.Select(p =>
@@ -206,6 +206,8 @@ namespace MyStore.Controllers
         [HttpPost("{id}")]
         public async Task<IActionResult> Edit(EditProductViewModel editModel)
         {
+            Guid userId = new Guid(this.User.FindFirstValue(ClaimTypes.NameIdentifier));
+
             if (!ModelState.IsValid)
             {
                 return  await Edit(editModel.Id);
@@ -216,7 +218,8 @@ namespace MyStore.Controllers
                 await _productService.UpdateProduct(editModel.Id,editModel.Name, editModel.Price, editModel.Category,editModel.Description);
 
                 //return View(edit);
-                return RedirectToAction(editModel.Id.ToString(), "Products");
+                //return RedirectToAction(editModel.Id.ToString(), "Products");
+                return RedirectToAction("browse", new { userId = userId });
             }
 
             return NotFound();

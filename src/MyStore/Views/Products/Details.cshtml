@@ -56,7 +56,7 @@
                 <p><h3>@LocString["Description"]</h3> <br /> @Model.Description</p>
             </div>
             <div class="well">
-                <p><h3>@LocString["Price"]</h3> @Model.Price $ </p>
+                <p><h3>@LocString["Price"]</h3>@(String.Format("{0:0.##}", Model.Price)) @LocString["Currency"] </p>
             </div>
         </div>
     </div>
