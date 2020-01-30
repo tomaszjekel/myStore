@@ -163,5 +163,9 @@ namespace MyStore.Services
         {
             throw new NotImplementedException();
         }
+        public async Task DeleteProduct(Guid productId, Guid userId)
+        {
+            await _productRepository.DeleteProduct(productId,userId);
+        }
     }
 }

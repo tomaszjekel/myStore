@@ -20,5 +20,6 @@ namespace MyStore.Services
 
         Task UploadandResize(ICollection<IFormFile> files, Guid userId, Guid productId);
         Task UpdateProduct(Guid id, string name, decimal price, string category, string description);
+        Task DeleteProduct(Guid productId, Guid userId);
     }
 }

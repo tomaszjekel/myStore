@@ -107,6 +107,19 @@ namespace MyStore.Infrastructure.EF
             _context.Entry(product).State = EntityState.Modified;
             _context.SaveChanges();
         }
+
+        public async Task DeleteProduct(Guid productId, Guid userId)
+        {
+            var product = _context.Products.Include(x=>x.Files).Where(x => x.Id == productId && x.UserId == userId).FirstOrDefault();
+            foreach(var name in product.Files)
+            {
+                var filesPath = Environment.GetEnvironmentVariable("UPLOAD_DIR");
+                File.Delete(Path.Combine(filesPath, name.Name.ToString()));
+                File.Delete(Path.Combine(filesPath, "min_" + name.Name));
+            }
+            _context.Remove(product);
+            _context.SaveChanges();
+        }
     }
 
 }

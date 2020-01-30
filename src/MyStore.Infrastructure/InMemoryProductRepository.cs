@@ -68,5 +68,10 @@ namespace MyStore.Infrastructure
         {
             throw new NotImplementedException();
         }
+
+        public Task DeleteProduct(Guid productId, Guid userId)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

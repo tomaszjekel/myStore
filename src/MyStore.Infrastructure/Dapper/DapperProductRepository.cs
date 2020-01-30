@@ -35,6 +35,11 @@ namespace MyStore.Infrastructure.Dapper
             throw new NotImplementedException();
         }
 
+        public Task DeleteProduct(Guid productId, Guid userId)
+        {
+            throw new NotImplementedException();
+        }
+
         public async Task<Product> GetAsync(Guid id)
         {
             throw new NotImplementedException();

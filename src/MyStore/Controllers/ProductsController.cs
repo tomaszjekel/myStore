@@ -157,7 +157,7 @@ namespace MyStore.Controllers
             //QRCode qrCode = new QRCode(qrCodeData);
             //Bitmap qrCodeImage = qrCode.GetGraphic(20);
             //wwait _fileService.UpdateAsync(newId);
-            return RedirectToAction(nameof(Browse));
+            return RedirectToAction("browse", new { userId = userId });
         }
 
         [HttpGet]
@@ -241,6 +241,17 @@ namespace MyStore.Controllers
 
             //return RedirectToAction( productId.ToString(),"Products" );
             return RedirectToAction("create");
+
+        }
+
+        [HttpGet("/DeleteProduct/{productId}")]
+        public async Task<IActionResult> DeleteProduct(Guid productId)
+        {
+            Guid userId = new Guid(this.User.FindFirstValue(ClaimTypes.NameIdentifier));
+            await _productService.DeleteProduct(productId, userId);
+
+            //return RedirectToAction( productId.ToString(),"Products" );
+            return RedirectToAction("browse",new { userId = userId});
 
         }
 
