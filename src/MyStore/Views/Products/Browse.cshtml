@@ -10,12 +10,12 @@
     {
 
 
-        var path = product?.Files?.FirstOrDefault()?.Name??"";
+        var imageName = product?.Files?.FirstOrDefault()?.Name??"";
 
 
         <div class="col-lg-3 col-sm-6">
             <div class="thumbnail">
-                <img class="img-responsive" src="../images/min_@(path)" alt="Chania">
+                <img class="img-responsive" src="../images/min_@(imageName)" alt="Chania">
                 <div class="caption">
                     <h4>@product.Name</h4>
                     <p>@product.Category</p>

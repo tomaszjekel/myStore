@@ -16,19 +16,22 @@
     </div>
 </div>
 <div class="row">
-    @foreach (var file in Model.Files)
+    @foreach (var file in @Model.Files)
     {
 
-        var path = file.Name;
+        var imageName = file.Name;
 
-        <div class="col-lg-1 col-sm-4">
-            <div class="caption">
-                <img class="img-responsive" src="../images/min_@(path)" alt="Chania">
-                <a asp-action="DeleteImage" asp-route-imageId="@file.Id" class="btn btn-primary" role="button">Delete</a>
-
+        <div class="col-lg-3 col-sm-6">
+            <div class="thumbnail">
+                <img class="img-responsive" src="../images/min_@(imageName)" alt="Chania">
+                <div class="caption">
+                    <p>
+                        <a asp-action="DeleteImage" asp-route-imageId="@file.Id" class="btn btn-primary" role="button">Delete</a>
+                        
+                    </p>
+                </div>
             </div>
         </div>
-
     }
 </div>
 

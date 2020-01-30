@@ -55,8 +55,8 @@ namespace MyStore.Controllers
                     Description = p.Description,
                     Files= p.Files
                 });
-            if (userGuid != Guid.Empty && name !="all")
-                viewModels = viewModels.Where(c => c.ProductUserId == userGuid);
+            //if (userGuid != Guid.Empty && name !="all")
+            //    viewModels = viewModels.Where(c => c.ProductUserId == userGuid);
 
             ProductNewViewModel newModel = new ProductNewViewModel();
             newModel.Products =  viewModels.ToList();
@@ -116,7 +116,9 @@ namespace MyStore.Controllers
         [Authorize(AuthenticationSchemes = CookieAuthenticationDefaults.AuthenticationScheme)]
         public async Task<IActionResult> Create()
         {
-          //  QRCodeGenerator qrGenerator = new QRCodeGenerator();
+
+           
+            //  QRCodeGenerator qrGenerator = new QRCodeGenerator();
             //System.Random rnd = new System.Random();
 
             //QRCodeData qrCodeData = new QRCodeGenerator().CreateQrCode("your nr->" + rnd.Next(0, 100), QRCodeGenerator.ECCLevel.Q);
@@ -142,8 +144,7 @@ namespace MyStore.Controllers
         {
             if (!ModelState.IsValid)
             {
-                return View(Create());
-
+                return await Create();
             }
 
             Guid userId = new Guid(this.User.FindFirstValue(ClaimTypes.NameIdentifier));
@@ -207,7 +208,7 @@ namespace MyStore.Controllers
         {
             if (!ModelState.IsValid)
             {
-                return View(Edit(editModel.Id));
+                return  await Edit(editModel.Id);
 
             }
             if (editModel != null)

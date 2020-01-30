@@ -22,13 +22,18 @@
     @foreach (var image in Model.Files)
     {
 
-        var path = image.Name;
+        var imageName = image.Name;
 
-        <div class="col-lg-1 col-sm-4">
-            <div class="caption">
-                <img id="@image.Id" class="img-responsive" src="../../images/min_@(path)" alt="Chania">
-                <a asp-action="Delete" asp-route-productId="@Model.Id" asp-route-imageId="@image.Id" class="btn btn-primary" role="button">Delete</a>
 
+        <div class="col-lg-3 col-sm-6">
+            <div class="thumbnail">
+                <img class="img-responsive" src="../../images/min_@(imageName)" alt="Chania">
+                <div class="caption">
+                    <p>
+                        <a asp-action="Delete" asp-route-productId="@Model.Id" asp-route-imageId="@image.Id" class="btn btn-primary" role="button">Delete</a>
+
+                    </p>
+                </div>
             </div>
         </div>
 
@@ -87,5 +92,5 @@
 }
 
 <div>
-    @Html.ActionLink("Back to List", "Index")
+    @Html.ActionLink("Back to List", "browse")
 </div>
