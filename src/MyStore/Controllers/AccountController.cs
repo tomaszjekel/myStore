@@ -116,14 +116,17 @@ namespace MyStore.Controllers
         {
             if (!ModelState.IsValid || string.IsNullOrEmpty(guid))
             {
-                return await ResetPassword("");
+                return await ResetPassword(guid);
             }
             var success = await _userService.RegisterNewPassword(model.Password, guid);
             if (success)
             {
                 ViewBag.Message = "Password changed";
+            }else
+            {
+                ViewBag.Message = "Password Changed Error";
             }
-            return View();
+            return await ResetPassword(guid);
         }
 
         [HttpGet("logoff")]
