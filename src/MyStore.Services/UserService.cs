@@ -60,22 +60,15 @@ namespace MyStore.Services
             return false;
         }
 
-        public async Task ResetPassword(string email)
+        public async Task<bool> ResetPassword(string email)
         {
-            if (string.IsNullOrEmpty(email))
-            {
-                throw new Exception("email can`t be empty");
-            }
             var user = await _userRepository.GetAsync(email);
             if (user!= null)
             {
                 string password = Guid.NewGuid().ToString();
                 await _userRepository.ResetPassword(user, password);
             }
-            else
-            {
-                throw new Exception("user not exist");
-            }
+            return true;
         }
 
         public async Task<bool> RegisterNewPassword(string password, string guid)

@@ -9,7 +9,7 @@ namespace MyStore.Services
         Task RegisterAsync(string email, string password, string role);
         Task<bool> LoginAsync(string email, string password);
         Task<string> Confirmation(string userId, string confirmationId);
-        Task ResetPassword(string email);
+        Task<bool> ResetPassword(string email);
         Task<bool> RegisterNewPassword(string password, string guid);
     }
 }
