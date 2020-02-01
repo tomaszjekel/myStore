@@ -44,20 +44,20 @@ namespace MyStore.Services
         {
             return await _userRepository.Confirmation(userId, confirmationId);
         }
-        public async Task<UserDto> LoginAsync(string email, string password)
+        public async Task<bool> LoginAsync(string email, string password)
         {
             var user = await _userRepository.GetAsync(email);
             if (user == null)
             {
-                throw new Exception("Invalid credentials.");
+                return false;
             }
             var passwordVerificationResult = _passwordHasher.VerifyHashedPassword(user,
                 user.Password, password);
             if (passwordVerificationResult != PasswordVerificationResult.Failed)
             {
-                return _mapper.Map<UserDto>(user);
+                return true;
             }
-            throw new Exception("Invalid credentials.");
+            return false;
         }
 
         public async Task ResetPassword(string email)

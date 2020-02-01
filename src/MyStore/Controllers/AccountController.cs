@@ -1,11 +1,5 @@
-﻿using System.Collections.Generic;
-using System.Net;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Localization;
+﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Localization;
-using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Localization;
 using MyStore.Framework;
 using MyStore.Models;
@@ -46,10 +40,19 @@ namespace MyStore.Controllers
             {
                 return View(viewModel);
             }
-            await _userService.LoginAsync(viewModel.Email, viewModel.Password);
-            var user = await _userService.GetAsync(viewModel.Email);
-            await _authenticator.SignInAsync(user.Id, user.Email, user.Role);
-            return RedirectToAction("Index", "Home");
+            var success = await _userService.LoginAsync(viewModel.Email, viewModel.Password);
+            if (success)
+            {
+                var user = await _userService.GetAsync(viewModel.Email);
+                await _authenticator.SignInAsync(user.Id, user.Email, user.Role);
+                return RedirectToAction("Index", "Home");
+            }
+            else
+            {
+                ViewBag.Message = "Invalid username or password";
+                return View();
+            }
+            
         }
 
         [HttpGet("reset")]
