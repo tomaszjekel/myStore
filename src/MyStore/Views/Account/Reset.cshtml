@@ -1,0 +1,24 @@
+﻿@model Reset
+@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer LocString
+    <h2>Reset Password</h2>
+<br />
+<div class="row">
+    <div class="col-md-6 col-lg-3">
+        @if(ViewBag.Message != null)
+        {
+            @ViewBag.Message <br /><br />
+        }
+        <form asp-action="Reset" method="post">
+            <div class="form-group">
+                <label asp-for="Email">@LocString["User"]:</label>
+                <input asp-for="Email" class="form-control" />
+                <span asp-validation-for="Email" class="text-danger"></span>
+            </div>
+            <button type="submit" class="btn btn-default">@LocString["DoReset"]</button>
+
+        </form>
+        <br />
+        <div asp-validation-summary="All"></div>
+    </div>
+</div>

@@ -34,7 +34,7 @@ namespace MyStore.Services
             {
                 throw new Exception($"Email: {email} already in use.");
             }
-            user = new User(email, "", "");
+            user = new User(email);
             var passwordHash = _passwordHasher.HashPassword(user, password);
             user.SetPassword(passwordHash);
             await _userRepository.CreateAsync(user);
@@ -59,5 +59,37 @@ namespace MyStore.Services
             }
             throw new Exception("Invalid credentials.");
         }
+
+        public async Task ResetPassword(string email)
+        {
+            if (string.IsNullOrEmpty(email))
+            {
+                throw new Exception("email can`t be empty");
+            }
+            var user = await _userRepository.GetAsync(email);
+            if (user!= null)
+            {
+                string password = Guid.NewGuid().ToString();
+                await _userRepository.ResetPassword(user, password);
+            }
+            else
+            {
+                throw new Exception("user not exist");
+            }
+        }
+
+        public async Task<bool> RegisterNewPassword(string password, string guid)
+        {
+            var user = await _userRepository.GetUserByResetPassword(guid);
+            if (user != null)
+            {
+                var passwordHash = _passwordHasher.HashPassword(user, password);
+                user.SetPassword(passwordHash);
+                await _userRepository.UpdatePassword(user.Email, user.Password);
+                return true;
+            }
+            return false;
+        }
+
     }
 }

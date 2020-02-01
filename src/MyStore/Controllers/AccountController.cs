@@ -51,30 +51,40 @@ namespace MyStore.Controllers
             await _authenticator.SignInAsync(user.Id, user.Email, user.Role);
             return RedirectToAction("Index", "Home");
         }
-        
+
+        [HttpGet("reset")]
+        public async Task<IActionResult> Reset()
+        {
+            var viewModel = new Reset();
+
+            return View(viewModel);
+        }
+
+        [HttpPost("reset")]
+        public async Task<IActionResult> Reset(Reset reset)
+            {
+            if (!ModelState.IsValid)
+            {
+                return await Reset();
+            }
+            await _userService.ResetPassword(reset.Email);
+            ViewBag.Message = "Link to reset your account was sent to your e-mial";
+            return View(reset);
+        }
+
         [HttpGet("register")]
         public IActionResult Register()
         {
             var viewModel = new UserViewModel();
-            //viewModel.Roles = new List<SelectListItem>
-            //{
-            //    new SelectListItem {Value = "user", Text =  _localizer["renter"]},
-            //    new SelectListItem {Value = "admin", Text = _localizer["owner"]}
-            //};
 
             return View(viewModel);
         }
-        
+
         [HttpPost("register")]
         public async Task<IActionResult> Register(UserViewModel viewModel)
         {
             if (!ModelState.IsValid)
             {
-            //    viewModel.Roles = new List<SelectListItem>
-            //{
-            //    new SelectListItem {Value = "user", Text =  _localizer["renter"]},
-            //    new SelectListItem {Value = "admin", Text = _localizer["owner"]}
-            //};
                 return View(viewModel);
             }
 
@@ -90,9 +100,30 @@ namespace MyStore.Controllers
         public async Task<IActionResult> Confirmation(string userId, string confirmationId)
         {
             ConfirmationViewModel model = new ConfirmationViewModel();
-           model.Message = await _userService.Confirmation(userId,confirmationId);
-            //return Ok("User is activate");
+            model.Message = await _userService.Confirmation(userId,confirmationId);
             return View(model);
+        }
+
+        [HttpGet("reset_password")]
+        public async Task<IActionResult> ResetPassword(string guid)
+        {
+            ViewBag.Guid = guid;
+            return View();
+        }
+
+        [HttpPost("reset_password")]
+        public async Task<IActionResult> ResetPassword(PasswordResetViewModel model, string guid)
+        {
+            if (!ModelState.IsValid || string.IsNullOrEmpty(guid))
+            {
+                return await ResetPassword("");
+            }
+            var success = await _userService.RegisterNewPassword(model.Password, guid);
+            if (success)
+            {
+                ViewBag.Message = "Password changed";
+            }
+            return View();
         }
 
         [HttpGet("logoff")]

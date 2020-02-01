@@ -6,19 +6,18 @@ namespace MyStore.Domain
     {
         public Guid Id { get; private set; }
         public string Email { get; private set; }
-        public string Password { get; private set; }
+        public string Password { get; set; }
         public string Role { get; private set; }
         public string EmailConfirmation { get; set; }
-
+        public string PasswordReset{ get; set; }
         private User()
         {
         }
 
-        public User(string email, string role = "user", string v = null)
+        public User(string email)
         {
             Id = Guid.NewGuid();
             Email = email.ToLowerInvariant();
-            Role = role.ToLowerInvariant();
             EmailConfirmation = Guid.NewGuid().ToString();
         }
 
