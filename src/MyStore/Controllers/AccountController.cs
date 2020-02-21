@@ -40,6 +40,13 @@ namespace MyStore.Controllers
             {
                 return View(viewModel);
             }
+            var request = Request.Form["g-recaptcha-response"];
+            if (!ReCaptchaPassed(request, "6Le5INsUAAAAADdH3v1dOa5VGBUOvzMg5JhlmRbA"))
+            {
+                ModelState.AddModelError(string.Empty, "You failed the CAPTCHA, stupid robot. Go play some 1x1 on SFs instead.");
+                return View(viewModel);
+            }
+
             var success = await _userService.LoginAsync(viewModel.Email, viewModel.Password);
             if (success)
             {
@@ -70,6 +77,14 @@ namespace MyStore.Controllers
             {
                 return await Reset();
             }
+
+            var request = Request.Form["g-recaptcha-response"];
+            if (!ReCaptchaPassed(request, "6Le5INsUAAAAADdH3v1dOa5VGBUOvzMg5JhlmRbA"))
+            {
+                ModelState.AddModelError(string.Empty, "You failed the CAPTCHA, stupid robot. Go play some 1x1 on SFs instead.");
+                return View(reset);
+            }
+
             await _userService.ResetPassword(reset.Email);
             ViewBag.Message = "Link to reset your account was sent to your e-mial";
             return View(reset);
@@ -91,12 +106,21 @@ namespace MyStore.Controllers
                 return View(viewModel);
             }
 
+            var request = Request.Form["g-recaptcha-response"];
+            if (!ReCaptchaPassed(request, "6Le5INsUAAAAADdH3v1dOa5VGBUOvzMg5JhlmRbA"))
+            {
+                ModelState.AddModelError(string.Empty, "You failed the CAPTCHA, stupid robot. Go play some 1x1 on SFs instead.");
+                return View(viewModel);
+            }
+
             await _userService.RegisterAsync(viewModel.Email,
                 viewModel.Password, null);
 
             TempData["message"] = "Account created";
+            ViewBag.Message = "Account created";
 
-            return RedirectToAction("Index", "Home");
+            return View(viewModel);
+            //return RedirectToAction("Index", "Home");
         }
 
         [HttpGet("confirmation")]
