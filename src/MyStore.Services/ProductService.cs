@@ -115,7 +115,7 @@ namespace MyStore.Services
                     {
                         pathImage.Add(fileNameGuid.ToString() + Path.GetExtension(file.FileName));
 
-                        await file.CopyToAsync(fileStream);
+                        file.CopyTo(fileStream);
                         string fileName = fileNameGuid.ToString() + Path.GetExtension(file.FileName);
                         if(productId == new Guid("00000000-0000-0000-0000-000000000000"))
                         {
