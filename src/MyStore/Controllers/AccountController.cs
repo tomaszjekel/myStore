@@ -1,5 +1,7 @@
-﻿using System.Threading.Tasks;
+﻿using System;
+using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Localization;
 using MyStore.Framework;
 using MyStore.Models;
@@ -9,14 +11,17 @@ namespace MyStore.Controllers
 {
     public class AccountController : BaseController
     {
+        private IConfiguration _configuration;
         private readonly IAuthenticator _authenticator;
         private readonly IUserService _userService;
         private readonly IStringLocalizer<AccountController> _localizer;
+        private string SecretKeyHtml = Environment.GetEnvironmentVariable("SecretKeyHtml");
+        private string SecretKey = Environment.GetEnvironmentVariable("SecretKey");
 
-
-        public AccountController(IAuthenticator authenticator,
+        public AccountController(IConfiguration iconfig,IAuthenticator authenticator,
             IUserService userService, IStringLocalizer<AccountController> localize) 
         {
+            _configuration = iconfig;
             _authenticator = authenticator;
             _userService = userService;
             _localizer = localize;
@@ -25,11 +30,13 @@ namespace MyStore.Controllers
         [HttpGet("login")]
         public IActionResult Login()
         {
+            var secret1 = _configuration.GetValue<string>("appSettings:secretKey");
             //var rqf = Request.HttpContext.Features.Get<IRequestCultureFeature>();
             //var culture = rqf.RequestCulture.Culture;
             //System.Console.WriteLine($"Culture: {culture}");
             //Test
-            var lang = _localizer["signIn"];
+           
+            ViewBag.SecretKeyHtml = SecretKeyHtml;
             return View();
         }
 
@@ -38,12 +45,14 @@ namespace MyStore.Controllers
         {
             if (!ModelState.IsValid)
             {
+                ViewBag.SecretKeyHtml = SecretKeyHtml;
                 return View(viewModel);
             }
             var request = Request.Form["g-recaptcha-response"];
-            if (!ReCaptchaPassed(request, "6Le5INsUAAAAADdH3v1dOa5VGBUOvzMg5JhlmRbA"))
+            if (!ReCaptchaPassed(request, SecretKey))
             {
                 ModelState.AddModelError(string.Empty, "You failed the CAPTCHA, stupid robot. Go play some 1x1 on SFs instead.");
+                ViewBag.SecretKeyHtml = SecretKeyHtml;
                 return View(viewModel);
             }
 
@@ -56,6 +65,7 @@ namespace MyStore.Controllers
             }
             else
             {
+                ViewBag.SecretKeyHtml = SecretKeyHtml;
                 ViewBag.Message = "Invalid username or password";
                 return View();
             }
@@ -66,7 +76,7 @@ namespace MyStore.Controllers
         public async Task<IActionResult> Reset()
         {
             var viewModel = new Reset();
-
+            ViewBag.SecretKeyHtml = SecretKeyHtml;
             return View(viewModel);
         }
 
@@ -75,17 +85,20 @@ namespace MyStore.Controllers
             {
             if (!ModelState.IsValid)
             {
+                ViewBag.SecretKeyHtml = SecretKeyHtml;
                 return await Reset();
             }
 
             var request = Request.Form["g-recaptcha-response"];
-            if (!ReCaptchaPassed(request, "6Le5INsUAAAAADdH3v1dOa5VGBUOvzMg5JhlmRbA"))
+            if (!ReCaptchaPassed(request, SecretKey))
             {
+                ViewBag.SecretKeyHtml = SecretKeyHtml;
                 ModelState.AddModelError(string.Empty, "You failed the CAPTCHA, stupid robot. Go play some 1x1 on SFs instead.");
                 return View(reset);
             }
 
             await _userService.ResetPassword(reset.Email);
+            ViewBag.SecretKeyHtml = SecretKeyHtml;
             ViewBag.Message = "Link to reset your account was sent to your e-mial";
             return View(reset);
         }
@@ -94,7 +107,7 @@ namespace MyStore.Controllers
         public IActionResult Register()
         {
             var viewModel = new UserViewModel();
-
+            ViewBag.SecretKeyHtml = SecretKeyHtml;
             return View(viewModel);
         }
 
@@ -103,12 +116,14 @@ namespace MyStore.Controllers
         {
             if (!ModelState.IsValid)
             {
+                ViewBag.SecretKeyHtml = SecretKeyHtml;
                 return View(viewModel);
             }
 
             var request = Request.Form["g-recaptcha-response"];
-            if (!ReCaptchaPassed(request, "6Le5INsUAAAAADdH3v1dOa5VGBUOvzMg5JhlmRbA"))
+            if (!ReCaptchaPassed(request, SecretKey))
             {
+                ViewBag.SecretKeyHtml = SecretKeyHtml;
                 ModelState.AddModelError(string.Empty, "You failed the CAPTCHA, stupid robot. Go play some 1x1 on SFs instead.");
                 return View(viewModel);
             }
@@ -117,6 +132,7 @@ namespace MyStore.Controllers
                 viewModel.Password, null);
 
             TempData["message"] = "Account created";
+            ViewBag.SecretKeyHtml = SecretKeyHtml;
             ViewBag.Message = "Account created";
 
             return View(viewModel);
