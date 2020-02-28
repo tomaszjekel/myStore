@@ -142,7 +142,7 @@ namespace MyStore.Services
                         else
                         {
                             image.Mutate(x => x
-                            .Resize(480, 720));
+                            .Resize(480, 600));
                         }
 
                         using (var minFileStream = new FileStream(filesPath + "/" + "min_" + imageName, FileMode.Create))
