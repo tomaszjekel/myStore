@@ -85,15 +85,15 @@ namespace MyStore.Infrastructure.EF
             File.Delete(Path.Combine(filesPath, "min_" + imageId));
         }
 
-        public async Task DeleteImage(Guid imageId, Guid userId)
+        public async Task DeleteImage(string imageName, Guid userId)
         {
-            var image = _context.Files.Where(x => x.UserId == userId && x.Id == imageId).FirstOrDefault();
+            var image = _context.Files.Where(x => x.UserId == userId && x.Name == imageName).FirstOrDefault();
             _context.Files.Remove(image);
             _context.SaveChanges();
 
             var filesPath = Environment.GetEnvironmentVariable("UPLOAD_DIR");
-            File.Delete(Path.Combine(filesPath, imageId.ToString()));
-            File.Delete(Path.Combine(filesPath, "min_" + imageId));
+            File.Delete(Path.Combine(filesPath, imageName));
+            File.Delete(Path.Combine(filesPath, "min_" + imageName));
         }
 
         public async Task UpdateProduct(Guid id, string name, decimal price, string category, string description)

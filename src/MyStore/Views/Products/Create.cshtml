@@ -8,14 +8,16 @@
 <h1>@LocString["CreateProduct"]</h1>
 <div class="row">
     <div class="col-lg-1 col-sm-6">
-        <form method="post" asp-action="Upload" asp-route-action_name="create" asp-route-productId="00000000-0000-0000-0000-000000000000" asp-controller="Products" enctype="multipart/form-data">
+        <form id="formUpload" method="post" asp-action="Upload" asp-route-action_name="create" asp-route-productId="00000000-0000-0000-0000-000000000000" asp-controller="Products" enctype="multipart/form-data">
             <div class="form-group">
-                <input type="file" name="files" class="btn btn-info" onchange="submit()" multiple />
+                <input type="file" name="files" id="file" class="btn btn-info" onchange="upload()" multiple />
             </div>
         </form>
     </div>
 </div>
 <div class="row">
+    <div id="imagesDiv">
+    </div>
     @foreach (var file in @Model.Files)
     {
 
@@ -26,8 +28,8 @@
                 <img class="img-responsive" src="../images/min_@(imageName)" alt="Chania">
                 <div class="caption">
                     <p>
-                        <a asp-action="DeleteImage" asp-route-imageId="@file.Id" class="btn btn-primary" role="button">Delete</a>
-                        
+                        <a href="@Url.Action(imageName,"DeleteImage")" class="btn btn-primary" role="button">Delete</a>
+
                     </p>
                 </div>
             </div>
@@ -67,3 +69,70 @@
         </form>
     </div>
 </div>
+@section Scripts
+{
+    <script>
+        //loadImages();
+     //   $(document).ready(function () {
+
+        function loadImages(files) {
+            $.each(files, function (key, fileName) {
+                var hostname = location.protocol + '//' + location.hostname + (location.port ? ':' + location.port : '');
+                var img = $("<img />").attr('src', hostname + '/images/min_' + fileName)
+
+                    .on('load', function () {
+                        if (!this.complete || typeof this.naturalWidth == "undefined" || this.naturalWidth == 0) {
+                            alert('broken image!');
+                        } else {
+                            img.addClass("img-responsive");
+                            var imagesDiv = $('<div />'); imagesDiv.addClass("col-lg-3 col-sm-6");
+                            var thumbnail = $('<div />'); thumbnail.addClass("thumbnail");
+                            $("#imagesDiv").append(imagesDiv);
+                            imagesDiv.append(thumbnail);
+                            thumbnail.append(img)
+                            var caption = $('<div class="caption" />');
+                            var button = $('<a class="btn btn-primary" role="button" />').text("Delete");
+                            button.attr("href", hostname + "/DeleteImage/" + fileName);
+                            thumbnail.append(caption);
+                            caption.append(button);
+
+
+                            //$("#imagesDiv").append(img);
+                        }
+                    });
+            });
+        }
+
+
+        function upload() {
+
+            var fd = new FormData();
+
+            var totalfiles = document.getElementById('file').files.length;
+            for (var index = 0; index < totalfiles; index++) {
+                fd.append("files", document.getElementById('file').files[index]);
+            }
+
+            $.ajax({
+                url: 'Upload/create/00000000-0000-0000-0000-000000000000',
+                type: 'post',
+                data: fd,
+                contentType: false,
+                processData: false,
+                success: function (response) {
+                    debugger;
+                    loadImages(response.files);
+                    if (response != 0) {
+                        $("#img").attr("src", response);
+                        $(".preview img").show(); // Display image element
+                    } else {
+                        alert('file not uploaded');
+                    }
+                },
+            });
+        }
+       
+//});
+
+</script>
+}

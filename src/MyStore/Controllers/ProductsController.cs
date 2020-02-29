@@ -236,11 +236,11 @@ namespace MyStore.Controllers
         
         }
 
-        [HttpGet("/DeleteImage/{imageId}")]
-        public async Task<IActionResult> DeleteImage(Guid imageId, Guid productId)
+        [HttpGet("/DeleteImage/{imageName}")]
+        public async Task<IActionResult> DeleteImage(string imageName, Guid productId)
         {
             Guid userId = new Guid(this.User.FindFirstValue(ClaimTypes.NameIdentifier));
-            await _productService.DeleteImage(imageId, userId);
+            await _productService.DeleteImage(imageName, userId);
 
             //return RedirectToAction( productId.ToString(),"Products" );
             return RedirectToAction("create");
@@ -277,8 +277,10 @@ namespace MyStore.Controllers
             
             if (action_name == "create")
             {
-                await _productService.UploadandResize(files, userGuid, productId);
-               return RedirectToAction("create");
+                var fileList = await _productService.UploadandResize(files, userGuid, productId);
+                // return RedirectToAction("create");
+                return Json(new { files = fileList });
+
             }
             else
             {

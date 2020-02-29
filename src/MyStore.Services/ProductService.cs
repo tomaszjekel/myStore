@@ -92,16 +92,16 @@ namespace MyStore.Services
            
         }
 
-        public async Task DeleteImage(Guid imageId, Guid userId)
+        public async Task DeleteImage(string imageName, Guid userId)
         {
-            await _productRepository.DeleteImage(imageId, userId);
+            await _productRepository.DeleteImage(imageName, userId);
 
         }
 
-        public async Task UploadandResize(ICollection<IFormFile> files, Guid userId, Guid productId)
+        public async Task<List<string>> UploadandResize(ICollection<IFormFile> files, Guid userId, Guid productId)
         {
 
-            List<string> pathImage = new List<string>();
+            List<string> pathImage =  new List<string>();
 
             var filesPath = Environment.GetEnvironmentVariable("UPLOAD_DIR");
 
@@ -152,6 +152,7 @@ namespace MyStore.Services
                     }
                 }
             }
+            return pathImage;
         }
 
         public async Task UpdateProduct(Guid id, string name, decimal price, string category, string description)

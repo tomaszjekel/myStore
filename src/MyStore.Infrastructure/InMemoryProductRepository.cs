@@ -54,7 +54,7 @@ namespace MyStore.Infrastructure
             throw new NotImplementedException();
         }
 
-        public Task DeleteImage(Guid imageId, Guid userId)
+        public Task DeleteImage(string imageId, Guid userId)
         {
             throw new NotImplementedException();
         }

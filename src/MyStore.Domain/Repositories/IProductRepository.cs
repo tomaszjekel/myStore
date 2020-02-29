@@ -12,7 +12,7 @@ namespace MyStore.Domain.Repositories
         Task<IQueryable<Product>> BrowseAsync(string name);
         Task CreateAsync(Product product);
         Task DeleteImageFromProduct(Guid productId, Guid imageId, Guid userId);
-        Task DeleteImage( Guid imageId, Guid userId);
+        Task DeleteImage( string imageName, Guid userId);
         Task UpdateProduct(Guid id, string name, decimal price, string category, string description);
         Task<IQueryable<Product>> BrowseByUserId(string name, int? pageIndex, Guid userId);
         Task DeleteProduct(Guid productId, Guid userId);
