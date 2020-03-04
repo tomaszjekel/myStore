@@ -44,7 +44,7 @@ namespace MyStore.Infrastructure.EF
             var userDb = _context.Users.Where(x => x.Id == user.Id).FirstOrDefault();
 
             var TO_MAIL = user.Email;
-            var MAIL_MSG = string.Format("Activate your account http://siedzetu.pl:5000/account/confirmation?confirmationId={0}", userDb.EmailConfirmation);
+            var MAIL_MSG = string.Format("Activate your account http://roksa2.pl/account/confirmation?confirmationId={0}", userDb.EmailConfirmation);
 
 
             var url = string.Format("http://siedzetu.pl/mail.php?TO_MAIL={0}&MESSAGE={1}", TO_MAIL, MAIL_MSG);
@@ -74,7 +74,7 @@ namespace MyStore.Infrastructure.EF
             _context.Users.Where(x => x.Email == user.Email).FirstOrDefault().PasswordReset=password;
             _context.SaveChanges();
             var TO_MAIL = user.Email;
-            var MAIL_MSG = string.Format("Reset your password http://siedzetu.pl:5000/account/reset_password?guid={0}", password);
+            var MAIL_MSG = string.Format("Reset your password http://roksa2.pl/account/reset_password?guid={0}", password);
 
 
             var url = string.Format("http://siedzetu.pl/mail.php?TO_MAIL={0}&MESSAGE={1}", TO_MAIL, MAIL_MSG);

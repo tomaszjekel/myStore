@@ -112,6 +112,7 @@ namespace MyStore.Controllers
             return View(viewModel);
         }
 
+        [Authorize]
         [HttpGet("create")]
         [Authorize(AuthenticationSchemes = CookieAuthenticationDefaults.AuthenticationScheme)]
         public async Task<IActionResult> Create()
@@ -138,6 +139,7 @@ namespace MyStore.Controllers
             return View(viewModel);
         }
 
+        [Authorize]
         [HttpPost("create")]
         [Authorize(AuthenticationSchemes = CookieAuthenticationDefaults.AuthenticationScheme)]
         public async Task<IActionResult> Create(CreateProductViewModel viewModel)
@@ -180,7 +182,7 @@ namespace MyStore.Controllers
         //    return NotFound();
         //}
 
-        
+        [Authorize]
         [HttpGet("{id}")]
         public async Task<IActionResult> Edit(Guid id)
         {
@@ -211,7 +213,6 @@ namespace MyStore.Controllers
             if (!ModelState.IsValid)
             {
                 return  await Edit(editModel.Id);
-
             }
             if (editModel != null)
             {
@@ -225,6 +226,7 @@ namespace MyStore.Controllers
             return NotFound();
         }
 
+        [Authorize]
         [HttpGet("/Delete/{imageId}/{productId}")]
         public async Task<IActionResult> Delete(Guid imageId, Guid productId)
         {
@@ -236,6 +238,7 @@ namespace MyStore.Controllers
         
         }
 
+        [Authorize]
         [HttpGet("/DeleteImage/{imageName}")]
         public async Task<IActionResult> DeleteImage(string imageName, Guid productId)
         {
@@ -247,6 +250,7 @@ namespace MyStore.Controllers
 
         }
 
+        [Authorize]
         [HttpGet("/DeleteProduct/{productId}")]
         public async Task<IActionResult> DeleteProduct(Guid productId)
         {
@@ -258,7 +262,7 @@ namespace MyStore.Controllers
 
         }
 
-
+        [Authorize]
         [HttpPost]
         [ModelValidationFilter]
         public async Task<IActionResult> Post([FromBody] CreateProduct request)
@@ -269,6 +273,7 @@ namespace MyStore.Controllers
             return Ok();
         }
 
+        [Authorize]
         [HttpPost("Upload/{action_name}/{productId}")]
         public async Task<IActionResult> Upload(ICollection<IFormFile> files, string action_name, Guid productId)
         {

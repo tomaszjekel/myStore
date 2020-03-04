@@ -121,7 +121,7 @@
     <value>Kategoria</value>
   </data>
   <data name="Create" xml:space="preserve">
-    <value>Dodaj ogłoszenie</value>
+    <value>Dodaj</value>
   </data>
   <data name="CreateProduct" xml:space="preserve">
     <value>Dodaj nowe ogłoszenie</value>
@@ -136,6 +136,6 @@
     <value>Cena</value>
   </data>
   <data name="Products" xml:space="preserve">
-    <value>Produkty</value>
+    <value>Kategoria</value>
   </data>
 </root>

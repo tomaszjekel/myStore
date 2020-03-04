@@ -25,9 +25,9 @@ namespace MyStore.Models
         public List<SelectListItem> Categories { get; set; } =
             new List<SelectListItem>
             {
-                new SelectListItem { Text = "Electronics", Value = "Electronics"},
-                new SelectListItem { Text = "Tools", Value = "Tools"},
-                new SelectListItem { Text = "Cars", Value = "Cars"}
+                new SelectListItem { Text = "Blonde", Value = "Blonde"},
+                new SelectListItem { Text = "Red", Value = "Red"},
+                new SelectListItem { Text = "Black", Value = "Black"}
             };
 
         public List<FileDto> Files { get; set; }
