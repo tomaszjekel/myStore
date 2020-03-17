@@ -16,5 +16,6 @@ namespace MyStore.Domain.Repositories
         Task UpdateProduct(Guid id, string name, decimal price, string category, string description);
         Task<IQueryable<Product>> BrowseByUserId(string name, int? pageIndex, Guid userId);
         Task DeleteProduct(Guid productId, Guid userId);
+        Task<List<Cities>> GetCities();
     }
 }

@@ -120,6 +120,11 @@ namespace MyStore.Infrastructure.EF
             _context.Remove(product);
             _context.SaveChanges();
         }
+        public async Task<List<Cities>> GetCities()
+        {
+            return  _context.Cities.Select(x =>new Cities { Id = x.Id, Name = x.Name, Province_Id = x.Province_Id }).OrderBy(x=>x.Name).ToList();
+                
+        }
     }
 
 }

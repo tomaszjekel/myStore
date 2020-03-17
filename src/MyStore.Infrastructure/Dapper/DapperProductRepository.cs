@@ -45,6 +45,11 @@ namespace MyStore.Infrastructure.Dapper
             throw new NotImplementedException();
         }
 
+        public Task<List<Cities>> GetCities()
+        {
+            throw new NotImplementedException();
+        }
+
         public Task UpdateProduct(Guid id, string name, decimal price, string category, string description)
         {
             throw new NotImplementedException();

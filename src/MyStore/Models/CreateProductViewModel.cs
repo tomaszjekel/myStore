@@ -1,13 +1,14 @@
 ﻿using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using MyStore.Domain;
 using MyStore.Services.DTO;
 
 namespace MyStore.Models
 {
     public class CreateProductViewModel
     {
-        [RegularExpression(@".\S+.", ErrorMessage = "No white space allowed")]
+        //[RegularExpression(@".\S+.", ErrorMessage = "No white space allowed")]
         [Required(AllowEmptyStrings = false)]
         [StringLength(50, MinimumLength = 3)]
         public string Name { get; set; }
@@ -29,6 +30,8 @@ namespace MyStore.Models
             };
 
 
+        public IEnumerable<SelectListItem> Cities { get; set; }
+        public string SelectedCity { get; set; }
 
         public List<FileDto> Files { get; set; }
 

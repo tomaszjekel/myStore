@@ -19,7 +19,7 @@ namespace MyStore.Controllers
         public IActionResult Index()
         {
             
-            var product = new Product(new Guid(),"ttt", "ttt", 20,"ddd");
+            var product = new Product();
             var lista = new List<Product>();
             lista.Add(product);
             var profile = new Profile(new Guid() ,new Guid(),lista ) ;

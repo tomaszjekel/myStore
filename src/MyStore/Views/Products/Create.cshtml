@@ -67,6 +67,13 @@
                 <span asp-validation-for="Category" class="text-danger"></span>
             </div>
             <div class="form-group">
+                <label asp-for="Cities">City:</label>
+                @*@Html.LabelFor(model => model.Cities, "CityID", new { @class = "control-label col-md-2" })*@
+                @Html.DropDownListFor(m => m.SelectedCity, Model.Cities, "Wybierz", new { @class = "form-control" })
+
+                <span asp-validation-for="Cities" class="text-danger"></span>
+            </div>
+            <div class="form-group">
                 <input type="submit" class="btn btn-success" value="@LocString["Create"]" />
             </div>
         </form>
@@ -123,7 +130,6 @@
                 contentType: false,
                 processData: false,
                 success: function (response) {
-                    debugger;
                     loadImages(response.files);
                     if (response != 0) {
                         $("#img").attr("src", response);

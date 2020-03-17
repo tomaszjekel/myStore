@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
 using MyStore.Domain;
 using MyStore.Framework;
 using MyStore.Models;
@@ -88,7 +89,7 @@ namespace MyStore.Controllers
             return View(viewModels);
         }
 
-        [HttpGet("{id}/details")]
+        [HttpGet("details/{id}")]
         public async Task<IActionResult> Details(Guid id)
         {
             var product = await _productService.GetAsync(id);
@@ -133,9 +134,11 @@ namespace MyStore.Controllers
             Guid userGuid;
             Guid.TryParse(this.User.FindFirstValue(ClaimTypes.NameIdentifier), out userGuid);
             var fileList = await _fileService.BrowseAsync(userGuid);
+            var cities = await _productService.GetCities();
+            var citiy = cities.Select(x => new { Value = x.Id, Text = x.Name });
+            SelectList list = new SelectList(citiy, "Value", "Text");
+            var viewModel = new CreateProductViewModel() { Files=fileList.ToList(), Cities=list };
 
-            var viewModel = new CreateProductViewModel() { Files=fileList.ToList() };
-            
             return View(viewModel);
         }
 
@@ -152,7 +155,7 @@ namespace MyStore.Controllers
             Guid userId = new Guid(this.User.FindFirstValue(ClaimTypes.NameIdentifier));
             var newId = Guid.NewGuid();
             await _productService.CreateAsync(newId, userId, viewModel.Name,
-            viewModel.Category, viewModel.Price, viewModel.Description);
+            viewModel.Category, viewModel.Price, viewModel.Description, Int32.Parse(viewModel.SelectedCity));
 
             //QRCodeGenerator qrGenerator = new QRCodeGenerator();
             //QRCodeData qrCodeData = qrGenerator.CreateQrCode("The text which should be encoded.", QRCodeGenerator.ECCLevel.Q);
@@ -183,7 +186,7 @@ namespace MyStore.Controllers
         //}
 
         [Authorize]
-        [HttpGet("{id}")]
+        [HttpGet("Edit/{id}")]
         public async Task<IActionResult> Edit(Guid id)
         {
             var product = await _productService.GetAsync(id);
@@ -205,7 +208,7 @@ namespace MyStore.Controllers
             return NotFound();
         }
 
-        [HttpPost("{id}")]
+        [HttpPost("Edit/{id}")]
         public async Task<IActionResult> Edit(EditProductViewModel editModel)
         {
             Guid userId = new Guid(this.User.FindFirstValue(ClaimTypes.NameIdentifier));
@@ -258,8 +261,7 @@ namespace MyStore.Controllers
             await _productService.DeleteProduct(productId, userId);
 
             //return RedirectToAction( productId.ToString(),"Products" );
-            return RedirectToAction("browse",new { userId = userId});
-
+            return RedirectToAction("browse", new { userId = userId });
         }
 
         [Authorize]
@@ -267,8 +269,8 @@ namespace MyStore.Controllers
         [ModelValidationFilter]
         public async Task<IActionResult> Post([FromBody] CreateProduct request)
         {
-            await _productService.CreateAsync(Guid.NewGuid(), request.UserId, request.Name,
-                request.Category, request.Price, request.Description);
+            //await _productService.CreateAsync(Guid.NewGuid(), request.UserId, request.Name,
+            //    request.Category, request.Price, request.Description,(Int32.Parse("1")));
 
             return Ok();
         }

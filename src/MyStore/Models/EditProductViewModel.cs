@@ -18,7 +18,7 @@ namespace MyStore.Models
         public string Category { get; set; }
 
         [Required]
-        [Range(1, 100000)]
+        [Range(0, 100000)]
         //[DataType(DataType.Currency)]
         public decimal Price { get; set; }
 
@@ -29,6 +29,7 @@ namespace MyStore.Models
                 new SelectListItem { Text = "Red", Value = "Red"},
                 new SelectListItem { Text = "Black", Value = "Black"}
             };
+
 
         public List<FileDto> Files { get; set; }
 

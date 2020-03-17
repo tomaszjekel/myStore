@@ -73,5 +73,10 @@ namespace MyStore.Infrastructure
         {
             throw new NotImplementedException();
         }
+
+        public Task<List<Cities>> GetCities()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

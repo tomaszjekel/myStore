@@ -56,6 +56,8 @@ namespace MyStore.Services
                 Price = x.Price,
                 UserId = x.UserId
             }).ToList();
+
+            
         }
         public async Task<PaginatedList<Product>> BrowseByUserId(string name, int? pageIndex, Guid userId)
         {
@@ -80,9 +82,9 @@ namespace MyStore.Services
             return Products;
         }
 
-        public async Task CreateAsync(Guid id, Guid userId, string name, string category, decimal price, string description)
+        public async Task CreateAsync(Guid id, Guid userId, string name, string category, decimal price, string description , int cityId)
         {
-            var product = new Product(id, userId, name, category, price, description);
+            var product = new Product { Id= id, UserId= userId, Name= name, Category= category, Price= price, Description= description, CityId= cityId };
             await _productRepository.CreateAsync(product);
         }
 
@@ -167,6 +169,10 @@ namespace MyStore.Services
         public async Task DeleteProduct(Guid productId, Guid userId)
         {
             await _productRepository.DeleteProduct(productId,userId);
+        }
+        public Task<List<Cities>> GetCities()
+        {
+            return _productRepository.GetCities();
         }
     }
 }

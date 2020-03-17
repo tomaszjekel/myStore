@@ -12,30 +12,11 @@ namespace MyStore.Domain
         public string Description { get;  set; }
         public decimal Price { get;  set; }
         public List<FilesUpload> Files { get; set; }
+        public int CityId { get; set; }
 
+        
 
-
-        private Product()
-        {
-        }
-
-        public Product(Guid userId , string name, string category, 
-            decimal price, string description): this(userId, new Guid(),
-            name, category, price, description)
-        {
-        }
-
-        public Product(Guid id, Guid userId, string name,
-            string category, decimal price, string description)
-        {
-            Id = id;
-            UserId = userId;
-            SetName(name);
-            Category = category;
-            SetPrice(price);
-            Description = description;
-            
-        }
+   
 
         public void SetName(string name)
         {
