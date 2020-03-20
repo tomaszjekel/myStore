@@ -157,7 +157,7 @@ namespace MyStore.Controllers
             Guid userId = new Guid(this.User.FindFirstValue(ClaimTypes.NameIdentifier));
             var newId = Guid.NewGuid();
             await _productService.CreateAsync(newId, userId, viewModel.Name,
-            viewModel.Category, viewModel.Price, viewModel.Description, Int32.Parse(viewModel.SelectedCity));
+            viewModel.Category, viewModel.Price, viewModel.Description,  Int32.Parse(viewModel.SelectedCity??"0"));
 
             //QRCodeGenerator qrGenerator = new QRCodeGenerator();
             //QRCodeData qrCodeData = qrGenerator.CreateQrCode("The text which should be encoded.", QRCodeGenerator.ECCLevel.Q);
@@ -207,8 +207,12 @@ namespace MyStore.Controllers
                     Category = product.Category,
                     Cities =list
                 };
-                var selected = list.Where(x => x.Value == product.CityId.ToString()).First();
-                selected.Selected = true;
+                if (product.CityId != 0)
+                {
+                    var selected = list.Where(x => x.Value == product.CityId.ToString()).First();
+                    selected.Selected = true;
+                }
+                
 
                 return View(edit);
             }
@@ -232,7 +236,7 @@ namespace MyStore.Controllers
                     Id=editModel.Id,
                     Name = editModel.Name,
                     Category = editModel.Category,
-                    CityId = Int32.Parse(editModel.SelectedCity),
+                    CityId = Int32.Parse(editModel.SelectedCity??"0"),
                     Description = editModel.Description,
                     Price = editModel.Price
                 };
