@@ -13,5 +13,7 @@ namespace MyStore.Services.DTO
         public decimal Price { get; set; }
         public string Description { get; set; }
         public List<FilesUpload> Files { get; set; }
+        public int CityId { get; set; }
+
     }
 }

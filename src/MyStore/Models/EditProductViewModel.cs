@@ -30,6 +30,8 @@ namespace MyStore.Models
                 new SelectListItem { Text = "Black", Value = "Black"}
             };
 
+        public IEnumerable<SelectListItem> Cities { get; set; }
+        public string SelectedCity { get; set; }
 
         public List<FileDto> Files { get; set; }
 

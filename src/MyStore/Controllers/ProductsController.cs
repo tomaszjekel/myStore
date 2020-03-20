@@ -99,7 +99,7 @@ namespace MyStore.Controllers
             }
 
             var fileList = await _fileService.BrowseByProductAsync(product.UserId, product.Id);
-
+            var cities = await _productService.GetCities();
             var viewModel = new ProductViewModel
             {
                 Id = product.Id,
@@ -107,7 +107,8 @@ namespace MyStore.Controllers
                 Category = product.Category,
                 Price = product.Price,
                 Files = product.Files,
-                Description = product.Description
+                Description = product.Description,
+                City = cities.Where(x => x.Id == product.CityId).Select(x=>x.Name).FirstOrDefault()
             };
 
             return View(viewModel);
@@ -137,6 +138,7 @@ namespace MyStore.Controllers
             var cities = await _productService.GetCities();
             var citiy = cities.Select(x => new { Value = x.Id, Text = x.Name });
             SelectList list = new SelectList(citiy, "Value", "Text");
+
             var viewModel = new CreateProductViewModel() { Files=fileList.ToList(), Cities=list };
 
             return View(viewModel);
@@ -192,15 +194,21 @@ namespace MyStore.Controllers
             var product = await _productService.GetAsync(id);
             if (product != null)
             {
+                var cities = await _productService.GetCities();
+                var citiy = cities.Select(x => new { Value = x.Id, Text = x.Name });
+                SelectList list = new SelectList(citiy, "Value", "Text");
                 EditProductViewModel edit = new EditProductViewModel
                 {
-                    Id= product.Id,
+                    Id = product.Id,
                     Name = product.Name,
                     Description = product.Description,
                     Price = product.Price,
-                    Files = product.Files.Select(x => new FileDto {Id= x.Id, Name = x.Name, ProductId = x.ProductId }).ToList(),
-                    Category= product.Category
+                    Files = product.Files.Select(x => new FileDto { Id = x.Id, Name = x.Name, ProductId = x.ProductId }).ToList(),
+                    Category = product.Category,
+                    Cities =list
                 };
+                var selected = list.Where(x => x.Value == product.CityId.ToString()).First();
+                selected.Selected = true;
 
                 return View(edit);
             }
@@ -219,7 +227,16 @@ namespace MyStore.Controllers
             }
             if (editModel != null)
             {
-                await _productService.UpdateProduct(editModel.Id,editModel.Name, editModel.Price, editModel.Category,editModel.Description);
+                Product p = new Product
+                {
+                    Id=editModel.Id,
+                    Name = editModel.Name,
+                    Category = editModel.Category,
+                    CityId = Int32.Parse(editModel.SelectedCity),
+                    Description = editModel.Description,
+                    Price = editModel.Price
+                };
+                await _productService.UpdateProduct(p);
 
                 //return View(edit);
                 //return RedirectToAction(editModel.Id.ToString(), "Products");

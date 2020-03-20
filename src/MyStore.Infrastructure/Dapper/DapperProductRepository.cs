@@ -50,7 +50,7 @@ namespace MyStore.Infrastructure.Dapper
             throw new NotImplementedException();
         }
 
-        public Task UpdateProduct(Guid id, string name, decimal price, string category, string description)
+        public Task UpdateProduct(Product p)
         {
             throw new NotImplementedException();
         }

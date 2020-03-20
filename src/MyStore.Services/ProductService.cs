@@ -157,9 +157,9 @@ namespace MyStore.Services
             return pathImage;
         }
 
-        public async Task UpdateProduct(Guid id, string name, decimal price, string category, string description)
+        public async Task UpdateProduct(Product p)
         {
-          await  _productRepository.UpdateProduct(id, name, price, category, description);
+          await  _productRepository.UpdateProduct(p);
         }
 
         public Task<PaginatedList<Product>> BrowseAsync1(string name, int? pageIndex)

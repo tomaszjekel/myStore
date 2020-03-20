@@ -96,13 +96,14 @@ namespace MyStore.Infrastructure.EF
             File.Delete(Path.Combine(filesPath, "min_" + imageName));
         }
 
-        public async Task UpdateProduct(Guid id, string name, decimal price, string category, string description)
+        public async Task UpdateProduct(Product p)
         {
-           var product = _context.Products.Where(x => x.Id == id).FirstOrDefault();
-            product.Name = name;
-            product.Price = price;
-            product.Description = description;
-            product.Category = category;
+           var product = _context.Products.Where(x => x.Id == p.Id).FirstOrDefault();
+            product.Name = p.Name;
+            product.Price = p.Price;
+            product.Description = p.Description;
+            product.Category = p.Category;
+            product.CityId = p.CityId;
 
             _context.Entry(product).State = EntityState.Modified;
             _context.SaveChanges();
