@@ -132,6 +132,7 @@
                 success: function (response) {
                     loadImages(response.files);
                     if (response != 0) {
+                        debugger;
                         $("#img").attr("src", response);
                         $(".preview img").show(); // Display image element
                     } else {

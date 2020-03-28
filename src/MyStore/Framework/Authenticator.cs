@@ -23,7 +23,6 @@ namespace MyStore.Framework
             var claims = new List<Claim>
             {
                 new Claim(ClaimTypes.Name, email),
-                new Claim(ClaimTypes.Role, role),
                 new Claim(ClaimTypes.NameIdentifier , userId.ToString())
                  
             };

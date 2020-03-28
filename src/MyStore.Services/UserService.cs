@@ -6,6 +6,8 @@ using MyStore.Domain;
 using MyStore.Domain.Repositories;
 using MyStore.Services.DTO;
 using Microsoft.AspNetCore.Authentication;
+using SendGrid;
+using SendGrid.Helpers.Mail;
 
 namespace MyStore.Services
 {

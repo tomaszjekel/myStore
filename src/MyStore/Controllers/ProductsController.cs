@@ -188,10 +188,10 @@ namespace MyStore.Controllers
         //}
 
         [Authorize]
-        [HttpGet("Edit/{id}")]
-        public async Task<IActionResult> Edit(Guid id)
+        [HttpGet("Edit/")]
+        public async Task<IActionResult> Edit(Guid productId)
         {
-            var product = await _productService.GetAsync(id);
+            var product = await _productService.GetAsync(productId);
             if (product != null)
             {
                 var cities = await _productService.GetCities();
@@ -258,7 +258,8 @@ namespace MyStore.Controllers
             await _productService.DeleteImageFromProduct(productId ,imageId, userId);
 
             //return RedirectToAction( productId.ToString(),"Products" );
-           return RedirectToAction(productId.ToString(), "Products");
+            return RedirectToAction("edit", "Products", new {productId = productId });
+            //return await Edit(productId);
         
         }
 
@@ -310,11 +311,21 @@ namespace MyStore.Controllers
                 return Json(new { files = fileList });
 
             }
-            else
+            else if(action_name == "edit")
             {
-                await _productService.UploadandResize(files, userGuid, productId );
-               return RedirectToAction(productId.ToString(), "Products");
+                var fileList = await _productService.UploadandResize(files, userGuid, productId);
+                // return RedirectToAction("create");
+                return Json(new { files = fileList });
             }
+
+            return RedirectToAction(productId.ToString(), "Products");
+
+            // _productService.UploadandResize(files, userGuid, productId );
+            //return RedirectToAction(productId.ToString(), "Products");
+
+
+
+
         }
     }
 
