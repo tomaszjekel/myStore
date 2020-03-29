@@ -41,7 +41,7 @@ namespace MyStore.Controllers
         {
             Guid userGuid;
             Guid.TryParse(this.User.FindFirstValue(ClaimTypes.NameIdentifier),  out userGuid);
-            var products = await _productService.BrowseByUserId(keyword, pageIndex,userId);
+            var products = await _productService.BrowseByUserId(keyword, pageIndex, userId);
            
 
             var viewModels = products.Select(p =>

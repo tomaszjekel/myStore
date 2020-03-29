@@ -12,8 +12,11 @@
       "commandName": "IISExpress",
       "launchBrowser": true,
       "environmentVariables": {
+        "NAME_OF_THE_ENVIRONMENT_VARIABLE_FOR_YOUR_SENDGRID_KEY": "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",
+        "SecretKey": "6Le5INsUAAAAADdH3v1dOa5VGBUOvzMg5JhlmRbA",
         "UPLOAD_DIR": "C:\\Users\\A669802\\upload",
         "Key": "Value",
+        "SecretKeyHtml": "6Le5INsUAAAAAIJII-dMx7peLleZqrAKXT45U-ER",
         "ASPNETCORE_ENVIRONMENT": "local"
       }
     },

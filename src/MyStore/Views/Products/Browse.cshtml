@@ -23,11 +23,13 @@
                     <p>
                         <a asp-action="Details" asp-route-id="@product.Id"
                            class="btn btn-primary" role="button">@LocString["Details"]</a>
-                        @if (product.UserId == product.ProductUserId)
+                        <a asp-controller="Cart" asp-action="Add" asp-route-id="@product.Id"
+                           class="btn btn-success" role="button">Zakup</a>
+                        @*@if (product.UserId == product.ProductUserId)
                         {
                             <a asp-controller="Products" asp-action="Edit" asp-route-productId="@product.Id"
                                class="btn btn-primary" role="button">Edit</a>
-                        }
+                        }*@
                     </p>
                        
                 </div>

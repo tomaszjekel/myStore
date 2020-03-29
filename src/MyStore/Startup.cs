@@ -55,6 +55,10 @@ namespace MyStore
             services.AddScoped<IProductRepository, EfProductRepository>();
             services.AddScoped<IProductService, ProductService>();
 
+            services.AddScoped<ICartService, CartService>();
+            services.AddScoped<ICartProvider, CartProvider>();
+
+
             services.AddScoped<IFileRepository, EfFileRepository>();
             services.AddScoped<IFileService, FileService>();
 
@@ -65,7 +69,7 @@ namespace MyStore
             services.AddScoped<IAuthenticator, Authenticator>();
             services.AddSingleton(AutoMapperConfig.GetMapper());
 
-            var connMySql = "server=localhost;port=3306;uid=root;password=;database=MyStore;";
+            var connMySql = "server=localhost;port=3306;uid=root;password=Blokersi123$;database=MyStore;";
             services.AddDbContext<MyStoreContext>(options => options.UseMySql(connMySql));
 
             services.AddMemoryCache();

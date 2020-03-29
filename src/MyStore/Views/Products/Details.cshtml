@@ -57,6 +57,9 @@
             </div>
             <div class="well">
                 <p><h3>@LocString["Price"]</h3>@(String.Format("{0:0.##}", Model.Price)) @LocString["Currency"] </p>
+                <a asp-controller="Cart" asp-action="Add" asp-route-id="@Model.Id"
+                   class="btn btn-success pull-right col-md-12" role="button">Zakup</a>
+                <br />
             </div>
             <div class="well">
                 <p><h3>Miasto</h3> <br /> @Model.City</p>

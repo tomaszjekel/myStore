@@ -19,7 +19,7 @@ namespace MyStore.Infrastructure.EF
         }
 
         public async Task<Product> GetAsync(Guid id)
-            => await _context.Products.Include(x=>x.Files).SingleOrDefaultAsync(p => p.Id == id);
+            => await _context.Products.Where(x => x.Id == id).Include(x => x.Files).FirstOrDefaultAsync();
 
         public async Task<IQueryable<Product>> BrowseAsync(string name)
         {
