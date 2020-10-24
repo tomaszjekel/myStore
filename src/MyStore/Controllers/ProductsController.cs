@@ -5,6 +5,7 @@ using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication.Cookies;
@@ -36,6 +37,66 @@ namespace MyStore.Controllers
             _fileService = fileService;
         }
 
+        [HttpGet("categories")]
+        public async Task<IActionResult> Categories()
+        {
+
+            CategoryVieModel categoryVieModel = new CategoryVieModel();
+            categoryVieModel.Categories = await _productService.GetCategories();
+
+            return View(categoryVieModel);
+        }
+
+        [HttpGet("deleteCategory/{id}")]
+        public async Task<IActionResult> DeleteCategory(int id)
+        {
+
+            CategoryVieModel categoryVieModel = new CategoryVieModel();
+            _productService.RemoveCategory(id);
+
+            return RedirectToAction("categories", "Products");
+        }
+
+        
+        [Authorize]
+        [Authorize(AuthenticationSchemes = CookieAuthenticationDefaults.AuthenticationScheme)]
+        [HttpPost("createCategory")]
+        public async Task<IActionResult> CreateCategory(CategoryVieModel categoryVieModel)
+        {
+            if (!ModelState.IsValid)
+            {
+                return null ;
+            }
+
+            _productService.CreateCategory(categoryVieModel.Name);
+            return RedirectToAction("categories", "Products");
+        }
+
+        
+        [Authorize]
+        [HttpPost("AddToBasket/{productId}/{quantity}")]
+        [Authorize(AuthenticationSchemes = CookieAuthenticationDefaults.AuthenticationScheme)]
+        public async Task<IActionResult> AddToBasket(Guid productId, int quantity)
+        {
+            Guid userGuid;
+            Guid.TryParse(this.User.FindFirstValue(ClaimTypes.NameIdentifier), out userGuid);
+            _productService.AddToBasket(productId, quantity, userGuid);
+
+            
+            return View();
+        }
+
+        [Authorize]
+        [HttpPost("Quantity/{basketItemId}")]
+        [Authorize(AuthenticationSchemes = CookieAuthenticationDefaults.AuthenticationScheme)]
+        public async Task<IActionResult> Quantity(int basketItemId, int quantity)
+        {
+
+            _productService.ChangeQuantity(basketItemId, quantity);
+
+            return View();
+        }
+        
         [HttpGet("browse")]
         public async Task<IActionResult> Browse(string keyword, int? pageIndex, Guid userId)
         {

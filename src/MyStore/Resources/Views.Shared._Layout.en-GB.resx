@@ -126,7 +126,13 @@
   <data name="New" xml:space="preserve">
     <value>New</value>
   </data>
-  <data name="Products" xml:space="preserve">
+  <data name="Categories" xml:space="preserve">
+    <value>Categories</value>
+  </data>
+    <data name="Basket" xml:space="preserve">
+    <value>Basket</value>
+  </data>
+    <data name="Products" xml:space="preserve">
     <value>Products</value>
   </data>
   <data name="SignIn" xml:space="preserve">

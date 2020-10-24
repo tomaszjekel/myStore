@@ -1,6 +1,7 @@
 ﻿using System;
 using Microsoft.EntityFrameworkCore;
 using MyStore.Domain;
+using MyStore.Domain.Repositories;
 
 namespace MyStore.Infrastructure.EF
 {
@@ -19,6 +20,9 @@ namespace MyStore.Infrastructure.EF
         public DbSet<FilesUpload> Files { get; set; }
         public DbSet<Cities> Cities { get; set; }
         public DbSet<Province> Provinces { get; set; }
+        public DbSet<Category> Categories { get; set; }
+        public DbSet<BasketItem> BasketItem { get; set; }
+        public DbSet<Item> Items { get; set; }
 
 
 
@@ -55,7 +59,10 @@ namespace MyStore.Infrastructure.EF
             var filesBuilder = builder.Entity<FilesUpload>();
             filesBuilder.Property(x => x.UserId).IsRequired();
             filesBuilder.HasOne<User>().WithMany().HasForeignKey(x => x.UserId);
-
+            
+            //var categoryBuilder = builder.Entity<Category>();
+            //categoryBuilder.Property(x => x.Id).IsRequired();
+            //categoryBuilder.HasOne<User>().WithMany().HasForeignKey(x => x.UserId);
         }
     }
     

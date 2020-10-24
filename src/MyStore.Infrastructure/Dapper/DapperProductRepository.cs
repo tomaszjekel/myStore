@@ -9,7 +9,7 @@ using System.Linq;
 
 namespace MyStore.Infrastructure.Dapper
 {
-    public class DapperProductRepository : IProductRepository
+    public class DapperProductRepository
     {
 
         public async Task<IQueryable<Product>> BrowseAsync(string name)
@@ -45,7 +45,17 @@ namespace MyStore.Infrastructure.Dapper
             throw new NotImplementedException();
         }
 
+        public Task<List<Category>> GetCategories()
+        {
+            throw new NotImplementedException();
+        }
+
         public Task<List<Cities>> GetCities()
+        {
+            throw new NotImplementedException();
+        }
+
+        public void RemoveCategory(int id)
         {
             throw new NotImplementedException();
         }
@@ -55,24 +65,6 @@ namespace MyStore.Infrastructure.Dapper
             throw new NotImplementedException();
         }
 
-        Task<IQueryable<Product>> IProductRepository.BrowseAsync(string name)
-        {
-            throw new NotImplementedException();
-        }
 
-        Task IProductRepository.CreateAsync(Product product)
-        {
-            throw new NotImplementedException();
-        }
-
-        Task IProductRepository.DeleteImageFromProduct(Guid productId, Guid imageId, Guid userId)
-        {
-            throw new NotImplementedException();
-        }
-
-        Task<Product> IProductRepository.GetAsync(Guid id)
-        {
-            throw new NotImplementedException();
-        }
     }
 }

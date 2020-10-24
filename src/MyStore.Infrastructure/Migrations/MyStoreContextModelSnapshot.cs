@@ -158,6 +158,23 @@ namespace MyStore.Infrastructure.Migrations
                     b.ToTable("Provinces");
                 });
 
+            modelBuilder.Entity("MyStore.Domain.Repositories.Category", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<bool>("IsSubCategory")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("longtext CHARACTER SET utf8mb4");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Categories");
+                });
+
             modelBuilder.Entity("MyStore.Domain.User", b =>
                 {
                     b.Property<Guid>("Id")

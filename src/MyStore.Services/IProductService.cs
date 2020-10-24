@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using MyStore.Domain;
+using MyStore.Domain.Repositories;
 using MyStore.Services.DTO;
 
 namespace MyStore.Services
@@ -22,6 +23,13 @@ namespace MyStore.Services
         Task UpdateProduct(Product p);
         Task DeleteProduct(Guid productId, Guid userId);
         Task<List<Cities>> GetCities();
-           
+        Task <List<Category>> GetCategories();
+        void RemoveCategory(int id);
+        void CreateCategory(string name);
+        void AddToBasket(Guid productId, int quantity, Guid userId);
+        Task<List<BasketItem>> GetBasket(Guid userGuid);
+        Task<Item> GetBasketItem(int basketItemId);
+        void ChangeQuantity(int basketItemId, int quantity);
+        void RemoveBasketItem(int id);
     }
 }

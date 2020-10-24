@@ -17,5 +17,6 @@ namespace MyStore.Models
         public string Description { get; set; }
         public List<FilesUpload> Files { get; set; }
         public string City { get; set; }
+        public int Quantity { get; set; }
     }
 }

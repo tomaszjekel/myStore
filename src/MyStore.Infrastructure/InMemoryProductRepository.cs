@@ -7,7 +7,7 @@ using MyStore.Domain.Repositories;
 
 namespace MyStore.Infrastructure
 {
-    public class InMemoryProductRepository : IProductRepository
+    public class InMemoryProductRepository
     {
         //No thread safe
         private readonly List<Product> _products = new List<Product>();
@@ -34,26 +34,6 @@ namespace MyStore.Infrastructure
 
         }
 
-        Task<Product> IProductRepository.GetAsync(Guid id)
-        {
-            throw new NotImplementedException();
-        }
-
-        Task<IQueryable<Product>> IProductRepository.BrowseAsync(string name)
-        {
-            throw new NotImplementedException();
-        }
-
-        Task IProductRepository.CreateAsync(Product product)
-        {
-            throw new NotImplementedException();
-        }
-
-        Task IProductRepository.DeleteImageFromProduct(Guid productId, Guid imageId, Guid userId)
-        {
-            throw new NotImplementedException();
-        }
-
         public Task DeleteImage(string imageId, Guid userId)
         {
             throw new NotImplementedException();
@@ -75,6 +55,16 @@ namespace MyStore.Infrastructure
         }
 
         public Task<List<Cities>> GetCities()
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<List<Category>> GetCategories()
+        {
+            throw new NotImplementedException();
+        }
+
+        public void RemoveCategory(int id)
         {
             throw new NotImplementedException();
         }

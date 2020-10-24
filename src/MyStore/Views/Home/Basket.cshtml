@@ -1,2 +1,73 @@
-﻿body {
-}
+﻿@model List<BasketItemViewModel>
+    <br />
+    <br />
+    <br />
+
+    @foreach (var m in Model)
+    {
+
+
+        <li id="@m.Id" class="list-group-item d-flex justify-content-between">
+           
+                <div class="thumbnail">
+                    <img style="width: 201px"
+                         class="img-responsive" src="../images/min_@(m.ItemViewModel.ProductViewModel.Files.FirstOrDefault().Name)" alt="Chania">
+                </div>
+            
+            <p class="p-0 m-0 flex-grow-1">@m.ItemViewModel.ProductViewModel.Name</p>
+            <p class="p-0 m-0 flex-grow-1">@m.ItemViewModel.ProductViewModel.Description</p>
+            <p id="price" class="p-0 m-0 flex-grow-1">@(String.Format("{0:0.##}", m.ItemViewModel.ProductViewModel.Price))</p>
+            @Html.EditorFor(z => m.ItemViewModel.ProductViewModel.Quantity, new { htmlAttributes = new { @id = "quantity" + m.ItemViewModel.Id, @class = "form-control", style = "width:50px", onchange = "changeQuantity(" + m.ItemViewModel.Id + ")" } })
+            <button class="btn-success"> EDIT</button>
+            <button id="button" class="btn-danger" onClick="onDelete(@m.Id)" href="#">DELETE</button>
+
+        </li>
+    }
+
+    @section Scripts
+{
+        <script>function changeQuantity(id) {
+                var fd = new FormData();
+
+                var quantity = $('#quantity' + id).val();
+                fd.append("quantity", quantity);
+
+                $.ajax({
+                    url: 'Products/Quantity/' + id,
+                    type: 'post',
+                    data: fd,
+                    contentType: false,
+                    processData: false,
+                    success: function (response) {
+                        loadImages(response.files);
+                        if (response != 0) {
+                            //$("#img").attr("src", response);
+                            //$(".preview img").show(); // Display image element
+                        } else {
+                            alert('file not uploaded');
+                        }
+                    },
+                });
+            }
+
+            function onDelete(id) {
+                $("#" + id).remove();
+
+                $.ajax({
+                    url: 'DeleteFromBasket/' + id,
+                    type: 'get',
+                    data: null,
+                    contentType: false,
+                    processData: false,
+                    success: function (response) {
+                        debugger;
+                        if (response != 0) {
+                            //$("#img").attr("src", response);
+                            //$(".preview img").show(); // Display image element
+                        } else {
+                            alert('file not uploaded');
+                        }
+                    },
+                });
+            }</script>
+    }

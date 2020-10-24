@@ -1,10 +1,10 @@
 ﻿using System;
+using System.Collections.Generic;
+
 namespace MyStore.Models
 {
     public class BasketListVieModel
     {
-        public BasketListVieModel()
-        {
-        }
+        public List<BasketItemViewModel> BasketViewModels { get; set; }
     }
 }

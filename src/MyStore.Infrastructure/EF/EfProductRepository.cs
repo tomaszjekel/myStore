@@ -126,6 +126,69 @@ namespace MyStore.Infrastructure.EF
             return  _context.Cities.Select(x =>new Cities { Id = x.Id, Name = x.Name, Province_Id = x.Province_Id }).OrderBy(x=>x.Name).ToList();
                 
         }
+
+        public Task<List<Category>> GetCategories()
+        {
+            return  _context.Categories.ToListAsync();
+        }
+
+        public void RemoveCategory(int id)      
+        {
+            var category = _context.Categories.Where(x => x.Id == id).FirstOrDefault();
+            _context.Categories.Remove(category);
+            _context.SaveChanges();
+        }
+
+        public void CreateCategory(string name)
+        {
+            _context.Categories.Add(new Category { Name = name });
+            _context.SaveChanges();
+        }
+
+        public void AddToBasket(Guid productId, int quantity, Guid userId)
+        {
+            var product = _context.Products.Where(x => x.Id == productId).FirstOrDefault();
+            Item item = new Item { Product = product, Quantity = quantity };
+            _context.Items.Add(item);
+            _context.SaveChanges();
+
+            
+            BasketItem basket = new BasketItem{ Item=item,UserId=userId};
+            _context.BasketItem.Add(basket);
+            _context.SaveChanges();
+        }
+
+        public Task<List<BasketItem>> GetBasket(Guid userGuid)
+        {
+            return _context.BasketItem.Where(x => x.UserId == userGuid).
+                Include(x=>x.Item.Product).
+                Include(x=> x.Item.Product.Files).ToListAsync();
+        }
+
+        public Task<Item> GetBasketItem(int basketItemId)
+        {
+            return  _context.Items.Where(x => x.Id == basketItemId).FirstOrDefaultAsync();
+        }
+
+        public void ChangeQuantity(int basketItemId, int quantity)
+        {
+            var basketItem = _context.Items.FirstOrDefault(x => x.Id == basketItemId);
+            basketItem.Quantity = quantity;
+            _context.SaveChanges();
+        }
+        public void RemoveBasketItem(int id)
+        {
+            var basket1 = _context.BasketItem.Include(x => x.Item).FirstOrDefault(x => x.Id == id);
+            int itemId = basket1.Item.Id;
+            var item = _context.Items.FirstOrDefault(x => x.Id == itemId);
+            _context.Items.Remove(item);
+            _context.SaveChanges();
+            var basket = _context.BasketItem.Include(x => x.Item).FirstOrDefault(x => x.Id == id);
+            _context.BasketItem.Remove(basket);
+            _context.SaveChanges();
+
+        }
     }
+
 
 }

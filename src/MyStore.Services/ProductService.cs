@@ -157,6 +157,11 @@ namespace MyStore.Services
             return pathImage;
         }
 
+        public async Task<List<Category>> GetCategories()
+        {
+           return await _productRepository.GetCategories();
+        }
+
         public async Task UpdateProduct(Product p)
         {
           await  _productRepository.UpdateProduct(p);
@@ -174,5 +179,39 @@ namespace MyStore.Services
         {
             return _productRepository.GetCities();
         }
+
+        public void RemoveCategory(int id)
+        {
+            _productRepository.RemoveCategory(id);
+        }
+
+        public void CreateCategory(string name)
+        {
+            _productRepository.CreateCategory(name);
+        }
+
+        public void AddToBasket(Guid productId, int quantity,Guid userId )
+        {
+            _productRepository.AddToBasket(productId, quantity, userId);
+        }
+
+        public Task<List<BasketItem>> GetBasket(Guid userGuid)
+        {
+            return _productRepository.GetBasket(userGuid);
+        }
+
+        public Task<Item> GetBasketItem(int basketItemId)
+        {
+            return _productRepository.GetBasketItem(basketItemId);
+        }
+        public void ChangeQuantity(int basketItemId, int quantity)
+        {
+            _productRepository.ChangeQuantity(basketItemId, quantity);
+        }
+        public void RemoveBasketItem(int id)
+        {
+            _productRepository.RemoveBasketItem(id);
+        }
+
     }
 }
