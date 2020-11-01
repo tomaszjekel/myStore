@@ -78,6 +78,7 @@ namespace MyStore.Controllers
         [Authorize(AuthenticationSchemes = CookieAuthenticationDefaults.AuthenticationScheme)]
         public async Task<IActionResult> AddToBasket(Guid productId, int quantity)
         {
+            HttpContext.Session.SetString("MyKey", "MyVal");
             Guid userGuid;
             Guid.TryParse(this.User.FindFirstValue(ClaimTypes.NameIdentifier), out userGuid);
             _productService.AddToBasket(productId, quantity, userGuid);
@@ -169,7 +170,8 @@ namespace MyStore.Controllers
                 Price = product.Price,
                 Files = product.Files,
                 Description = product.Description,
-                City = cities.Where(x => x.Id == product.CityId).Select(x=>x.Name).FirstOrDefault()
+                City = cities.Where(x => x.Id == product.CityId).Select(x=>x.Name).FirstOrDefault(),
+                Quantity = 1
             };
 
             return View(viewModel);
@@ -281,7 +283,7 @@ namespace MyStore.Controllers
             return NotFound();
         }
 
-        [HttpPost("Edit/{id}")]
+        [HttpPost("Edit")]
         public async Task<IActionResult> Edit(EditProductViewModel editModel)
         {
             Guid userId = new Guid(this.User.FindFirstValue(ClaimTypes.NameIdentifier));

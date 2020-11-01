@@ -44,6 +44,11 @@ namespace MyStore.Infrastructure.EF
             return await files.ToListAsync();
         }
 
+        public async Task<List<FilesUpload>> BrowseByProductByIdAsync(Guid productId)
+        {
+            return _context.Files.Where(x => x.ProductId == productId).ToList();
+        }
+
         public async Task CreateAsync(FilesUpload files)
         {
             await _context.Files.AddAsync(files);

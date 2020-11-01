@@ -45,6 +45,13 @@ namespace MyStore.Services
             return file.Select(_mapper.Map<FileDto>);
         }
 
+        public async Task<List<FilesUpload>> BrowseByProductByIdAsync(Guid productId)
+        {
+            var file = await _fileRepository.BrowseByProductByIdAsync(productId);
+            return file;
+        }
+
+
         public async Task CreateAsync(Guid userId, Guid? productId, string name , DateTime data)
         {
             var fu = new FilesUpload(userId, productId, name, data);

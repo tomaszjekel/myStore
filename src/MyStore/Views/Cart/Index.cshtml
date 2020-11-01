@@ -1,0 +1,111 @@
+﻿@model List<ItemViewModel>
+<br />
+<br />
+<br />
+
+@foreach (var m in Model)
+{
+
+
+    <li id="@m.ProductViewModel.Id" class="list-group-item d-flex justify-content-between">
+
+        <div class="thumbnail" style="border: 0px;">
+            <img style="width: 201px;float:left;padding:20px"
+                 class="img-responsive" src="../images/min_@(m.ProductViewModel.Files.FirstOrDefault().Name)" alt="Chania">
+        </div>
+
+        <p class="p-0 m-0 flex-grow-1">@m.ProductViewModel.Name</p>
+        @*<p class="p-0 m-0 flex-grow-1">@m.ProductViewModel.Description</p>*@
+        <p id="price-@m.ProductViewModel.Id" price="@m.ProductViewModel.Price" class="p-0 m-0 flex-grow-1 price">@(String.Format("{0:0.##}", m.Price)) zl</p>
+        @Html.EditorFor(z => m.Quantity, new { htmlAttributes = new { @id = "quantity" + m.ProductViewModel.Id, @class = "form-control", @min = "1" , style = "width:70px", onchange = "changeQuantity('" + m.ProductViewModel.Id + "')" } })
+        @*<button class="btn-success"> EDIT</button>*@
+        <button id="button" class="btn-danger pull-right" onClick="onDelete('@m.ProductViewModel.Id')" href="#">Usun</button>
+        <br />
+    </li>
+}
+<br />
+
+<table style="width:57%;float:right">
+    <tr>
+        <th></th>
+    </tr>
+    <tr>
+        <td><h1>Cena do zaplaty</h1></td>
+        <td id="sum"></td>
+    </tr>
+</table>
+<br /><br /><br /><br /><br />
+
+
+@section Scripts
+{
+    <script>
+
+        function changeQuantity(id) {
+            var fd = new FormData();
+
+            var quantity = $('#quantity' + id).val();
+            
+            var price = parseInt($('#price-' + id).attr("price"));
+            $("#price-" + id)[0].innerHTML = parseInt(quantity) * price + ' zl';
+
+            var price = 0;
+            $(".price").each(function () {
+                price += parseInt($(this).text());
+            });
+            $("#sum")[0].innerHTML = "<h1>" + price + "zl </h1>";
+
+            fd.append("quantity", quantity);
+
+            $.ajax({
+                url: 'Quantity/' + id,
+                type: 'post',
+                data: fd,
+                contentType: false,
+                processData: false,
+                success: function (response) {
+                    ;
+                    if (response != 0) {
+
+                    } else {
+                        alert('file not uploaded');
+                    }
+                },
+            });
+        }
+
+        function onDelete(id) {
+            $("#" + id).remove();
+            debugger;
+            $.ajax({
+                url: 'remove/' + id,
+                type: 'get',
+                data: null,
+                contentType: false,
+                processData: false,
+                success: function (response) {
+                    if (response != 0) {
+                        removeQuantity();
+                    } else {
+                        alert('file not uploaded');
+                    }
+                },
+            });
+        }
+
+        function removeQuantity() {
+            var count = parseInt($("#notification").attr("data-count"));
+            count--;
+            $("#notification").attr("data-count", count);
+        }
+
+
+            var price = 0;
+            $(".price").each(function () {
+                price += parseInt($(this).text());
+            });
+
+            $("#sum")[0].innerHTML ="<h1>" +price + "zl </h1>";
+
+    </script>
+}

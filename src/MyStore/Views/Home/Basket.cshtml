@@ -16,8 +16,8 @@
             
             <p class="p-0 m-0 flex-grow-1">@m.ItemViewModel.ProductViewModel.Name</p>
             <p class="p-0 m-0 flex-grow-1">@m.ItemViewModel.ProductViewModel.Description</p>
-            <p id="price" class="p-0 m-0 flex-grow-1">@(String.Format("{0:0.##}", m.ItemViewModel.ProductViewModel.Price))</p>
-            @Html.EditorFor(z => m.ItemViewModel.ProductViewModel.Quantity, new { htmlAttributes = new { @id = "quantity" + m.ItemViewModel.Id, @class = "form-control", style = "width:50px", onchange = "changeQuantity(" + m.ItemViewModel.Id + ")" } })
+            <p id="price" class="p-0 m-0 flex-grow-1 price">@(String.Format("{0:0.##}", m.ItemViewModel.ProductViewModel.Price))</p>
+            @Html.EditorFor(z => m.ItemViewModel.ProductViewModel.Quantity, new { htmlAttributes = new { @id = "quantity" + m.ItemViewModel.Id, @class = "form-control", style = "width:70px", onchange = "changeQuantity(" + m.ItemViewModel.Id + ")" } })
             <button class="btn-success"> EDIT</button>
             <button id="button" class="btn-danger" onClick="onDelete(@m.Id)" href="#">DELETE</button>
 
@@ -69,5 +69,25 @@
                         }
                     },
                 });
-            }</script>
+            }
+
+            $(window).ready(function () {
+                sumPrice();
+            });
+
+            //window.onload = function () { this.sumPrice() }
+
+            function sumPrice() {
+                $("#price").each(function (index) {
+                    debugger;
+                    console.log(index + ": " + $(this).text());
+                });
+            }
+
+            var price = 0;
+            $(".price").each(function () {
+                price += parseInt($(this).text());
+            });
+            alert(price);
+    </script>
     }

@@ -8,6 +8,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Options;
 using MyStore.Domain;
@@ -61,7 +62,9 @@ namespace MyStore.Controllers
         [HttpGet("basket")]
         public async Task<IActionResult> Basket()
         {
-            Guid userGuid;
+
+
+                Guid userGuid;
             Guid.TryParse(this.User.FindFirstValue(ClaimTypes.NameIdentifier), out userGuid);
             var cookies = HttpContext.Request.Cookies["ConstoCookie"];
             List<BasketItemViewModel> basketViewModelList = new List<BasketItemViewModel>();

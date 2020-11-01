@@ -2,12 +2,38 @@
 @using Microsoft.AspNetCore.Mvc.Localization
 @using System.Net;
 
+
+<link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.6.3/css/font-awesome.min.css'>
+<style>
+    .badge-notification i {
+        @*width: 100px;*@
+        @*display: inline-block;*@
+        text-align: center;
+        @*vertical-align: middle;*@
+        @*position: relative;*@
+    }
+    .fa-stack[data-count]:after {
+        position: absolute;
+        right: 0%;
+        top: 1%;
+        content: attr(data-count);
+        font-size: 30%;
+        padding: .6em;
+        border-radius: 999px;
+        @*line-height: .75em;*@
+        color: white;
+        background: rgba(255, 0, 0, 0.85);
+        text-align: center;
+        @*min-width: 2em;*@
+        font-weight: bold;
+    }
+</style>
 @inject IViewLocalizer LocString
 @{
     HttpWebRequest request = (HttpWebRequest)WebRequest.Create("http://localhost");
-    request.CookieContainer = new CookieContainer();
-    request.CookieContainer.Add(new Cookie("ConstoCookie", "Chocolate Flavour") { Domain = "localhost"});
-        }
+ request.CookieContainer = new CookieContainer();
+ request.CookieContainer.Add(new Cookie("ConstoCookie", "Chocolate Flavour") { Domain = "localhost" });
+}
 <html>
 <head>
     <meta charset="utf-8" />
@@ -39,9 +65,9 @@
             </div>
 
             @if (User.Identity.IsAuthenticated)
-        {
-            Guid userGuid;
-            Guid.TryParse(User.Claims.LastOrDefault().Value, out userGuid);
+            {
+                Guid userGuid;
+                Guid.TryParse(User.Claims.LastOrDefault().Value, out userGuid);
 
                 <div class="navbar-collapse collapse">
                     <ul class="nav navbar-nav">
@@ -58,7 +84,10 @@
                         <li><a asp-area="" asp-controller="Products" asp-action="browse">@LocString["Browse"]</a></li>
                     </ul>
                     <ul class="nav navbar-nav navbar-right">
-                        <li><a asp-area="" asp-controller="Home" asp-action="basket"> @LocString["Basket"] </a> </li>
+                        <li>
+                            <a asp-area="" asp-controller="Cart" asp-action="index"> @LocString["Basket"] </a>
+                            <i id="notification" class="fa-3x has-badge" style="line-height: 0.1em;position: initial;display:revert;" data-count="0"></i>
+                        </li>
                         <li><a asp-area="" asp-controller="Products" asp-action="categories"> @LocString["Categories"] </a> </li>
                         <li><a asp-area="" asp-controller="Products" asp-action="create"> @LocString["New"] </a> </li>
                         <li><a asp-area="" asp-controller="Products" asp-action="browse" asp-route-userId="@userGuid"> @LocString["MyProducts"] </a> </li>
@@ -83,18 +112,26 @@
                         </li>
 
                         <li><a asp-area="" asp-controller="Products" asp-action="browse">@LocString["Browse"]</a></li>
+
                         @*<li><a asp-area="" asp-controller="Home" asp-action="About">About</a></li>
                             <li><a asp-area="" asp-controller="Home" asp-action="Contact">Contact</a></li>*@
                     </ul>
                     <ul class="nav navbar-nav navbar-right">
 
+
+                        <li>
+                            <a asp-area="" asp-controller="Cart" asp-action="index"> @LocString["Basket"] </a>
+                            <i id="notification" class="fa-3x has-badge" style="line-height: 0.1em;position: initial;display:revert;" data-count="0"></i>
+                        </li>
                         <li><a asp-area="" asp-controller="Account" asp-action="login">@LocString["SignIn"]</a></li>
                         <li><a asp-area="" asp-controller="Account" asp-action="register">@LocString["SignUp"]</a></li>
+
 
                     </ul>
                 </div>
 
             }
+
         </div>
     </nav>
     <div class="container body-content">
@@ -111,6 +148,7 @@
         <script src="~/js/site.js" asp-append-version="true"></script>
     </environment>
     <environment exclude="Development">
+
         <script src="https://ajax.aspnetcdn.com/ajax/jquery/jquery-2.2.0.min.js"
                 asp-fallback-src="~/lib/jquery/dist/jquery.min.js"
                 asp-fallback-test="window.jQuery"
@@ -122,6 +160,23 @@
                 crossorigin="anonymous"
                 integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"></script>
         <script src="~/js/site.min.js" asp-append-version="true"></script>
+
+        <script>$.ajax({
+                url: '../Cart/GetQuantity/',
+                type: 'post',
+                data: null,
+                contentType: false,
+                processData: false,
+                success: function (response) {
+                    if (response == 0) {
+                        $("#notification").removeClass("fa-stack");
+                        $("#notification").attr("data-count", 0);
+                    } else {
+                        $("#notification").addClass("fa-stack");
+                        $("#notification").attr("data-count", parseInt(response));
+                    }
+                },
+            });</script>
     </environment>
 
     @RenderSection("Scripts", required: false)

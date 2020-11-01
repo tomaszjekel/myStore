@@ -45,8 +45,9 @@
 </div>
 
 
-@using (Html.BeginForm())
+@using (Html.BeginForm("Edit", "Products", FormMethod.Post))
 {
+    @Html.Hidden("Id", Model.Id)
     @Html.AntiForgeryToken()
 
     <div class="form-horizontal">
@@ -111,41 +112,41 @@
         </div>
     </div>
 
-        <!-- Modal -->
-        <div class="modal fade" id="deleteProduct" role="dialog">
-            <div class="modal-dialog">
+    <!-- Modal -->
+    <div class="modal fade" id="deleteProduct" role="dialog">
+        <div class="modal-dialog">
 
-                <!-- Modal content-->
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal">&times;</button>
-                        <h4 class="modal-title">@LocString["Delete_header"]</h4>
-                    </div>
-                    <div class="modal-body">
-                        <p>@LocString["Delete_body"]</p>
-                    </div>
-                    <div class="modal-footer">
-                        <a asp-action="DeleteProduct" asp-route-productId="@Model.Id" class="btn btn-danger pull-right" role="button">Delete</a>
-                        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-
-                    </div>
+            <!-- Modal content-->
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="modal-title">@LocString["Delete_header"]</h4>
                 </div>
+                <div class="modal-body">
+                    <p>@LocString["Delete_body"]</p>
+                </div>
+                <div class="modal-footer">
+                    <a asp-action="DeleteProduct" asp-route-productId="@Model.Id" class="btn btn-danger pull-right" role="button">Delete</a>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
 
+                </div>
             </div>
+
         </div>
+    </div>
 
-        }
+}
 
 
 
-        <div>
-            <br />
-            @Html.ActionLink("Back to List", "browse")
-        </div>
+<div>
+    <br />
+    @Html.ActionLink("Back to List", "browse")
+</div>
 
-        @section Scripts
+@section Scripts
 {
-            <script>
+    <script>
 
            function loadImages(files) {
             $.each(files, function (key, fileName) {
@@ -202,5 +203,5 @@
             });
         }
 
-            </script>
-        }
+    </script>
+}
