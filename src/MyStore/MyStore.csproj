@@ -34,5 +34,6 @@
   <ItemGroup>
     <Content Remove="Views\Products\Category.cshtml" />
     <Content Remove="Views\Products\Categories.cshtml" />
+    <Content Remove="Views\Shared\index.cshtml" />
   </ItemGroup>
 </Project>
