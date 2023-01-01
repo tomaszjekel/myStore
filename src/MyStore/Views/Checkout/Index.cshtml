@@ -1,0 +1,40 @@
+﻿@using Microsoft.Extensions.Options
+@inject IOptions<MyStore.Data.StripeSettings> Stripe
+@{
+    ViewData["Title"] = "Home Page";
+}
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+
+@{
+    Layout = "_Layout";
+}
+
+
+
+<div class="text-center">
+    <form asp-action="Processing" asp-controller="Checkout" method="post">
+        <article>
+            <label>Amount USD$ : @ViewBag.DollarAmount</label>
+
+        </article>
+        <script src="//checkout.stripe.com/v2/checkout.js"
+                class="stripe-button"
+                data-key="@Stripe.Value.Publishablekey"
+                data-amount="@ViewBag.Total"
+                data-name="[Deveducate]"
+                data-locale="en"
+                data-discription="Sample charge"
+                data-image="https://stripe.com/img/documentation/checkout/marketplace.png"
+                data-zip-code="true"
+                >
+        </script>
+    </form>
+</div>
+
+
+
+

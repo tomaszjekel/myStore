@@ -15,11 +15,13 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using MyStore.Data;
 using MyStore.Domain;
 using MyStore.Domain.Repositories;
 using MyStore.Framework;
 using MyStore.Infrastructure.EF;
 using MyStore.Services;
+using Stripe;
 
 namespace MyStore
 {
@@ -53,10 +55,10 @@ namespace MyStore
 
 
             services.AddScoped<IProductRepository, EfProductRepository>();
-            services.AddScoped<IProductService, ProductService>();
+            services.AddScoped<IProductService, MyStore.Services.ProductService>();
 
             services.AddScoped<IFileRepository, EfFileRepository>();
-            services.AddScoped<IFileService, FileService>();
+            services.AddScoped<IFileService, MyStore.Services.FileService>();
 
             services.AddScoped<IUserRepository, EfUserRepository>();
             services.AddScoped<IUserService, UserService>();
@@ -65,7 +67,7 @@ namespace MyStore
             services.AddScoped<IAuthenticator, Authenticator>();
             services.AddSingleton(AutoMapperConfig.GetMapper());
 
-            var connMySql = "server=localhost;port=3306;uid=root;password=;database=MyStore;";
+            var connMySql = "server=vipsound.pl;port=3306;uid=root;password=blokersi;database=Roksa;";
             services.AddDbContext<MyStoreContext>(options => options.UseMySql(connMySql));
 
             services.AddMemoryCache();
@@ -78,13 +80,16 @@ namespace MyStore
                     o.ExpireTimeSpan = TimeSpan.FromDays(1);
                 });
 
-           
+            services.Configure<StripeSettings>(Configuration.GetSection("Stripe"));
+
+            // StripeConfiguration.SetApiKey("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");
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env,
             ILoggerFactory loggerFactory)
         {
+            StripeConfiguration.SetApiKey(Configuration.GetSection("Stripe")["Secretkey"]);
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
@@ -107,6 +112,7 @@ namespace MyStore
                 RequestPath = "/images",
                 EnableDirectoryBrowsing = true
             });
+
 
             //app.UseMiddleware(typeof(ErrorHandlerMiddleware));
             app.UseMiddleware<ErrorHandlerMiddleware>();

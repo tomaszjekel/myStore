@@ -58,10 +58,14 @@
             <div class="well">
                 <p><h3>@LocString["Price"]</h3>@(String.Format("{0:0.##}", Model.Price)) @LocString["Currency"] </p>
             </div>
-            <div class="well">
+           @* <div class="well">
                 <p><h3>Miasto</h3> <br /> @Model.City</p>
-            </div>
-        </div>
+            </div>*@
+        </div><form action="/Products/create-checkout-session" method="POST">
+            <button type="submit">Checkout</button>
+        </form>
+        <a asp-controller="Checkout" asp-action="Index" class="btn btn-sm btn-outline-success">Checkout</a>
+        <a asp-controller="cart" asp-action="buy" asp-route-Id="@Model.Id" class="btn btn-sm btn-primary" style="width:92px !important">Card</a>
     </div>
     <hr>
 </div>

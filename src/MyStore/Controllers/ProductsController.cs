@@ -22,6 +22,8 @@ using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.PixelFormats;
 using SixLabors.ImageSharp.Processing;
 using UnityEngine;
+using Stripe;
+using Stripe.FinancialConnections;
 
 namespace MyStore.Controllers
 {
@@ -40,9 +42,9 @@ namespace MyStore.Controllers
         public async Task<IActionResult> Browse(string keyword, int? pageIndex, Guid userId)
         {
             Guid userGuid;
-            Guid.TryParse(this.User.FindFirstValue(ClaimTypes.NameIdentifier),  out userGuid);
-            var products = await _productService.BrowseByUserId(keyword, pageIndex,userId);
-           
+            Guid.TryParse(this.User.FindFirstValue(ClaimTypes.NameIdentifier), out userGuid);
+            var products = await _productService.BrowseByUserId(keyword, pageIndex, userId);
+
 
             var viewModels = products.Select(p =>
                 new ProductViewModel
@@ -54,13 +56,13 @@ namespace MyStore.Controllers
                     Category = p.Category,
                     Price = p.Price,
                     Description = p.Description,
-                    Files= p.Files
+                    Files = p.Files
                 });
             //if (userGuid != Guid.Empty && name !="all")
             //    viewModels = viewModels.Where(c => c.ProductUserId == userGuid);
 
             ProductNewViewModel newModel = new ProductNewViewModel();
-            newModel.Products =  viewModels.ToList();
+            newModel.Products = viewModels.ToList();
             newModel.HasNextPage = products.HasNextPage;
             newModel.HasPreviousPage = products.HasPreviousPage;
             newModel.PageIndex = products.PageIndex;
@@ -81,7 +83,7 @@ namespace MyStore.Controllers
                     Name = p.Name,
                     Category = p.Category,
                     Price = p.Price,
-                    Description = p.Description    
+                    Description = p.Description
                 });
 
 
@@ -108,7 +110,7 @@ namespace MyStore.Controllers
                 Price = product.Price,
                 Files = product.Files,
                 Description = product.Description,
-                City = cities.Where(x => x.Id == product.CityId).Select(x=>x.Name).FirstOrDefault()
+                City = cities.Where(x => x.Id == product.CityId).Select(x => x.Name).FirstOrDefault()
             };
 
             return View(viewModel);
@@ -120,7 +122,7 @@ namespace MyStore.Controllers
         public async Task<IActionResult> Create()
         {
 
-           
+
             //  QRCodeGenerator qrGenerator = new QRCodeGenerator();
             //System.Random rnd = new System.Random();
 
@@ -139,7 +141,7 @@ namespace MyStore.Controllers
             var citiy = cities.Select(x => new { Value = x.Id, Text = x.Name });
             SelectList list = new SelectList(citiy, "Value", "Text");
 
-            var viewModel = new CreateProductViewModel() { Files=fileList.ToList(), Cities=list };
+            var viewModel = new CreateProductViewModel() { Files = fileList.ToList(), Cities = list };
 
             return View(viewModel);
         }
@@ -157,7 +159,7 @@ namespace MyStore.Controllers
             Guid userId = new Guid(this.User.FindFirstValue(ClaimTypes.NameIdentifier));
             var newId = Guid.NewGuid();
             await _productService.CreateAsync(newId, userId, viewModel.Name,
-            viewModel.Category, viewModel.Price, viewModel.Description,  Int32.Parse(viewModel.SelectedCity??"0"));
+            viewModel.Category, viewModel.Price, viewModel.Description, Int32.Parse(viewModel.SelectedCity ?? "0"));
 
             //QRCodeGenerator qrGenerator = new QRCodeGenerator();
             //QRCodeData qrCodeData = qrGenerator.CreateQrCode("The text which should be encoded.", QRCodeGenerator.ECCLevel.Q);
@@ -205,14 +207,14 @@ namespace MyStore.Controllers
                     Price = product.Price,
                     Files = product.Files.Select(x => new FileDto { Id = x.Id, Name = x.Name, ProductId = x.ProductId }).ToList(),
                     Category = product.Category,
-                    Cities =list
+                    Cities = list
                 };
                 if (product.CityId != 0)
                 {
                     var selected = list.Where(x => x.Value == product.CityId.ToString()).First();
                     selected.Selected = true;
                 }
-                
+
 
                 return View(edit);
             }
@@ -227,16 +229,16 @@ namespace MyStore.Controllers
 
             if (!ModelState.IsValid)
             {
-                return  await Edit(editModel.Id);
+                return await Edit(editModel.Id);
             }
             if (editModel != null)
             {
-                Product p = new Product
+                Domain.Product p = new Domain.Product
                 {
-                    Id=editModel.Id,
+                    Id = editModel.Id,
                     Name = editModel.Name,
                     Category = editModel.Category,
-                    CityId = Int32.Parse(editModel.SelectedCity??"0"),
+                    CityId = Int32.Parse(editModel.SelectedCity ?? "0"),
                     Description = editModel.Description,
                     Price = editModel.Price
                 };
@@ -255,12 +257,12 @@ namespace MyStore.Controllers
         public async Task<IActionResult> Delete(Guid imageId, Guid productId)
         {
             Guid userId = new Guid(this.User.FindFirstValue(ClaimTypes.NameIdentifier));
-            await _productService.DeleteImageFromProduct(productId ,imageId, userId);
+            await _productService.DeleteImageFromProduct(productId, imageId, userId);
 
             //return RedirectToAction( productId.ToString(),"Products" );
-            return RedirectToAction("edit", "Products", new {productId = productId });
+            return RedirectToAction("edit", "Products", new { productId = productId });
             //return await Edit(productId);
-        
+
         }
 
         [Authorize]
@@ -303,7 +305,7 @@ namespace MyStore.Controllers
         {
             Guid userGuid;
             Guid.TryParse(this.User.FindFirstValue(ClaimTypes.NameIdentifier), out userGuid);
-            
+
             if (action_name == "create")
             {
                 var fileList = await _productService.UploadandResize(files, userGuid, productId);
@@ -311,7 +313,7 @@ namespace MyStore.Controllers
                 return Json(new { files = fileList });
 
             }
-            else if(action_name == "edit")
+            else if (action_name == "edit")
             {
                 var fileList = await _productService.UploadandResize(files, userGuid, productId);
                 // return RedirectToAction("create");
@@ -327,8 +329,43 @@ namespace MyStore.Controllers
 
 
         }
-    }
 
+
+
+        [HttpPost("create-checkout-session")]
+        public ActionResult CreateCheckoutSession(string amount)
+        {
+            var options = new Stripe.Checkout.SessionCreateOptions
+            {
+                PaymentMethodTypes = new List<string> {
+    "card","p24"
+  },
+                LineItems = new List<Stripe.Checkout.SessionLineItemOptions>
+        {
+         new Stripe.Checkout.SessionLineItemOptions
+         {
+             PriceData = new Stripe.Checkout.SessionLineItemPriceDataOptions
+             {
+                 UnitAmount=Convert.ToInt32(2)*100,
+                 Currency="pln",
+                 ProductData = new Stripe.Checkout.SessionLineItemPriceDataProductDataOptions
+                 {
+                     Name = "T-shert"
+                 },
+             },
+             Quantity=2,
+         },
+        },
+                Mode = "payment",
+                SuccessUrl = "http://localhost:5000/Home/Success",
+                CancelUrl = "http://localhost:5000/Home/cancel",
+            };
+            var service = new Stripe.Checkout.SessionService();
+            Stripe.Checkout.Session session = service.Create(options);
+            Response.Headers.Add("Location", session.Url);
+            return new StatusCodeResult(303);
+        }
+    }
     public class CreateProduct
     {
         [Required]

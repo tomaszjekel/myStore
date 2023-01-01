@@ -1,0 +1,75 @@
+﻿<div class="row">
+
+    <div class="col-md-12">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>
+                        @Html.DisplayName("Photo")
+                    </th>
+
+                    <th>
+                        @Html.DisplayName("Name")
+                    </th>
+                    <th>
+                        @Html.DisplayName("Price")
+                    </th>
+
+                    <th>
+                        @Html.DisplayName("Quantity")
+                    </th>
+                    <th>
+                        @Html.DisplayName("SubTotal")
+                    </th>
+                    <th>
+                        
+                    </th>
+
+                </tr>
+            </thead>
+            <tbody id="myTable">
+                @if (ViewBag.cart != null)
+                {
+                    @foreach (var item in ViewBag.cart)
+                    {
+                        <tr>
+                            <td>
+                                @item.Name
+                            </td>
+                            <td>
+                            </td>
+
+
+                            <td>
+                                @item.Price
+                            </td>
+                            <td>
+                                @item.Quantity
+                            </td>
+                            <td>
+                                @(item.Price * item.Quantity)
+                            </td>
+                            <td>
+                                <a asp-controller="Cart" asp-action="Remove" asp-route-id="@item.Id" class="btn btn-sm btn">Remove</a>
+
+                            </td>
+                        </tr>
+                    }
+                }
+                
+
+                <tr>
+                    <td align="right" colspan="4">
+                        Sum
+                    </td>
+                    <td>
+                        @ViewBag.total
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+</div>
+<a asp-controller="Products" asp-action="Browse" class="btn btn-sm btn-info" >Continue Shoping</a>
+<a asp-controller="Checkout" asp-action="Index" class="btn btn-sm btn-outline-success">Checkout</a>
