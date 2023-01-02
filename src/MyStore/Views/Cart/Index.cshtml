@@ -32,13 +32,14 @@
                 {
                     @foreach (var item in ViewBag.cart)
                     {
+                       
                         <tr>
                             <td>
                                 @item.Name
                             </td>
                             <td>
+                            <img src="../images/min_@item.Img" asp-append-version="true" width="50px" height="50px" />
                             </td>
-
 
                             <td>
                                 @item.Price
@@ -73,3 +74,6 @@
 </div>
 <a asp-controller="Products" asp-action="Browse" class="btn btn-sm btn-info" >Continue Shoping</a>
 <a asp-controller="Checkout" asp-action="Index" class="btn btn-sm btn-outline-success">Checkout</a>
+<script>
+
+</script>

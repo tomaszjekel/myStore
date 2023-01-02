@@ -14,7 +14,9 @@
       "launchBrowser": true,
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "local",
-        "UPLOAD_DIR": "images"
+        "UPLOAD_DIR": "images",
+        "SecretKeyHtml": "6Le5INsUAAAAAIJII-dMx7peLleZqrAKXT45U-ER",
+        "SecretKey": "6Le5INsUAAAAADdH3v1dOa5VGBUOvzMg5JhlmRbA"
       },
       "applicationUrl": "http://localhost:5000/"
     }

@@ -1,9 +1,9 @@
-@model ProductNewViewModel
+﻿@model ProductNewViewModel
 
 @using Microsoft.AspNetCore.Mvc.Localization
 @inject IViewLocalizer LocString
 
-<h1>@LocString["Products"]</h1>
+
 
 <div class="row">
     @foreach (var product in Model.Products)
@@ -13,27 +13,53 @@
         var imageName = product?.Files?.FirstOrDefault()?.Name??"";
 
 
-        <div class="col-lg-3 col-sm-6">
-            <div class="thumbnail">
-                <img class="img-responsive" src="../images/min_@(imageName)" alt="Chania">
-                <div class="caption">
-                    <h4>@product.Name</h4>
-                    <p>@product.Category</p>
-                    <p>@(String.Format("{0:0.##}", product.Price)) @LocString["Currency"]</p>
-                    <p>
-                        <a asp-action="Details" asp-route-id="@product.Id"
-                           class="btn btn-primary" role="button">@LocString["Details"]</a>
-                        @if (product.UserId == product.ProductUserId)
+                        @*@if (product.UserId == product.ProductUserId)
                         {
                             <a asp-controller="Products" asp-action="Edit" asp-route-productId="@product.Id"
                                class="btn btn-primary" role="button">Edit</a>
-                        }
-                    </p>
-                       
-                </div>
-            </div>
-        </div>
-    }
+                        }*@
+
+
+                        <div class="col-lg-4 col-md-6 col-sm-6">
+                            <div class="product__item">
+                                <div class="product__item__pic set-bg" data-setbg="../images/min_@(imageName)">
+                                    <ul class="product__hover">
+                                        <li><a href="#"><img src="img/icon/heart.png" alt=""></a></li>
+                                        <li>
+                                            <a href="#"><img src="img/icon/compare.png" alt=""> <span>Compare</span></a>
+                                        </li>
+                                        <li><a href="#"><img src="img/icon/search.png" alt=""></a></li>
+                                    </ul>
+                                </div>
+                                <div class="product__item__text">
+                                    <h6>@product.Name</h6>
+                    <a onclick="addCart('@product.Id')" class="add-cart">+ Add To Cart</a>
+                                    <div class="rating">
+                                        <i class="fa fa-star-o"></i>
+                                        <i class="fa fa-star-o"></i>
+                                        <i class="fa fa-star-o"></i>
+                                        <i class="fa fa-star-o"></i>
+                                        <i class="fa fa-star-o"></i>
+                                    </div>
+                                    <h5>@product.Price zł</h5>
+                                    <div class="product__color__select">
+                                        <label for="pc-40">
+                                            <input type="radio" id="pc-40">
+                                        </label>
+                                        <label class="active black" for="pc-41">
+                                            <input type="radio" id="pc-41">
+                                        </label>
+                                        <label class="grey" for="pc-42">
+                                            <input type="radio" id="pc-42">
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                }
+
+                    
+    
     @{
         var prevDisabled = !Model.HasPreviousPage ? "disabled" : "";
         var nextDisabled = !Model.HasNextPage ? "disabled" : "";

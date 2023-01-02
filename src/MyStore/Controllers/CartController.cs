@@ -4,6 +4,7 @@ using MyStore.Helper;
 using MyStore.Infrastructure.EF;
 using MyStore.Models;
 using System;
+using System.Web;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -56,36 +57,36 @@ namespace MyStore.Controllers
             }
             return View(pet);
         }
-
-        public async Task<IActionResult> Buy(Guid Id)
+        
+        public async Task<JsonResult> BuyAsync(string id)
         {
+          
 
-            //    ProductModel productModel = new ProductModel();
-
-            var pet = _context.Products.FirstOrDefault(m => m.Id == Id);
-
+            var pet = _context.Products.FirstOrDefault(m => m.Id == Guid.Parse(id));
+            List<Product> cart;
             if (SessionHelper.GetObjectFromJson<List<Product>>(HttpContext.Session, "cart") == null)
             {
-                List<Product> cart = new List<Product>();
-                cart.Add(await _context.Products.FindAsync(Id));
+                cart = new List<Product>();
+                cart.Add(await _context.Products.FindAsync(Guid.Parse(id)));
                 SessionHelper.SetObjectasJson(HttpContext.Session, "cart", cart);
             }
             else
             {
-                List<Product> cart = SessionHelper.GetObjectFromJson<List<Product>>(HttpContext.Session, "cart");
-                int index = IsExist(Id);
+                cart = SessionHelper.GetObjectFromJson<List<Product>>(HttpContext.Session, "cart");
+                int index = IsExist(Guid.Parse(id));
                 if (index != -1)
                 {
                     cart[index].Quantity++;
                 }
                 else
                 {
-                    cart.Add( await _context.Products.FindAsync(Id));
+                    cart.Add( await _context.Products.FindAsync(Guid.Parse(id)));
                 }
                 SessionHelper.SetObjectasJson(HttpContext.Session, "cart", cart);
 
             }
-            return RedirectToAction("Index");
+            //List<Product> cart1 = SessionHelper.GetObjectFromJson<List<Product>>(HttpContext.Session, "cart");
+            return Json(new { qty = cart.Sum(item => item.Quantity), price= cart.Sum(item => item.Price * item.Quantity) });
         }
         public IActionResult Remove(Guid Id)
         {
@@ -97,6 +98,18 @@ namespace MyStore.Controllers
 
 
 
+        }
+
+        [HttpGet]
+        public JsonResult Quantity()
+        {
+            List<Product> cart = SessionHelper.GetObjectFromJson<List<Product>>(HttpContext.Session, "cart");
+            int qty = 0;
+            if (cart != null)
+            {
+                return Json(new {qty= cart.Sum(item => item.Quantity), price = cart.Sum(item => item.Price * item.Quantity) });
+            }
+            return Json(new { qty = 0, price = 0 });
         }
     }
 }

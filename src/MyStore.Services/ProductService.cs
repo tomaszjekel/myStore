@@ -82,9 +82,9 @@ namespace MyStore.Services
             return Products;
         }
 
-        public async Task CreateAsync(Guid id, Guid userId, string name, string category, decimal price, string description , int cityId)
+        public async Task CreateAsync(Guid id, Guid userId, string name, string category, decimal price, string description , int cityId, string img)
         {
-            var product = new Product { Id= id, UserId= userId, Name= name, Category= category, Price= price, Description= description, CityId= cityId };
+            var product = new Product { Id= id, UserId= userId, Name= name, Category= category, Price= price, Description= description, CityId= cityId,Img=img };
             await _productRepository.CreateAsync(product);
         }
 
