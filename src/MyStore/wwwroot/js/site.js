@@ -15,6 +15,7 @@ function addCart(id) {
     });
 }
 
+
 $(document).ready(function () {
     $.ajax({
         type: "GET",
@@ -29,3 +30,4 @@ $(document).ready(function () {
         }
     });
 });
+

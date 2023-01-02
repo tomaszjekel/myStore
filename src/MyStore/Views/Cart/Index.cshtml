@@ -1,77 +1,110 @@
-﻿<div class="row">
+﻿
+<!-- Breadcrumb Section Begin -->
+<section class="breadcrumb-option">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="breadcrumb__text">
+                    <h4>Shopping Cart</h4>
+                    <div class="breadcrumb__links">
+                        <a href="./index.html">Home</a>
+                        <a href="./shop.html">Shop</a>
+                        <span>Shopping Cart</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- Breadcrumb Section End -->
+<!-- Shopping Cart Section Begin -->
+<section class="shopping-cart spad">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-8">
+                <div class="shopping__cart__table">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Product</th>
+                                <th>Quantity</th>
+                                <th>Total</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @if (ViewBag.cart != null)
+                            {
+                                @foreach (var item in ViewBag.cart)
+                                {
+                                    <tr>
+                                        <td class="product__cart__item">
+                                            <div class="product__cart__item__pic">
+                                                <img src="../images/min_@item.Img" alt="" width="100px" height="100px">
+                                            </div>
+                                            <div class="product__cart__item__text">
+                                                <h6>@item.ProductName </h6>
+                                                <h5>@item.UnitPrice </h5>
+                                            </div>
+                                        </td>
+                                        <td class="quantity__item">
+                                            <div class="quantity">
+                                                <div class="pro-qty-2">
+                                                    <input type="text" value="@item.Quantity">
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td class="cart__price"> @(item.UnitPrice * item.Quantity) </td>
+                                        <td class="cart__close"><a asp-controller="Cart" asp-action="Remove" asp-route-id="@item.ProductId" class="fa fa-close"></a></td>
+                                    </tr>
+                                }
 
-    <div class="col-md-12">
-        <table class="table">
-            <thead>
-                <tr>
-                    <th>
-                        @Html.DisplayName("Photo")
-                    </th>
+                            }
+                        </tbody>
+                    </table>
+                </div>
+                <div class="row">
+                    <div class="col-lg-6 col-md-6 col-sm-6">
+                        <div class="continue__btn">
+                            <a href="#">Continue Shopping</a>
+                        </div>
+                    </div>
+                    <div class="col-lg-6 col-md-6 col-sm-6">
+                        <div class="continue__btn update__btn">
+                            <a href="#"><i class="fa fa-spinner"></i> Update cart</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-4">
+                <div class="cart__discount">
+                    <h6>Discount codes</h6>
+                    <form action="#">
+                        <input type="text" placeholder="Coupon code">
+                        <button type="submit">Apply</button>
+                    </form>
+                </div>
+                <div class="cart__total">
+                    <h6>Cart total</h6>
+                    <ul>
+                        <li>Subtotal <span>$ 169.50</span></li>
+                        <li>Total <span>$ 169.50</span></li>
+                    </ul>
+                    <a href="#" class="primary-btn">Proceed to checkout</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+<!-- Shopping Cart Section End -->
 
-                    <th>
-                        @Html.DisplayName("Name")
-                    </th>
-                    <th>
-                        @Html.DisplayName("Price")
-                    </th>
 
-                    <th>
-                        @Html.DisplayName("Quantity")
-                    </th>
-                    <th>
-                        @Html.DisplayName("SubTotal")
-                    </th>
-                    <th>
-                        
-                    </th>
+                                @*<a asp-controller="Cart" asp-action="Remove" asp-route-id="@item.ProductId" class="btn btn-sm btn">Remove</a>*@
 
-                </tr>
-            </thead>
-            <tbody id="myTable">
-                @if (ViewBag.cart != null)
-                {
-                    @foreach (var item in ViewBag.cart)
-                    {
-                       
-                        <tr>
-                            <td>
-                                @item.ProductName
-                            </td>
-                            <td>
-                            <img src="../images/min_@item.Img" asp-append-version="true" width="50px" height="50px" />
-                            </td>
-
-                            <td>
-                                @item.UnitPrice
-                            </td>
-                            <td>
-                                @item.Quantity
-                            </td>
-                            <td>
-                                @(item.UnitPrice * item.Quantity)
-                            </td>
-                            <td>
-                                <a asp-controller="Cart" asp-action="Remove" asp-route-id="@item.ProductId" class="btn btn-sm btn">Remove</a>
-
-                            </td>
-                        </tr>
-                    }
-                }
+         
                 
 
-                <tr>
-                    <td align="right" colspan="4">
-                        Sum
-                    </td>
-                    <td>
-                        @ViewBag.total
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-    </div>
-
-</div>
+               
 <a asp-controller="Products" asp-action="Browse" class="btn btn-sm btn-info" >Continue Shoping</a>
 <a asp-controller="Checkout" asp-action="Index" class="btn btn-sm btn-outline-success">Checkout</a>
 <script>

@@ -41,6 +41,7 @@ namespace MyStore.Controllers
         [HttpGet("browse")]
         public async Task<IActionResult> Browse(string keyword, int? pageIndex, Guid userId)
         {
+            ViewBag.Shop = "Shop";
             Guid userGuid;
             Guid.TryParse(this.User.FindFirstValue(ClaimTypes.NameIdentifier), out userGuid);
             var products = await _productService.BrowseByUserId(keyword, pageIndex, userId);

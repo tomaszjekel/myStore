@@ -18,8 +18,9 @@ namespace MyStore.Controllers
         {
             _context = context;
         }
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
+            ViewBag.IsShopingCart = "Shoping Cart";
             var cart = SessionHelper.GetObjectFromJson<List<CartItem>>(HttpContext.Session, "cart");
             if (cart != null)
             {
@@ -108,7 +109,7 @@ namespace MyStore.Controllers
             int qty = 0;
             if (cart != null)
             {
-                return Json(new {qty= cart.Sum(item => item.Quantity), price = cart.Sum(item => item.TotalPrice * item.Quantity) });
+                return Json(new {qty= cart.Sum(item => item.Quantity), price = cart.Sum(item => item.UnitPrice * item.Quantity) });
             }
             return Json(new { qty = 0, price = 0 });
         }

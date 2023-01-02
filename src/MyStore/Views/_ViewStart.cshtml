@@ -1,3 +1,14 @@
-﻿@{
+﻿@*@{
+    if (ViewContext.ViewBag.IsShopingCart == "Shoping Cart") // or other custom logic
+    {
+        Layout = "~/Views/Shared/_ShopingCartLayout.cshtml";
+    }
+    if (ViewContext.ViewBag.Shop=="Shop")
+    {
+        Layout = "_Layout";
+    }
+}*@
+
+@{
     Layout = "_Layout";
 }
