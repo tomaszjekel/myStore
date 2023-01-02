@@ -24,9 +24,9 @@ namespace MyStore.Domain
             _items.TryGetValue(product.Id, out CartItem item);
             if (item == null)
             {
-                item = new CartItem(product);
+                //item = new CartItem(product);
                 _items[product.Id] = item;
-                
+
                 return;
             }
             item.IncreaseQuantity();

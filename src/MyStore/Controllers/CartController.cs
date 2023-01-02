@@ -20,21 +20,21 @@ namespace MyStore.Controllers
         }
         public IActionResult Index()
         {
-            var cart = SessionHelper.GetObjectFromJson<List<Product>>(HttpContext.Session, "cart");
+            var cart = SessionHelper.GetObjectFromJson<List<CartItem>>(HttpContext.Session, "cart");
             if (cart != null)
             {
             ViewBag.cart = cart;
-            ViewBag.total = cart.Sum(item => item.Price * item.Quantity);
+            ViewBag.total = cart.Sum(item => item.TotalPrice * item.Quantity);
 
             }
             return View();
         }
         private int IsExist(Guid Id)
         {
-            List<Product> cart = SessionHelper.GetObjectFromJson<List<Product>>(HttpContext.Session, "cart");
+            List<CartItem> cart = SessionHelper.GetObjectFromJson<List<CartItem>>(HttpContext.Session, "cart");
             for (int i = 0; i < cart.Count; i++)
             {
-                if (cart[i].Id.Equals(Id))
+                if (cart[i].ProductId.Equals(Id))
                 {
                     return i;
                 }
@@ -62,17 +62,18 @@ namespace MyStore.Controllers
         {
           
 
-            var pet = _context.Products.FirstOrDefault(m => m.Id == Guid.Parse(id));
-            List<Product> cart;
+            List<CartItem> cart;
+            var product = _context.Products.FirstOrDefault(m => m.Id == Guid.Parse(id));
+            var prod = await _context.Products.FindAsync(Guid.Parse(id));
             if (SessionHelper.GetObjectFromJson<List<Product>>(HttpContext.Session, "cart") == null)
             {
-                cart = new List<Product>();
-                cart.Add(await _context.Products.FindAsync(Guid.Parse(id)));
+                cart = new List<CartItem>();
+                cart.Add(new CartItem { ProductId = prod.Id, Img = prod.Img, ProductName = prod.Name, Quantity = 1, UnitPrice = prod.Price });
                 SessionHelper.SetObjectasJson(HttpContext.Session, "cart", cart);
             }
             else
             {
-                cart = SessionHelper.GetObjectFromJson<List<Product>>(HttpContext.Session, "cart");
+                cart = SessionHelper.GetObjectFromJson<List<CartItem>>(HttpContext.Session, "cart");
                 int index = IsExist(Guid.Parse(id));
                 if (index != -1)
                 {
@@ -80,17 +81,17 @@ namespace MyStore.Controllers
                 }
                 else
                 {
-                    cart.Add( await _context.Products.FindAsync(Guid.Parse(id)));
+                    cart.Add(new CartItem { ProductId = prod.Id, Img = prod.Img, ProductName = prod.Name, Quantity = 1, UnitPrice = prod.Price });
                 }
                 SessionHelper.SetObjectasJson(HttpContext.Session, "cart", cart);
 
             }
             //List<Product> cart1 = SessionHelper.GetObjectFromJson<List<Product>>(HttpContext.Session, "cart");
-            return Json(new { qty = cart.Sum(item => item.Quantity), price= cart.Sum(item => item.Price * item.Quantity) });
+            return Json(new { qty = cart.Sum(item => item.Quantity), price= cart.Sum(item => item.UnitPrice * item.Quantity) });
         }
         public IActionResult Remove(Guid Id)
         {
-            List<Product> cart = SessionHelper.GetObjectFromJson<List<Product>>(HttpContext.Session, "cart");
+            List<CartItem> cart = SessionHelper.GetObjectFromJson<List<CartItem>>(HttpContext.Session, "cart");
             int index = IsExist(Id);
             cart.RemoveAt(index);
             SessionHelper.SetObjectasJson(HttpContext.Session, "cart", cart);
@@ -103,11 +104,11 @@ namespace MyStore.Controllers
         [HttpGet]
         public JsonResult Quantity()
         {
-            List<Product> cart = SessionHelper.GetObjectFromJson<List<Product>>(HttpContext.Session, "cart");
+            List<CartItem> cart = SessionHelper.GetObjectFromJson<List<CartItem>>(HttpContext.Session, "cart");
             int qty = 0;
             if (cart != null)
             {
-                return Json(new {qty= cart.Sum(item => item.Quantity), price = cart.Sum(item => item.Price * item.Quantity) });
+                return Json(new {qty= cart.Sum(item => item.Quantity), price = cart.Sum(item => item.TotalPrice * item.Quantity) });
             }
             return Json(new { qty = 0, price = 0 });
         }

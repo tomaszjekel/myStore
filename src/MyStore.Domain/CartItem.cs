@@ -4,19 +4,22 @@ namespace MyStore.Domain
 {
     public class CartItem
     {
-        public Guid ProductId { get; private set; }
-        public string ProductName { get; private set; }
-        public int Quantity { get; private set; }
-        public decimal UnitPrice { get; private set; }
+        public Guid ProductId { get;   set; }
+        public string ProductName { get;  set; }
+        public string Img { get;  set; }
+
+        public int Quantity { get;  set; }
+        public decimal UnitPrice { get;  set; }
         public decimal TotalPrice => Quantity * UnitPrice;
 
-        public CartItem(Product product)
-        {
-            ProductId = product.Id;
-            ProductName = product.Name;
-            Quantity = 1;
-            UnitPrice = product.Price;
-        }
+        //public  CartItem(Product product)
+        //{
+        //    ProductId = product.Id;
+        //    ProductName = product.Name;
+        //    Quantity = 1;
+        //    Img = product.Img;
+        //    UnitPrice = product.Price;
+        //}
 
         public void IncreaseQuantity()
             => Quantity++;
