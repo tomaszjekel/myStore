@@ -9,9 +9,7 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Male-Fashion | Template</title>
 
-    <!-- Google Font -->
-    <link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@300;400;600;700;800;900&display=swap"
-          rel="stylesheet">
+
 
     <!-- Css Styles -->
     <link rel="stylesheet" href="~/css/bootstrap.min.css" type="text/css">
@@ -22,6 +20,7 @@
     <link rel="stylesheet" href="~/css/owl.carousel.min.css" type="text/css">
     <link rel="stylesheet" href="~/css/slicknav.min.css" type="text/css">
     <link rel="stylesheet" href="~/css/style.css" type="text/css">
+    <link rel="stylesheet" href="~/css/custom.css" type="text/css">
 </head>
 
 <body>
@@ -33,7 +32,7 @@
     <!-- Offcanvas Menu Begin -->
     <div class="offcanvas-menu-overlay"></div>
     <div class="offcanvas-menu-wrapper">
-        <div class="offcanvas__option">
+       @* <div class="offcanvas__option">
             <div class="offcanvas__links">
                 <a href="#">Sign in</a>
                 <a href="#">FAQs</a>
@@ -46,22 +45,22 @@
                     <li>USD</li>
                 </ul>
             </div>
-        </div>
+        </div>*@
         <div class="offcanvas__nav__option">
             <a href="#" class="search-switch"><img src="~/img/icon/search.png" alt=""></a>
             <a href="#"><img src="~/img/icon/heart.png" alt=""></a>
-            <a href="#"><img src="~/img/icon/cart.png" alt=""> <span>0</span></a>
+            <a href="#"><img src="~/img/icon/cart.png" alt=""> <span class="qtyCart">0</span></a>
             <div class="price">$0.00</div>
         </div>
         <div id="mobile-menu-wrap"></div>
-        <div class="offcanvas__text">
+       @* <div class="offcanvas__text">
             <p>Free shipping, 30-day return or refund guarantee.</p>
-        </div>
+        </div>*@
     </div>
     <!-- Offcanvas Menu End -->
     <!-- Header Section Begin -->
     <header class="header">
-        <div class="header__top">
+@*        <div class="header__top">
             <div class="container">
                 <div class="row">
                     <div class="col-lg-6 col-md-7">
@@ -87,30 +86,30 @@
                     </div>
                 </div>
             </div>
-        </div>
+        </div>*@
         <div class="container">
             <div class="row">
                 <div class="col-lg-3 col-md-3">
                     <div class="header__logo">
-                        <a href="Products/browse"><img src="~/img/logo.png" alt=""></a>
+                        <a href="Home"><img src="~/img/logo.png" alt=""></a>
                     </div>
                 </div>
                 <div class="col-lg-6 col-md-6">
                     <nav class="header__menu mobile-menu">
                         <ul>
-                            <li><a href="Products/Browse">Home</a></li>
-                            <li class="active"><a href="./shop.html">Shop</a></li>
+                            <li class="active"><a asp-area="" asp-controller="Home" asp-action="index">Home</a></li>
+                            <li><a asp-area="" asp-controller="Products" asp-action="browse">Shop</a></li>
                             <li>
                                 <a href="#">Pages</a>
                                 <ul class="dropdown">
                                     <li><a href="#">About Us</a></li>
                                     <li><a href="#">Shop Details</a></li>
-                                    <li><a href="../Cart">Shopping Cart</a></li>
+                                    <li><a href="@Url.Action("Index", "Cart")">Shopping Cart</a></li>
                                     <li><a href="#">Check Out</a></li>
-                                    <li><a href="#">Blog Details</a></li>
+                                    @*<li><a href="#">Blog Details</a></li>*@
                                 </ul>
                             </li>
-                            <li><a href="#">Blog</a></li>
+                            @*<li><a href="#">Blog</a></li>*@
                             <li><a href="#">Contacts</a></li>
                         </ul>
                     </nav>
@@ -119,7 +118,7 @@
                     <div class="header__nav__option">
                         <a href="#" class="search-switch"><img src="~/img/icon/search.png" alt=""></a>
                         <a href="#"><img src="~/img/icon/heart.png" alt=""></a>
-                        <a href="../Cart"><img src="~/img/icon/cart.png" alt=""> <span id="qtyCart">0</span></a>
+                        <a href="@Url.Action("Index", "Cart")"><img src="~/img/icon/cart.png" alt=""> <span class="qtyCart">0</span></a>
                         <div class="price">$0.00</div>
                     </div>
                 </div>
@@ -219,7 +218,8 @@
     </div>
     <!-- Search End -->
     <!-- Js Plugins -->
-    <script src="~/js/jquery-3.3.1.min.js"></script>
+    @*<script src="~/js/jquery-3.3.1.min.js"></script>*@
+    <script src="https://code.jquery.com/jquery-3.6.3.min.js"></script>
     <script src="~/js/bootstrap.min.js"></script>
     <script src="~/js/jquery.nice-select.min.js"></script>
     <script src="~/js/jquery.nicescroll.min.js"></script>
@@ -230,12 +230,16 @@
     <script src="~/js/owl.carousel.min.js"></script>
     <script src="~/js/main.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
-
     
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.2/jquery-confirm.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-confirm/3.3.2/jquery-confirm.min.js"></script>
+    <!-- Google Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:wght@300;400;600;700;800;900&display=swap"
+          rel="stylesheet">
+
 </body>
-    @{
-        ;
-    }
+
 
 </html>
 
@@ -243,7 +247,7 @@
         <script src="~/lib/jquery/dist/jquery.js"></script>
         <script src="~/lib/bootstrap/dist/js/bootstrap.js"></script>
     </environment>
-    <environment exclude="Development">
+@*    <environment exclude="Development">
         <script src="https://ajax.aspnetcdn.com/ajax/jquery/jquery-2.2.0.min.js"
                 asp-fallback-src="~/lib/jquery/dist/jquery.min.js"
                 asp-fallback-test="window.jQuery"
@@ -257,18 +261,88 @@
                 integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa">
         </script>
         <script src="~/js/site.min.js" asp-append-version="true"></script>
-    </environment>
+    </environment>*@
 
-@section Scripts {
+@RenderSection("Scripts", required: false)
+@{
     <script>
         $(document).ready(function () {
-           
+            ;
+        });
+        // Write your JavaScript code.
+        function addCart(id) {
+
+            $.ajax({
+                type: "GET",
+                url: '@Url.Action("BuyAsync", "Cart")',
+                data: { id: id },
+                methasync: true,
+                success: function (html) {
+                    //$("#more").after(html);
+                    $(".price").html(html.price + " PLN");
+                    $(".qtyCart").text(html.qty);
+
+                }
+            });
+
+            $.confirm({
+                title: '',
+                content: 'Produkt dodano do koszyka',
+                type: 'green',
+                typeAnimated: true,
+                buttons: {
+                    tryAgain: {
+                        text: 'Ok',
+                        btnClass: 'btn-green',
+                        action: function () {
+                        }
+                    },
+                    close: function () {
+                    }
+                }
+            });
+        }
+
+
+        $(document).ready(function () {
+            $.ajax({
+                type: "GET",
+                url: "@Url.Action("Quantity", "Cart")",
+                //data: { id: id },
+                //async: true,
+                success: function (html) {
+                    //$("#more").after(html);
+                    $(".price").html(html.price + " PLN");
+                    $(".qtyCart").text(html.qty);
+
+                }
+            });
         });
 
+        function addCartQty(id) {
+
+            var qty = $('#prodQty').val();
+            $.ajax({
+                type: "GET",
+                url: "@Url.Action("BuyQty", "Cart")",
+                data: { 'id': id, 'qty': qty },
+                methasync: true,
+                success: function (html) {
+                    //$("#more").after(html);
+                    $(".price").html(html.price + " PLN");
+                    $(".qtyCart").text(html.qty);
+
+                }
+            });
+        }
     </script>
-      
 }
 
+@section Scripts {
+
+
     
 
     
+
+    }

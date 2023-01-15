@@ -160,7 +160,7 @@ namespace MyStore.Controllers
             Guid userId = new Guid(this.User.FindFirstValue(ClaimTypes.NameIdentifier));
             var newId = Guid.NewGuid();
             await _productService.CreateAsync(newId, userId, viewModel.Name,
-            viewModel.Category, viewModel.Price, viewModel.Description, Int32.Parse(viewModel.SelectedCity ?? "0"), viewModel.Files.FirstOrDefault().Name);
+            viewModel.Category, viewModel.Price, viewModel.Description, Int32.Parse(viewModel.SelectedCity ?? "0"), "");
 
             //QRCodeGenerator qrGenerator = new QRCodeGenerator();
             //QRCodeData qrCodeData = qrGenerator.CreateQrCode("The text which should be encoded.", QRCodeGenerator.ECCLevel.Q);

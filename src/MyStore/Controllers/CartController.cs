@@ -113,5 +113,37 @@ namespace MyStore.Controllers
             }
             return Json(new { qty = 0, price = 0 });
         }
+
+        public async Task<JsonResult> BuyQty(string id, int qty)
+        {
+
+
+            List<CartItem> cart;
+            var product = _context.Products.FirstOrDefault(m => m.Id == Guid.Parse(id));
+            var prod = await _context.Products.FindAsync(Guid.Parse(id));
+            if (SessionHelper.GetObjectFromJson<List<Product>>(HttpContext.Session, "cart") == null)
+            {
+                cart = new List<CartItem>();
+                cart.Add(new CartItem { ProductId = prod.Id, Img = prod.Img, ProductName = prod.Name, Quantity = qty, UnitPrice = prod.Price });
+                SessionHelper.SetObjectasJson(HttpContext.Session, "cart", cart);
+            }
+            else
+            {
+                cart = SessionHelper.GetObjectFromJson<List<CartItem>>(HttpContext.Session, "cart");
+                int index = IsExist(Guid.Parse(id));
+                if (index != -1)
+                {
+                    cart[index].Quantity+=qty;
+                }
+                else
+                {
+                    cart.Add(new CartItem { ProductId = prod.Id, Img = prod.Img, ProductName = prod.Name, Quantity = qty, UnitPrice = prod.Price });
+                }
+                SessionHelper.SetObjectasJson(HttpContext.Session, "cart", cart);
+
+            }
+            //List<Product> cart1 = SessionHelper.GetObjectFromJson<List<Product>>(HttpContext.Session, "cart");
+            return Json(new { qty = cart.Sum(item => item.Quantity), price = cart.Sum(item => item.UnitPrice * item.Quantity) });
+        }
     }
 }

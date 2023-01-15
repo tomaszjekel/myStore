@@ -25,8 +25,8 @@ namespace MyStore.Controllers
 
         public IActionResult Index()
         {
-            //return View();
-            return RedirectToAction("browse", "Products");
+            return View();
+            //return RedirectToAction("browse", "Products");
         }
 
         public IActionResult About()
