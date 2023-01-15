@@ -67,7 +67,7 @@ namespace MyStore
             services.AddScoped<IAuthenticator, Authenticator>();
             services.AddSingleton(AutoMapperConfig.GetMapper());
 
-            var connMySql = "server=vipsound.pl;port=3306;uid=root;password=blokersi;database=Roksa;";
+            var connMySql = "server=vipsound.pl;port=3306;uid=root;password=;database=Roksa;";
             services.AddDbContext<MyStoreContext>(options => options.UseMySql(connMySql));
 
             services.AddMemoryCache();
