@@ -353,7 +353,14 @@ namespace MyStore.Controllers
                  {
                      Name = "T-shert"
                  },
-             },
+             },{
+                 UnitAmount=Convert.ToInt32(2)*100,
+                 Currency="pln",
+                 ProductData = new Stripe.Checkout.SessionLineItemPriceDataProductDataOptions
+                 {
+                     Name = "T-shert"
+                 },
+             }
              Quantity=2,
          },
         },

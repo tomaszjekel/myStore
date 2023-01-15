@@ -8,6 +8,7 @@ using System.Web;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.EntityFrameworkCore;
 
 namespace MyStore.Controllers
 {
@@ -64,12 +65,12 @@ namespace MyStore.Controllers
           
 
             List<CartItem> cart;
-            var product = _context.Products.FirstOrDefault(m => m.Id == Guid.Parse(id));
-            var prod = await _context.Products.FindAsync(Guid.Parse(id));
+            var prod = _context.Products.Where(p => p.Id == Guid.Parse(id)).Include(x => x.Files).FirstOrDefault();
+            //var prod = await _context.Products.FindAsync(Guid.Parse(id));
             if (SessionHelper.GetObjectFromJson<List<Product>>(HttpContext.Session, "cart") == null)
             {
                 cart = new List<CartItem>();
-                cart.Add(new CartItem { ProductId = prod.Id, Img = prod.Img, ProductName = prod.Name, Quantity = 1, UnitPrice = prod.Price });
+                cart.Add(new CartItem { ProductId = prod.Id, Img = prod.Files.FirstOrDefault().Name, ProductName = prod.Name, Quantity = 1, UnitPrice = prod.Price });
                 SessionHelper.SetObjectasJson(HttpContext.Session, "cart", cart);
             }
             else
@@ -82,7 +83,7 @@ namespace MyStore.Controllers
                 }
                 else
                 {
-                    cart.Add(new CartItem { ProductId = prod.Id, Img = prod.Img, ProductName = prod.Name, Quantity = 1, UnitPrice = prod.Price });
+                    cart.Add(new CartItem { ProductId = prod.Id, Img = prod.Files.FirstOrDefault().Name, ProductName = prod.Name, Quantity = 1, UnitPrice = prod.Price });
                 }
                 SessionHelper.SetObjectasJson(HttpContext.Session, "cart", cart);
 
@@ -119,12 +120,11 @@ namespace MyStore.Controllers
 
 
             List<CartItem> cart;
-            var product = _context.Products.FirstOrDefault(m => m.Id == Guid.Parse(id));
-            var prod = await _context.Products.FindAsync(Guid.Parse(id));
+            var prod = _context.Products.Where(p => p.Id == Guid.Parse(id)).Include(x => x.Files).FirstOrDefault();
             if (SessionHelper.GetObjectFromJson<List<Product>>(HttpContext.Session, "cart") == null)
             {
                 cart = new List<CartItem>();
-                cart.Add(new CartItem { ProductId = prod.Id, Img = prod.Img, ProductName = prod.Name, Quantity = qty, UnitPrice = prod.Price });
+                cart.Add(new CartItem { ProductId = prod.Id, Img = prod.Files.FirstOrDefault().Name, ProductName = prod.Name, Quantity = qty, UnitPrice = prod.Price });
                 SessionHelper.SetObjectasJson(HttpContext.Session, "cart", cart);
             }
             else
@@ -137,7 +137,7 @@ namespace MyStore.Controllers
                 }
                 else
                 {
-                    cart.Add(new CartItem { ProductId = prod.Id, Img = prod.Img, ProductName = prod.Name, Quantity = qty, UnitPrice = prod.Price });
+                    cart.Add(new CartItem { ProductId = prod.Id, Img = prod.Files.FirstOrDefault().Name, ProductName = prod.Name, Quantity = qty, UnitPrice = prod.Price });
                 }
                 SessionHelper.SetObjectasJson(HttpContext.Session, "cart", cart);
 
