@@ -2,64 +2,22 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using MyStore.Infrastructure.EF;
 
 namespace MyStore.Infrastructure.Migrations
 {
     [DbContext(typeof(MyStoreContext))]
-    partial class MyStoreContextModelSnapshot : ModelSnapshot
+    [Migration("20200316151656_v2")]
+    partial class v2
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
                 .HasAnnotation("ProductVersion", "3.1.1")
                 .HasAnnotation("Relational:MaxIdentifierLength", 64);
-
-            modelBuilder.Entity("MyStore.Domain.Addresses", b =>
-                {
-                    b.Property<Guid>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("char(36)");
-
-                    b.Property<string>("Address")
-                        .HasColumnType("longtext CHARACTER SET utf8mb4");
-
-                    b.Property<string>("Address1")
-                        .HasColumnType("longtext CHARACTER SET utf8mb4");
-
-                    b.Property<string>("City")
-                        .HasColumnType("longtext CHARACTER SET utf8mb4");
-
-                    b.Property<string>("Country")
-                        .HasColumnType("longtext CHARACTER SET utf8mb4");
-
-                    b.Property<string>("Email")
-                        .HasColumnType("longtext CHARACTER SET utf8mb4");
-
-                    b.Property<string>("FistName")
-                        .HasColumnType("longtext CHARACTER SET utf8mb4");
-
-                    b.Property<string>("LastName")
-                        .HasColumnType("longtext CHARACTER SET utf8mb4");
-
-                    b.Property<string>("OrderNotes")
-                        .HasColumnType("longtext CHARACTER SET utf8mb4");
-
-                    b.Property<int>("Phone")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Postcode")
-                        .HasColumnType("longtext CHARACTER SET utf8mb4");
-
-                    b.Property<string>("State")
-                        .HasColumnType("longtext CHARACTER SET utf8mb4");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Addresses");
-                });
 
             modelBuilder.Entity("MyStore.Domain.Cities", b =>
                 {
@@ -111,9 +69,6 @@ namespace MyStore.Infrastructure.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("char(36)");
 
-                    b.Property<Guid?>("AddressIdId")
-                        .HasColumnType("char(36)");
-
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime(6)");
 
@@ -124,8 +79,6 @@ namespace MyStore.Infrastructure.Migrations
                         .HasColumnType("char(36)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("AddressIdId");
 
                     b.HasIndex("UserId");
 
@@ -177,17 +130,11 @@ namespace MyStore.Infrastructure.Migrations
                     b.Property<string>("Description")
                         .HasColumnType("longtext CHARACTER SET utf8mb4");
 
-                    b.Property<string>("Img")
-                        .HasColumnType("longtext CHARACTER SET utf8mb4");
-
                     b.Property<string>("Name")
                         .HasColumnType("longtext CHARACTER SET utf8mb4");
 
                     b.Property<decimal>("Price")
                         .HasColumnType("decimal(65,30)");
-
-                    b.Property<int>("Quantity")
-                        .HasColumnType("int");
 
                     b.Property<Guid>("UserId")
                         .HasColumnType("char(36)");
@@ -254,10 +201,6 @@ namespace MyStore.Infrastructure.Migrations
 
             modelBuilder.Entity("MyStore.Domain.Order", b =>
                 {
-                    b.HasOne("MyStore.Domain.Addresses", "AddressId")
-                        .WithMany()
-                        .HasForeignKey("AddressIdId");
-
                     b.HasOne("MyStore.Domain.User", null)
                         .WithMany()
                         .HasForeignKey("UserId")

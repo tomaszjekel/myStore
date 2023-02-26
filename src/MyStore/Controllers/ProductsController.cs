@@ -339,7 +339,7 @@ namespace MyStore.Controllers
             var options = new Stripe.Checkout.SessionCreateOptions
             {
                 PaymentMethodTypes = new List<string> {
-    "card","p24"
+    "card","blik"
   },
                 LineItems = new List<Stripe.Checkout.SessionLineItemOptions>
         {
@@ -351,7 +351,7 @@ namespace MyStore.Controllers
                  Currency="pln",
                  ProductData = new Stripe.Checkout.SessionLineItemPriceDataProductDataOptions
                  {
-                     Name = "T-shert"
+                     Name = "T-shert",
                  },
              },
              Quantity=2,
@@ -366,8 +366,48 @@ namespace MyStore.Controllers
             Response.Headers.Add("Location", session.Url);
             return new StatusCodeResult(303);
         }
+
+
+        [HttpPost("create-checkout-session1")]
+        public ActionResult CreateCheckoutSession1(string amount)
+        {
+            var options = new Stripe.Checkout.SessionCreateOptions
+            {
+                PaymentMethodTypes = new List<string> {
+    "card","blik"
+  },
+                LineItems = new List<Stripe.Checkout.SessionLineItemOptions>
+        {
+         
+        },
+                Mode = "payment",
+                SuccessUrl = "http://localhost:5000/Home/Success",
+                CancelUrl = "http://localhost:5000/Home/cancel",
+            };
+
+            var currentLineItem = new Stripe.Checkout.SessionLineItemOptions
+            {
+                PriceData = new Stripe.Checkout.SessionLineItemPriceDataOptions
+                {
+                    UnitAmount = Convert.ToInt32(2) * 100,
+                    Currency = "pln",
+                    ProductData = new Stripe.Checkout.SessionLineItemPriceDataProductDataOptions
+                    {
+                        Name = "T-shert",
+                    },
+                },
+                Quantity = 2,
+            };
+            options.LineItems.Add(currentLineItem);
+            options.LineItems.Add(currentLineItem);
+
+            var service = new Stripe.Checkout.SessionService();
+            Stripe.Checkout.Session session = service.Create(options);
+            Response.Headers.Add("Location", session.Url);
+            return new StatusCodeResult(303);
+        }
     }
-    public class CreateProduct
+public class CreateProduct
     {
         [Required]
         public Guid UserId { get; set; }

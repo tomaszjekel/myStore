@@ -1,21 +1,15 @@
-﻿@using Microsoft.Extensions.Options
-@inject IOptions<MyStore.Data.StripeSettings> Stripe
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
 @{
-    ViewData["Title"] = "Home Page";
 }
-
-@{
-    ViewData["Title"] = "Index";
-}
-
 
 @{
     Layout = "_Layout";
     @model OrderViewModel
+
 }
-
-
-
+@if (ViewBag.Order != "OK"){
 <!-- Checkout Section Begin -->
 <section class="checkout spad">
     <div class="container">
@@ -91,7 +85,7 @@
                         <div class="checkout__input__checkbox">
                             <label for="acc">
                                 Create an account?
-                                @*<input type="checkbox" id="acc">*@
+                                <input type="checkbox" id="acc">
                                 <span class="checkmark"></span>
                             </label>
                             <p>
@@ -121,21 +115,21 @@
                             <h4 class="order__title">Your order</h4>
                             <div class="checkout__order__products">Product <span>Total</span></div>
                             <ul class="checkout__total__products">
-                                @foreach (var cart in Model.Cart)
-                                {
-                                    <li>@cart.ProductName <span>@cart.TotalPrice</span></li>
-                                }
-                                <!--
-                                <li>01. Vanilla salted caramel <span>$ 300.0</span></li>
-                                <li>02. German chocolate <span>$ 170.0</span></li>
-                                <li>03. Sweet autumn <span>$ 170.0</span></li>
-                                <li>04. Cluten free mini dozen <span>$ 110.0</span></li>
-                                -->
-                            </ul>
-                            <ul class="checkout__total__all">
-                                <li>Subtotal <span>@Model.Cart.Sum(x=>x.TotalPrice)</span></li>
-                                <li>Total <span>@Model.Cart.Sum(x=>x.TotalPrice)</span></li>
-                            </ul>
+                                    @foreach (var cart in Model.Cart)
+                                    {
+                                        <li>@cart.ProductName <span>@cart.TotalPrice</span></li>
+                                    }
+                                    <!--
+                                    <li>01. Vanilla salted caramel <span>$ 300.0</span></li>
+                                    <li>02. German chocolate <span>$ 170.0</span></li>
+                                    <li>03. Sweet autumn <span>$ 170.0</span></li>
+                                    <li>04. Cluten free mini dozen <span>$ 110.0</span></li>
+                                    -->
+                                </ul>
+                                <ul class="checkout__total__all">
+                                    <li>Subtotal <span>@Model.Cart.Sum(x=>x.TotalPrice)</span></li>
+                                    <li>Total <span>@Model.Cart.Sum(x=>x.TotalPrice)</span></li>
+                                </ul>
                             <div class="checkout__input__checkbox">
                                 <label for="acc-or">
                                     Create an account?
@@ -170,27 +164,13 @@
     </div>
 </section>
 
-<div class="text-center">
-    <form asp-action="Processing" asp-controller="Checkout" method="post">
-        <article>
-            <label>Amount USD$ : @ViewBag.DollarAmount</label>
-
-        </article>
-        <script src="//checkout.stripe.com/v2/checkout.js"
-                class="stripe-button"
-                data-key="@Stripe.Value.Publishablekey"
-                data-amount="@ViewBag.Total"
-                data-name="[Deveducate]"
-                data-locale="en"
-                data-discription="Sample charge"
-                data-image="https://stripe.com/img/documentation/checkout/marketplace.png"
-                data-zip-code="true"
-
-                >
-        </script>
+}else{
+    <p>Success</p>
+    <form action="@Url.Action("CreateCheckoutSession1", "Checkout")" method="POST">
+        <p> Złożono zamówienie nr @Model.AllOrder.Id</p>
+        <input type="hidden" id="orderid" name="orderid" value="@Model.AllOrder.Id" />
+        <button type="submit"> Opłać zamówienie </button>
     </form>
-</div>
-
-
-
+    
+}
 

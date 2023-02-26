@@ -178,5 +178,11 @@ namespace MyStore.Controllers
             await _authenticator.SignOutAsync();
             return RedirectToAction("Index", "Home");
         }
+
+        public async Task<IActionResult> Admin()
+        {
+            await _authenticator.SignOutAsync();
+            return RedirectToAction("Index", "Home");
+        }
     }
 }

@@ -19,6 +19,7 @@ namespace MyStore.Infrastructure.EF
         public DbSet<FilesUpload> Files { get; set; }
         public DbSet<Cities> Cities { get; set; }
         public DbSet<Province> Provinces { get; set; }
+        public DbSet<Addresses> Addresses { get; set; }
 
 
 

@@ -58,9 +58,11 @@ namespace MyStore.Infrastructure.EF
         {
             try
             {
-                await _context.Products.AddAsync(product);
 
                 var files = _context.Files.Where(c => c.ProductId == null && c.UserId == product.UserId);
+                product.Files = files.ToList();
+                await _context.Products.AddAsync(product);
+
                 await files.ForEachAsync(b => b.ProductId = product.Id);
 
             }

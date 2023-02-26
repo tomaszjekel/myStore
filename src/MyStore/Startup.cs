@@ -66,8 +66,7 @@ namespace MyStore
             services.AddSingleton<IPasswordHasher<User>, PasswordHasher<User>>();
             services.AddScoped<IAuthenticator, Authenticator>();
             services.AddSingleton(AutoMapperConfig.GetMapper());
-
-            var connMySql = "server=vipsound.pl;port=3306;uid=root;password=;database=Roksa;";
+            var connMySql = "server=51.77.137.28;port=3306;uid=tomo;password=;database=MyStore;";
             services.AddDbContext<MyStoreContext>(options => options.UseMySql(connMySql));
 
             services.AddMemoryCache();
@@ -108,7 +107,7 @@ namespace MyStore
             {
 
                 FileProvider = new PhysicalFileProvider(
-                    Path.Combine(Directory.GetCurrentDirectory(), Environment.GetEnvironmentVariable("UPLOAD_DIR"))),
+                    Path.Combine(Directory.GetCurrentDirectory(), "images" /*Environment.GetEnvironmentVariable("UPLOAD_DIR")*/)),
                 RequestPath = "/images",
                 EnableDirectoryBrowsing = true
             });

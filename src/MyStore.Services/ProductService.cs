@@ -139,12 +139,12 @@ namespace MyStore.Services
                         if (image.Width > image.Height)
                         {
                             image.Mutate(x => x
-                             .Resize(720, 480));
+                             .Resize(720, 0));
                         }
                         else
                         {
                             image.Mutate(x => x
-                            .Resize(480, 600));
+                            .Resize(480, 0));
                         }
 
                         using (var minFileStream = new FileStream(filesPath + "/" + "min_" + imageName, FileMode.Create))

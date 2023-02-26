@@ -1,28 +1,33 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 
 namespace MyStore.Domain
 {
     public class Order
     {
-        public Guid Id { get; private set; }
-        public Guid UserId { get; private set; }
-        public decimal TotalPrice { get; private set; }
-        public DateTime CreatedAt { get; private set; }
-        public IEnumerable<OrderItem> Items { get; private set; }
+        public Guid Id { get;  set; }
+        public Guid UserId { get;  set; }
+        public decimal TotalPrice { get;  set; }
+        public DateTime CreatedAt { get;  set; }
+        public IEnumerable<OrderItem> Items { get;  set; }
+        public Addresses Address { get; set; }
+        public Guid Completed { get; set; }
 
-        private Order()
-        {
-        }
+        
 
-        public Order(Cart cart)
-        {
-            Id = Guid.NewGuid();
-            UserId = cart.UserId;
-            Items = cart.Items.Select(i => new OrderItem(i));
-            TotalPrice = cart.TotalPrice;
-            CreatedAt = DateTime.UtcNow;
-        }
+        //private Order()
+        //{
+        //}
+
+        //public Order(Cart cart)
+        //{
+        //    Id = Guid.NewGuid();
+        //    UserId = cart.UserId;
+        //    Items = cart.Items.Select(i => new OrderItem(i));
+        //    TotalPrice = cart.TotalPrice;
+        //    CreatedAt = DateTime.UtcNow;
+        //}
     }
 }
