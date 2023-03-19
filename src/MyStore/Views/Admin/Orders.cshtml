@@ -1,0 +1,47 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+@model AdminOrdersViewModel
+
+
+<div class="list-group">
+    @foreach (var item in Model.orders)
+                                {
+        <a href="@Url.Action("Order", "Admin" , new { order = item.Id})" class="list-group-item list-group-item-action">
+        <div class="d-flex w-100 justify-content-between">
+                <h5 class="mb-1">@item.Address.FistName @item.Address.LastName</h5>
+            <small>@item.CreatedAt</small>
+        </div>
+        <p class="mb-1">liczba produktów : @item.Items.Count()</p>
+        <small>Nr zamówienia - @item.Id </small>
+        </a>
+                                }
+  </div>
+
+<div class="row">
+    <div class="col-lg-12">
+        <div class="product__pagination">
+            @{int pageNr = 1;}
+            @for (int page = 1; page <= Model.count; page++)
+            {
+                @if (pageNr == Model.pageIndex)
+                {
+                    <a class="active" href="@Url.Action("Orders", "Admin" , new { pageIndex = page})">@(
+                page
+                )</a>
+                }
+                else
+                {
+                    <a class="" href="@Url.Action("Orders", "Admin" , new { pageIndex = page})">@(
+                page
+                )</a>
+                }
+                pageNr++;
+            }
+
+                        
+        </div>
+    </div>
+</div>

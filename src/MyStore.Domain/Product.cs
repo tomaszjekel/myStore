@@ -13,7 +13,7 @@ namespace MyStore.Domain
         public decimal Price { get;  set; }
         public List<FilesUpload> Files { get; set; }
         public string Img { get; set; }
-
+        public Category Categoryy { get; set; }
         public int CityId { get; set; }
         public int Quantity { get; set; }
 
