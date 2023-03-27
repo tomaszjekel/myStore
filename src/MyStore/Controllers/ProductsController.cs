@@ -24,6 +24,7 @@ using SixLabors.ImageSharp.Processing;
 using UnityEngine;
 using Stripe;
 using Stripe.FinancialConnections;
+using MyStore.Infrastructure.EF;
 
 namespace MyStore.Controllers
 {
@@ -31,20 +32,22 @@ namespace MyStore.Controllers
     {
         private readonly IProductService _productService;
         private readonly IFileService _fileService;
+        private readonly MyStoreContext _context;
 
-        public ProductsController(IProductService productService, IFileService fileService)
+        public ProductsController(IProductService productService, IFileService fileService, MyStoreContext context)
         {
             _productService = productService;
             _fileService = fileService;
+            _context = context;
         }
 
         [HttpGet("browse")]
-        public async Task<IActionResult> Browse(string keyword, int? pageIndex, Guid userId)
+        public async Task<IActionResult> Browse(string keyword, int? pageIndex, Guid userId, Guid? category)
         {
             ViewBag.Shop = "Shop";
             Guid userGuid;
             Guid.TryParse(this.User.FindFirstValue(ClaimTypes.NameIdentifier), out userGuid);
-            var products = await _productService.BrowseByUserId(keyword, pageIndex, userId);
+            var products = await _productService.BrowseByUserId(keyword, pageIndex, userId, category);
 
 
             var viewModels = products.Select(p =>
@@ -63,6 +66,17 @@ namespace MyStore.Controllers
             //    viewModels = viewModels.Where(c => c.ProductUserId == userGuid);
 
             ProductNewViewModel newModel = new ProductNewViewModel();
+            newModel.Catgories = _context.Categories.ToList();
+
+            newModel.Category = category;
+            if(category != null)
+            {
+                newModel.Count = _context.Products.Where(x=>x.Category == category.ToString() && x.Deleted == false).Count();
+            }
+            else
+            {
+                newModel.Count = _context.Products.Where(x=>x.Deleted== false).Count();
+            }
             newModel.Products = viewModels.ToList();
             newModel.HasNextPage = products.HasNextPage;
             newModel.HasPreviousPage = products.HasPreviousPage;
@@ -142,7 +156,11 @@ namespace MyStore.Controllers
             var citiy = cities.Select(x => new { Value = x.Id, Text = x.Name });
             SelectList list = new SelectList(citiy, "Value", "Text");
 
-            var viewModel = new CreateProductViewModel() { Files = fileList.ToList(), Cities = list };
+            var categories = _context.Categories.ToList();
+            var cat = categories.Select(x => new { Value = x.Id, Text = x.Name });
+            SelectList listCategories = new SelectList(cat, "Value", "Text");
+
+            var viewModel = new CreateProductViewModel() { Files = fileList.ToList(), Cities = list,  Categories = listCategories};
 
             return View(viewModel);
         }
@@ -191,7 +209,7 @@ namespace MyStore.Controllers
         //}
 
         [Authorize]
-        [HttpGet("Edit/")]
+        [HttpGet("Edit")]
         public async Task<IActionResult> Edit(Guid productId)
         {
             var product = await _productService.GetAsync(productId);
@@ -200,6 +218,11 @@ namespace MyStore.Controllers
                 var cities = await _productService.GetCities();
                 var citiy = cities.Select(x => new { Value = x.Id, Text = x.Name });
                 SelectList list = new SelectList(citiy, "Value", "Text");
+
+                var categories = _context.Categories.ToList();
+                var cat = categories.Select(x => new { Value = x.Id, Text = x.Name });
+                SelectList listCategories = new SelectList(cat, "Value", "Text");
+
                 EditProductViewModel edit = new EditProductViewModel
                 {
                     Id = product.Id,
@@ -208,6 +231,7 @@ namespace MyStore.Controllers
                     Price = product.Price,
                     Files = product.Files.Select(x => new FileDto { Id = x.Id, Name = x.Name, ProductId = x.ProductId }).ToList(),
                     Category = product.Category,
+                    Categories = listCategories.ToList(),
                     Cities = list
                 };
                 if (product.CityId != 0)
@@ -223,7 +247,7 @@ namespace MyStore.Controllers
             return NotFound();
         }
 
-        [HttpPost("Edit/{id}")]
+        [HttpPost("Edit")]
         public async Task<IActionResult> Edit(EditProductViewModel editModel)
         {
             Guid userId = new Guid(this.User.FindFirstValue(ClaimTypes.NameIdentifier));
@@ -247,7 +271,7 @@ namespace MyStore.Controllers
 
                 //return View(edit);
                 //return RedirectToAction(editModel.Id.ToString(), "Products");
-                return RedirectToAction("browse", new { userId = userId });
+                return RedirectToAction("EditProduct", "Admin");
             }
 
             return NotFound();
@@ -286,7 +310,8 @@ namespace MyStore.Controllers
             await _productService.DeleteProduct(productId, userId);
 
             //return RedirectToAction( productId.ToString(),"Products" );
-            return RedirectToAction("browse", new { userId = userId });
+            //return RedirectToAction("browse", new { userId = userId });
+            return RedirectToAction("EditProduct", "Admin");
         }
 
         [Authorize]
@@ -331,7 +356,36 @@ namespace MyStore.Controllers
 
         }
 
+        [Authorize]
+        [HttpPost("/Upload/{action_name}/{productId}")]
+        public async Task<IActionResult> Upload1(ICollection<IFormFile> files, string action_name, Guid productId)
+        {
+            Guid userGuid;
+            Guid.TryParse(this.User.FindFirstValue(ClaimTypes.NameIdentifier), out userGuid);
 
+            if (action_name == "create")
+            {
+                var fileList = await _productService.UploadandResize(files, userGuid, productId);
+                // return RedirectToAction("create");
+                return Json(new { files = fileList });
+
+            }
+            else if (action_name == "edit")
+            {
+                var fileList = await _productService.UploadandResize(files, userGuid, productId);
+                // return RedirectToAction("create");
+                return Json(new { files = fileList });
+            }
+
+            return RedirectToAction(productId.ToString(), "Products");
+
+            // _productService.UploadandResize(files, userGuid, productId );
+            //return RedirectToAction(productId.ToString(), "Products");
+
+
+
+
+        }
 
         [HttpPost("create-checkout-session")]
         public ActionResult CreateCheckoutSession(string amount)

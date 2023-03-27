@@ -21,13 +21,14 @@ namespace MyStore.Models
         //[DataType(DataType.Currency)]
         public decimal Price { get; set; }
 
-        public List<SelectListItem> Categories { get; set; } =
-            new List<SelectListItem>
-            {
-                new SelectListItem { Text = "Blonde", Value = "Blonde"},
-                new SelectListItem { Text = "Red", Value = "Red"},
-                new SelectListItem { Text = "Black", Value = "Black"}
-            };
+        
+        public IEnumerable<SelectListItem> Categories { get; set; }
+            //new List<SelectListItem>
+            //{
+            //    new SelectListItem { Text = "Blonde", Value = "Blonde"},
+            //    new SelectListItem { Text = "Red", Value = "Red"},
+            //    new SelectListItem { Text = "Black", Value = "Black"}
+            //};
 
 
         public IEnumerable<SelectListItem> Cities { get; set; }

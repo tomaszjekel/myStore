@@ -1,0 +1,78 @@
+﻿@model ProductNewViewModel
+
+@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer LocString
+
+
+<div class="row">
+    @foreach (var product in Model.Products)
+    {
+
+
+        var imageName = product?.Files?.FirstOrDefault()?.Name ?? "";
+
+
+        @*@if (product.UserId == product.ProductUserId)
+    {
+    <a asp-controller="Products" asp-action="Edit" asp-route-productId="@product.Id"
+    class="btn btn-primary" role="button">Edit</a>
+    }*@
+
+    <div class="col-lg-3 col-sm-6">
+            <div class="thumbnail">
+                <img class="img-responsive" src="../images/min_@(imageName)"  width="320" height="240   ">
+                <div class="caption">
+                    <h4>@product.Name</h4>
+                    <p>@product.Category</p>
+                    <p>@product.Price $</p>
+                    <p>
+                        <a href="@Url.Action("Edit", "Products" , new { productId = product.Id})"
+                           class="btn btn-primary" role="button">@LocString["Details"]</a>
+                    </p>
+                </div>
+            </div>
+        </div>
+
+
+    }
+
+
+</div>
+
+@{
+    var prevDisabled = !Model.HasPreviousPage ? "disabled" : "";
+    var nextDisabled = !Model.HasNextPage ? "disabled" : "";
+}
+
+
+<div class="row">
+    <div class="col-lg-12">
+        <div class="product__pagination">
+            @{
+                int pageNr = 1;
+            }
+            @for (int page = 1; page <= Model.TotalPages; page++)
+            {
+                @if (pageNr == Model.PageIndex)
+                {
+                    <a class="active" href="@Url.Action("EditProduct", "Admin" , new { pageIndex = page})">
+                        @(
+                            page
+                            )
+                    </a>
+                }
+                else
+                {
+                    <a class="" href="@Url.Action("EditProduct", "Admin" , new { pageIndex = page})">
+                        @(
+                            page
+                            )
+                    </a>
+                }
+                pageNr++;
+            }
+
+
+        </div>
+    </div>
+</div>

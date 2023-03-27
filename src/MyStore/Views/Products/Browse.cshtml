@@ -43,21 +43,32 @@
                                     <div class="card-body">
                                         <div class="shop__sidebar__categories">
                                             <ul class="nice-scroll">
-                                                <li><a href="#">Men (20)</a></li>
-                                                <li><a href="#">Women (20)</a></li>
+                                             @foreach (var cat in Model.Catgories)
+                                            {
+                                                    if(cat.Id.ToString() == Model.Category.ToString())
+                                                    {
+                                                        <li><a style="color: #ce0000;" href="@Url.Action("Browse", "Products" , new { category = cat.Id})">@cat.Name</a></li>
+                                                    }
+                                                    else
+                                                    {
+                                                        <li><a style="color: #b7b7b7;" href="@Url.Action("Browse", "Products" , new { category = cat.Id})">@cat.Name</a></li>
+                                                    }
+                                                }
+                                            
+                                            @*    <li><a href="#">Women (20)</a></li>
                                                 <li><a href="#">Bags (20)</a></li>
                                                 <li><a href="#">Clothing (20)</a></li>
                                                 <li><a href="#">Shoes (20)</a></li>
                                                 <li><a href="#">Accessories (20)</a></li>
                                                 <li><a href="#">Kids (20)</a></li>
                                                 <li><a href="#">Kids (20)</a></li>
-                                                <li><a href="#">Kids (20)</a></li>
+                                                <li><a href="#">Kids (20)</a></li>*@
                                             </ul>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                            <div class="card">
+                           @* <div class="card">
                                 <div class="card-heading">
                                     <a data-toggle="collapse" data-target="#collapseTwo">Branding</a>
                                 </div>
@@ -191,7 +202,7 @@
                                         </div>
                                     </div>
                                 </div>
-                            </div>
+                            </div>*@
                         </div>
                     </div>
                 </div>
@@ -201,10 +212,11 @@
                     <div class="row">
                         <div class="col-lg-6 col-md-6 col-sm-6">
                             <div class="shop__product__option__left">
-                                <p>Showing 1–12 of 126 results</p>
+                                
+                                <p>Showing @*1–9 of*@ @Model.Count results</p>
                             </div>
                         </div>
-                        <div class="col-lg-6 col-md-6 col-sm-6">
+                        @*<div class="col-lg-6 col-md-6 col-sm-6">
                             <div class="shop__product__option__right">
                                 <p>Sort by Price:</p>
                                 <select>
@@ -213,7 +225,7 @@
                                     <option value="">$55 - $100</option>
                                 </select>
                             </div>
-                        </div>
+                        </div>*@
                     </div>
                 </div>
 
@@ -238,13 +250,13 @@
                             <div class="product__item">
                                 <div class="product__item__pic set-bg" data-setbg="../images/min_@(imageName)">
                                     <a asp-action="Details" asp-route-id="@product.Id" class="fill-div"></a>
-                                    <ul class="product__hover">
+                                    @*<ul class="product__hover">
                                         <li><a href="#"><img src="img/icon/heart.png" alt=""></a></li>
                                         <li>
                                             <a href="#"><img src="img/icon/compare.png" alt=""> <span>Compare</span></a>
                                         </li>
                                         <li><a href="#"><img src="img/icon/search.png" alt=""></a></li>
-                                    </ul>
+                                    </ul>*@
                                 </div>
                                 <div class="product__item__text">
                                     <h6>@product.Name</h6>
@@ -257,7 +269,7 @@
                                         <i class="fa fa-star-o"></i>
                                     </div>
                                     <h5>@product.Price zł</h5>
-                                    <div class="product__color__select">
+                                    @*<div class="product__color__select">
                                         <label for="pc-40">
                                             <input type="radio" id="pc-40">
                                         </label>
@@ -267,7 +279,7 @@
                                         <label class="grey" for="pc-42">
                                             <input type="radio" id="pc-42">
                                         </label>
-                                    </div>
+                                    </div>*@
                                 </div>
                             </div>
                         </div>
@@ -280,22 +292,45 @@
         var prevDisabled = !Model.HasPreviousPage ? "disabled" : "";
         var nextDisabled = !Model.HasNextPage ? "disabled" : "";
     }
-                    <div class="row">
-                        <div class="col-lg-12">
-                            <div class="product__pagination">
-                                <a class="active" href="#">1</a>
-                                <a href="#">2</a>
-                                <a href="#">3</a>
-                                <span>...</span>
-                                <a href="#">21</a>
-                            </div>
+
+
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="product__pagination">
+                            @{
+                                int pageNr = 1;
+                            }
+                            @for (int page = 1; page <= Model.TotalPages; page++)
+                            {
+                                @if (pageNr == Model.PageIndex)
+                                {
+                                    <a class="active" href="@Url.Action("Browse", "Products" , new { pageIndex = page , category = Model.Category})">
+                                        @(
+                                            page
+                                            )
+                                    </a>
+                                }
+                                else
+                                {
+                                    <a class="" href="@Url.Action("Browse", "Products" , new { pageIndex = page, category = Model.Category})">
+                                        @(
+                                            page
+                                            )
+                                    </a>
+                                }
+                                pageNr++;
+                            }
+
+
                         </div>
                     </div>
+                </div>
+
                 </div>
             </div>
         </div>
 </section>
-<a asp-route-pageIndex="@(Model.PageIndex - 1)"class="btn btn-default @prevDisabled">
+@*<a asp-route-pageIndex="@(Model.PageIndex - 1)"class="btn btn-default @prevDisabled">
     Previous
 </a>
 
@@ -316,4 +351,4 @@
 <a asp-route-pageIndex="@(Model.PageIndex + 1)"
    class="btn btn-default @nextDisabled">
     Next
-</a>
+</a>*@

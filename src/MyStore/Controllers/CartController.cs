@@ -145,5 +145,17 @@ namespace MyStore.Controllers
             //List<Product> cart1 = SessionHelper.GetObjectFromJson<List<Product>>(HttpContext.Session, "cart");
             return Json(new { qty = cart.Sum(item => item.Quantity), price = cart.Sum(item => item.UnitPrice * item.Quantity) });
         }
+
+        public async Task<JsonResult> AddQtyCard(string id, int qty)
+        {
+           var cart = SessionHelper.GetObjectFromJson<List<CartItem>>(HttpContext.Session, "cart");
+           cart.Where(x=>x.ProductId.ToString()==id).FirstOrDefault().Quantity = qty;
+            SessionHelper.SetObjectasJson(HttpContext.Session, "cart", cart);
+
+
+
+
+            return Json(new { qty = cart.Sum(item => item.Quantity), price = cart.Sum(item => item.UnitPrice * item.Quantity) });
+        }
     }
 }

@@ -5,10 +5,12 @@ using MyStore.Domain;
 using MyStore.Infrastructure.EF;
 using MyStore.Models;
 using MyStore.Services;
+using Stripe;
 using System;
 using System.Collections.Generic;
 using System.Drawing.Printing;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using UnityEngine;
 
@@ -17,9 +19,11 @@ namespace MyStore.Controllers
     public class AdminController : Controller
     {
         private readonly MyStoreContext _context;
-        public AdminController( MyStoreContext context) 
+        private readonly IProductService _productService;
+        public AdminController( MyStoreContext context, IProductService productService) 
         { 
             _context= context;
+            _productService= productService;
         }
         public IActionResult Index()
         {
@@ -91,7 +95,54 @@ namespace MyStore.Controllers
                 Categories = categories
             };
 
-            return View(model);
+            return RedirectToAction("Category", "Admin");
+        }
+
+        
+         public async Task<IActionResult> DeleteCategory(Guid id)
+        {
+
+            var category = _context.Categories.Where(x=>x.Id == id).FirstOrDefault();
+            
+            _context.Categories.Remove(category);
+            _context.SaveChanges();
+            return RedirectToAction("Category", "Admin");
+        }
+
+
+        //[HttpGet("editProduct")]
+        public async Task<IActionResult> EditProduct(string keyword, int? pageIndex, Guid userId)
+        {
+            ViewBag.Shop = "Shop";
+            Guid userGuid;
+            Guid.TryParse(this.User.FindFirstValue(ClaimTypes.NameIdentifier), out userGuid);
+            var products = await _productService.BrowseByUserId(keyword, pageIndex, userId, null);
+
+
+            var viewModels = products.Select(p =>
+                new ProductViewModel
+                {
+                    Id = p.Id,
+                    UserId = userGuid,
+                    ProductUserId = p.UserId,
+                    Name = p.Name,
+                    Category = p.Category,
+                    Price = p.Price,
+                    Description = p.Description,
+                    Files = p.Files
+                });
+            //if (userGuid != Guid.Empty && name !="all")
+            //    viewModels = viewModels.Where(c => c.ProductUserId == userGuid);
+
+            ProductNewViewModel newModel = new ProductNewViewModel();
+            newModel.Products = viewModels.ToList();
+            newModel.HasNextPage = products.HasNextPage;
+            newModel.HasPreviousPage = products.HasPreviousPage;
+            newModel.PageIndex = products.PageIndex;
+            newModel.TotalPages = products.TotalPages;
+
+            return View(newModel);
         }
     }
+
 }

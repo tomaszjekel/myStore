@@ -14,7 +14,7 @@ namespace MyStore.Domain.Repositories
         Task DeleteImageFromProduct(Guid productId, Guid imageId, Guid userId);
         Task DeleteImage( string imageName, Guid userId);
         Task UpdateProduct(Product p);
-        Task<IQueryable<Product>> BrowseByUserId(string name, int? pageIndex, Guid userId);
+        Task<IQueryable<Product>> BrowseByUserId(string name, int? pageIndex, Guid userId,Guid? category);
         Task DeleteProduct(Guid productId, Guid userId);
         Task<List<Cities>> GetCities();
     }

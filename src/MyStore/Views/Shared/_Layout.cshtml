@@ -51,7 +51,7 @@
         <div class="offcanvas__nav__option">
             <a href="#" class="search-switch"><img src="~/img/icon/search.png" alt=""></a>
             <a href="#"><img src="~/img/icon/heart.png" alt=""></a>
-            <a href="#"><img src="~/img/icon/cart.png" alt=""> <span class="qtyCart">0</span></a>
+            <a href="@Url.Action("Index", "Cart")"><img src="~/img/icon/cart.png" alt=""> <span class="qtyCart">0</span></a>
             <div class="price">$0.00</div>
         </div>
         <div id="mobile-menu-wrap"></div>
@@ -327,6 +327,48 @@
             $.ajax({
                 type: "GET",
                 url: "@Url.Action("BuyQty", "Cart")",
+                data: { 'id': id, 'qty': qty },
+                methasync: true,
+                success: function (html) {
+                    //$("#more").after(html);
+                    $(".price").html(html.price + " PLN");
+                    $(".qtyCart").text(html.qty);
+
+                }
+            });
+        }
+        
+        $( ".target" ).change(function() {
+  
+        });
+
+        function delQtyCard(id, name) {
+            var qty = $('#'+name).val();
+            if(qty == 1){
+                qty =1;
+            }else{
+                qty = qty -1;
+            }
+            $.ajax({
+                type: "GET",
+                url: "@Url.Action("AddQtyCard", "Cart")",
+                data: { 'id': id, 'qty': qty },
+                methasync: true,
+                success: function (html) {
+                    //$("#more").after(html);
+                    $(".price").html(html.price + " PLN");
+                    $(".qtyCart").text(html.qty);
+
+                }
+            });
+        }
+
+         function addQtyCard(id, name) {
+            var qty = $('#'+name).val();
+            qty = parseInt(qty) +1;
+            $.ajax({
+                type: "GET",
+                url: "@Url.Action("AddQtyCard", "Cart")",
                 data: { 'id': id, 'qty': qty },
                 methasync: true,
                 success: function (html) {

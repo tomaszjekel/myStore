@@ -64,7 +64,7 @@ namespace MyStore.Infrastructure
             throw new NotImplementedException();
         }
 
-        public Task<IQueryable<Product>> BrowseByUserId(string name, int? pageIndex, Guid userId)
+        public Task<IQueryable<Product>> BrowseByUserId(string name, int? pageIndex, Guid userId, Guid? category)
         {
             throw new NotImplementedException();
         }

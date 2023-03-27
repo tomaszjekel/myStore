@@ -13,7 +13,7 @@ namespace MyStore.Domain
         public DateTime CreatedAt { get;  set; }
         public IEnumerable<OrderItem> Items { get;  set; }
         public Addresses Address { get; set; }
-        public Guid Completed { get; set; }
+        public bool Completed { get; set; }
 
         
 

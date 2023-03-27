@@ -47,7 +47,13 @@ namespace MyStore.Infrastructure.EF
         public async Task CreateAsync(FilesUpload files)
         {
             await _context.Files.AddAsync(files);
-            await _context.SaveChangesAsync();
+            try
+            {
+                await _context.SaveChangesAsync();
+            }catch(Exception ex)
+            {
+                ;
+            }
         }
 
         public async Task UpdateAsync(Guid productId)

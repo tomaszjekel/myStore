@@ -33,12 +33,9 @@
                             </tr>
                         </thead>
                         <tbody>
-                                    @{int count = 0;};
+                            @{int count = 0;}
                             @if (ViewBag.cart != null)
                             {
-                                
-
-                                
                                 @foreach (var item in ViewBag.cart)
                                 {
                                     <tr>
@@ -53,19 +50,20 @@
                                         </td>
                                         <td class="quantity__item">
                                             <div class="quantity">
+
                                                 <div class="pro-qty-2">
-                                                    <input type="text" value="@item.Quantity">
+                                                    <span class="fa fa-angle-left dec qtybtn" onClick="delQtyCard('@item.ProductId', 'prodQty@(count)' )")></span>   
+                                                    <input id="prodQty@(count)" type="text" value="@item.Quantity">
+                                                    <span class="fa fa-angle-right inc qtybtn" onClick="addQtyCard('@item.ProductId', 'prodQty@(count)' )"></span>
                                                 </div>
                                             </div>
                                         </td>
-                                        <td class="cart__price"> @(
-                                    item.UnitPrice * item.Quantity
-) </td>
+                                        <td class="cart__price"> @(item.UnitPrice * item.Quantity) </td>
                                         <td class="cart__close"><a asp-controller="Cart" asp-action="Remove" asp-route-id="@item.ProductId" class="fa fa-close"></a></td>
                                     </tr>
-                                    @(count++);
+                                    count++;
                                     
-                                ;
+                                
 
                             }
 
@@ -76,12 +74,12 @@
                 <div class="row">
                     <div class="col-lg-6 col-md-6 col-sm-6">
                         <div class="continue__btn">
-                            <a href="#">Continue Shopping</a>
+                            <a href="@Url.Action("browse", "Products")">Continue Shopping</a>
                         </div>
                     </div>
                     <div class="col-lg-6 col-md-6 col-sm-6">
                         <div class="continue__btn update__btn">
-                            <a href="#"><i class="fa fa-spinner"></i> Update cart</a>
+                            <a href="@Url.Action("index", "Cart")"><i class="fa fa-spinner"></i> Update cart</a>
                         </div>
                     </div>
                 </div>

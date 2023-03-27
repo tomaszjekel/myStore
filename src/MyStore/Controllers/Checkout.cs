@@ -72,15 +72,16 @@ namespace MyStore.Controllers
                 Items = orderItemList,
                 TotalPrice = orderItemList.Sum(x => x.UnitPrice),
                 UserId = new Guid("b9d9cd48-27eb-46fb-adc6-9086261c8d18"),
-                Address = adres
+                Address = adres,
+                Completed = false
             };
 
             _context.Orders.AddAsync(order);
             _context.SaveChanges();
 
-            List<CartItem> cart1 = new List<CartItem>();
+            //List<CartItem> cart1 = new List<CartItem>();
 
-            SessionHelper.SetObjectasJson(HttpContext.Session, "cart", cart1);
+            //SessionHelper.SetObjectasJson(HttpContext.Session, "cart", cart1);
 
             model.AllOrder= order;
             ViewBag.Order = "OK";
@@ -155,9 +156,12 @@ namespace MyStore.Controllers
         public IActionResult Complete(string orderid)
         {
             var order = _context.Orders.Where(p => p.Id == new Guid(orderid)).Include(x => x.Items).FirstOrDefault();
-            order.Completed = new Guid();
+            order.Completed = true;
             _context.Entry(order).State = EntityState.Modified;
             _context.SaveChanges();
+
+            List<CartItem> cart1 = new List<CartItem>();
+            SessionHelper.SetObjectasJson(HttpContext.Session, "cart", cart1);
             return View();
         }
     }

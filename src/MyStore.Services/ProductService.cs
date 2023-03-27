@@ -59,10 +59,10 @@ namespace MyStore.Services
 
             
         }
-        public async Task<PaginatedList<Product>> BrowseByUserId(string name, int? pageIndex, Guid userId)
+        public async Task<PaginatedList<Product>> BrowseByUserId(string name, int? pageIndex, Guid userId, Guid? category)
         {
-            var products = await _productRepository.BrowseByUserId(name, pageIndex, userId);
-            int pageSize = 8;
+            var products = await _productRepository.BrowseByUserId(name, pageIndex, userId, category);
+            int pageSize = 9;
 
             var Products = await PaginatedList<Product>.CreateAsync(
                   products, pageIndex ?? 1, pageSize);
@@ -82,9 +82,9 @@ namespace MyStore.Services
             return Products;
         }
 
-        public async Task CreateAsync(Guid id, Guid userId, string name, string category, decimal price, string description , int cityId, string img)
+        public async Task CreateAsync(Guid id, Guid userId, string name, string category, decimal price, string description , int cityId, string img )
         {
-            var product = new Product { Id= id, UserId= userId, Name= name, Category= category, Price= price, Description= description, CityId= cityId,Img=img };
+            var product = new Product { Id= id, UserId= userId, Name= name, Category= category, Price= price, Description= description, CityId= cityId,Img=img , Deleted = false};
             await _productRepository.CreateAsync(product);
         }
 

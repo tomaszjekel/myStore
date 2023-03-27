@@ -5,19 +5,20 @@
 }
 @model CategoriesViemModel
 <form asp-action="RegisterCategory" method="post">
+
   <div class="form-group">
-    <label for="exampleInputEmail1">Email address</label>
+    <label for="Name">New category</label>
         <input asp-for="Name" type="text" class="form-control" placeholder="new name of category">
 
     @*<small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small>*@
   </div>
  
-  <button type="submit" class="btn btn-primary">Submit</button>
+  <button type="submit" class="btn btn-primary">Create</button>
 </form>
 <br />
 <br />
 
     @foreach (var item in Model.Categories)
     {
-        <button type="button" class="btn btn-info">@item.Name</button>    
+        <button type="button" class="btn btn-info">@item.Name</button> <a href="@Url.Action("DeleteCategory", "Admin" , new { id = item.Id})">Delete</a>    
     }

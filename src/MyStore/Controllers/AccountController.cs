@@ -61,7 +61,7 @@ namespace MyStore.Controllers
             {
                 var user = await _userService.GetAsync(viewModel.Email);
                 await _authenticator.SignInAsync(user.Id, user.Email, user.Role);
-                return RedirectToAction("Index", "Home");
+                return RedirectToAction("Index", "Admin");
             }
             else
             {

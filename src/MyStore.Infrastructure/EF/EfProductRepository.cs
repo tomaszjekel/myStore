@@ -32,23 +32,28 @@ namespace MyStore.Infrastructure.EF
             return products;
         }
 
-        public async Task<IQueryable<Product>> BrowseByUserId(string name, int? pageIndex, Guid userId)
+        public async Task<IQueryable<Product>> BrowseByUserId(string name, int? pageIndex, Guid userId, Guid? category)
         {
             if (userId != new Guid("00000000-0000-0000-0000-000000000000"))
             {
-                var products = _context.Products.Where(x => x.UserId == userId).Include(x => x.Files).AsNoTracking();
+                var products = _context.Products.Where(x => x.UserId == userId && x.Deleted == false).Include(x => x.Files).AsNoTracking();
                 if (!string.IsNullOrWhiteSpace(name))
                 {
                     products = products.Where(x => x.Name.Contains(name) && x.UserId == userId).Include(x => x.Files).AsNoTracking();
                 }
+
                 return products;
             }
             else
             {
-                var products = _context.Products.Include(x => x.Files).AsNoTracking();
+                var products = _context.Products.Where(x=>x.Deleted==false).Include(x => x.Files).AsNoTracking();
                 if (!string.IsNullOrWhiteSpace(name))
                 {
                     products = products.Where(x => x.Name.Contains(name)).Include(x => x.Files).AsNoTracking();
+                }
+                if (category != null)
+                {
+                    products = products.Where(x => x.Category == category.ToString());
                 }
                 return products;
             }
@@ -65,14 +70,17 @@ namespace MyStore.Infrastructure.EF
 
                 await files.ForEachAsync(b => b.ProductId = product.Id);
 
+                await _context.SaveChangesAsync();
+
+
             }
-            catch
+            catch(Exception ex) 
             {
                 ;
             }
             finally
             {
-                await _context.SaveChangesAsync();
+                ;
             }
         }
 
@@ -114,14 +122,23 @@ namespace MyStore.Infrastructure.EF
         public async Task DeleteProduct(Guid productId, Guid userId)
         {
             var product = _context.Products.Include(x=>x.Files).Where(x => x.Id == productId && x.UserId == userId).FirstOrDefault();
+            product.Deleted= true;
+
             foreach(var name in product.Files)
             {
                 var filesPath = Environment.GetEnvironmentVariable("UPLOAD_DIR");
                 File.Delete(Path.Combine(filesPath, name.Name.ToString()));
                 File.Delete(Path.Combine(filesPath, "min_" + name.Name));
             }
-            _context.Remove(product);
-            _context.SaveChanges();
+            try
+            {
+                //_context.Remove(product);
+                await _context.SaveChangesAsync();
+            }
+            catch(Exception ex)
+            {
+                ;
+            }
         }
         public async Task<List<Cities>> GetCities()
         {
