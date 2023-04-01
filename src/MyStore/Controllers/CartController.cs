@@ -27,7 +27,7 @@ namespace MyStore.Controllers
             {
             ViewBag.cart = cart;
             ViewBag.total = cart.Sum(item => item.TotalPrice * item.Quantity);
-
+            
             }
             return View();
         }
@@ -129,7 +129,7 @@ namespace MyStore.Controllers
                     ProductName = prod.Name,
                     Quantity = qty,
                     UnitPrice = prod.Price, 
-                    SizeId =sizeId
+                    Size =_context.Sizes.Where(x=>x.Id == sizeId).Select(x=>x.Name).FirstOrDefault(),
                 });
                 SessionHelper.SetObjectasJson(HttpContext.Session, "cart", cart);
             }
@@ -151,7 +151,7 @@ namespace MyStore.Controllers
                             ProductName = prod.Name,
                             Quantity = qty,
                             UnitPrice = prod.Price,
-                            SizeId =sizeId
+                            Size = _context.Sizes.Where(x => x.Id == sizeId).Select(x => x.Name).FirstOrDefault(),
                         });
                 }
                 SessionHelper.SetObjectasJson(HttpContext.Session, "cart", cart);

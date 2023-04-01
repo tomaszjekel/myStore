@@ -58,7 +58,8 @@ namespace MyStore.Controllers
                    ProductName = cart[i].ProductName,
                    UnitPrice = cart[i].UnitPrice,
                    Quantity = cart[i].Quantity,
-                   Id = new Guid()
+                   Id = new Guid(),
+                   Size= cart[i].Size,
                 };
                 
                 orderItemList.Add(cartItem);

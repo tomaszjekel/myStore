@@ -10,7 +10,7 @@ namespace MyStore.Domain
         public int Quantity { get;  set; }
         public decimal UnitPrice { get;  set; }
         public decimal TotalPrice => Quantity * UnitPrice;
-
+        public string Size { get; set; }
   
 
         

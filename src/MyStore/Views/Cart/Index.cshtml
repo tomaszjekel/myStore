@@ -41,10 +41,14 @@
                                     <tr>
                                         <td class="product__cart__item">
                                             <div class="product__cart__item__pic">
-                                                <img src="../images/min_@item.Img" alt="" width="100px" height="100px">
+                                                <img src="../images/min_@item.Img" alt="" width="100px" @*height="100px"*@>
                                             </div>
                                             <div class="product__cart__item__text">
                                                 <h6>@item.ProductName </h6>
+                                                @if(item.Size != null)
+                                                {
+                                                    <h6> Size - @item.Size</h6>
+                                                }
                                                 <h5>@item.UnitPrice </h5>
                                             </div>
                                         </td>
