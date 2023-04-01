@@ -12,6 +12,7 @@ namespace MyStore.Domain
         public string Description { get;  set; }
         public decimal Price { get;  set; }
         public List<FilesUpload> Files { get; set; }
+        public List<ProductVariant> Variants { get; set; }
         public string Img { get; set; }
         public int CityId { get; set; }
         public int Quantity { get; set; }

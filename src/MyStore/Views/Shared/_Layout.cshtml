@@ -321,21 +321,31 @@
             });
         });
 
+        var size = ""
+        var hasSize = false;
+
         function addCartQty(id) {
-
-            var qty = $('#prodQty').val();
-            $.ajax({
-                type: "GET",
-                url: "@Url.Action("BuyQty", "Cart")",
-                data: { 'id': id, 'qty': qty },
-                methasync: true,
-                success: function (html) {
-                    //$("#more").after(html);
-                    $(".price").html(html.price + " PLN");
-                    $(".qtyCart").text(html.qty);
-
+            if ($(".product__details__option__size")[0] ){
+                hasSize = true;        
+            }
+            $("label").each(function () {
+                if ($(this).hasClass("active")) {
+                   size = $(this).children().attr('id')
                 }
             });
+            
+            if(!hasSize)
+            {
+                buyQty(id);
+            }
+            else
+            {
+                if(size !== ""){
+                    buyQty(id)
+                }
+                else
+                alert("Select size");
+            }
         }
         
         $( ".target" ).change(function() {
@@ -379,6 +389,23 @@
                 }
             });
         }
+
+        function buyQty(id) {
+            var qty = $('#prodQty').val();
+                $.ajax({
+                    type: "GET",
+                    url: "@Url.Action("BuyQty", "Cart")",
+                    data: { 'id': id, 'qty': qty, 'sizeId': size },
+                    methasync: true,
+                    success: function (html) {
+                        //$("#more").after(html);
+                        $(".price").html(html.price + " PLN");
+                        $(".qtyCart").text(html.qty);
+
+                    }
+                });
+        }
+
     </script>
 }
 

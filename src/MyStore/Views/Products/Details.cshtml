@@ -96,14 +96,21 @@
                         <p>
                             @Model.Description
                         </p>
+
+                    
                         <div class="product__details__option">
-                            <div class="product__details__option__size">
-                                <span>Size:</span>
-                                <label for="xxl">
-                                    xxl
-                                    <input type="radio" id="xxl">
-                                </label>
-                                <label class="active" for="xl">
+                            @if (Model.NamesSize.Count() > 0)
+                            {
+                                <div class="product__details__option__size">
+                                    <span>Size:</span>
+                                    @foreach (var size in @Model.NamesSize)
+                                    {
+                                        <label for="@size.Name">
+                                            @size.Name
+                                            <input type="radio" id="@size.Id">
+                                        </label>
+                                    }
+                                    @*   <label class="active" for="xl">
                                     xl
                                     <input type="radio" id="xl">
                                 </label>
@@ -114,8 +121,9 @@
                                 <label for="sm">
                                     s
                                     <input type="radio" id="sm">
-                                </label>
-                            </div>
+                                </label>*@
+                                </div>
+                            }
                             <div class="product__details__option__color">
                                 <span>Color:</span>
                                 <label class="c-1" for="sp-1">

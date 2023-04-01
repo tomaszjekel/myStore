@@ -19,11 +19,11 @@ namespace MyStore.Infrastructure.EF
         }
 
         public async Task<Product> GetAsync(Guid id)
-            => await _context.Products.Include(x=>x.Files).SingleOrDefaultAsync(p => p.Id == id);
+            => await _context.Products.Include(x=>x.Files).Include(x => x.Variants).SingleOrDefaultAsync(p => p.Id == id);
 
         public async Task<IQueryable<Product>> BrowseAsync(string name)
         {
-            var products = _context.Products.Include(x => x.Files).AsNoTracking();
+            var products = _context.Products.Include(x => x.Files).Include(x => x.Variants).AsQueryable();
             if (!string.IsNullOrWhiteSpace(name))
             {
                 products = products.Where(x => x.Name.Contains(name));
@@ -36,20 +36,20 @@ namespace MyStore.Infrastructure.EF
         {
             if (userId != new Guid("00000000-0000-0000-0000-000000000000"))
             {
-                var products = _context.Products.Where(x => x.UserId == userId && x.Deleted == false).Include(x => x.Files).AsNoTracking();
+                var products = _context.Products.Where(x => x.UserId == userId && x.Deleted == false).Include(x => x.Files).Include(x=>x.Variants).AsNoTracking();
                 if (!string.IsNullOrWhiteSpace(name))
                 {
-                    products = products.Where(x => x.Name.Contains(name) && x.UserId == userId).Include(x => x.Files).AsNoTracking();
+                    products = products.Where(x => x.Name.Contains(name) && x.UserId == userId).Include(x => x.Files).Include(x => x.Variants);
                 }
 
                 return products;
             }
             else
             {
-                var products = _context.Products.Where(x=>x.Deleted==false).Include(x => x.Files).AsNoTracking();
+                var products = _context.Products.Where(x=>x.Deleted==false).Include(x => x.Files).Include(x => x.Variants).AsNoTracking();
                 if (!string.IsNullOrWhiteSpace(name))
                 {
-                    products = products.Where(x => x.Name.Contains(name)).Include(x => x.Files).AsNoTracking();
+                    products = products.Where(x => x.Name.Contains(name)).Include(x => x.Files).Include(x => x.Variants).AsNoTracking();
                 }
                 if (category != null)
                 {

@@ -25,6 +25,7 @@ using UnityEngine;
 using Stripe;
 using Stripe.FinancialConnections;
 using MyStore.Infrastructure.EF;
+using System.Xml.Linq;
 
 namespace MyStore.Controllers
 {
@@ -60,7 +61,8 @@ namespace MyStore.Controllers
                     Category = p.Category,
                     Price = p.Price,
                     Description = p.Description,
-                    Files = p.Files
+                    Files = p.Files,
+                    Variants = p.Variants,
                 });
             //if (userGuid != Guid.Empty && name !="all")
             //    viewModels = viewModels.Where(c => c.ProductUserId == userGuid);
@@ -117,6 +119,15 @@ namespace MyStore.Controllers
 
             var fileList = await _fileService.BrowseByProductAsync(product.UserId, product.Id);
             var cities = await _productService.GetCities();
+            
+            List<Domain.Size> namesSize = new List<Domain.Size>();
+            foreach(var n in product.Variants)
+            {
+                var name = _context.Sizes.Where(x => x.Id == n.SizeId).FirstOrDefault().Name;
+                var value = _context.Sizes.Where(y => y.Id == n.SizeId).FirstOrDefault().Id;
+                namesSize.Add(new Domain.Size() { Id = value , Name=name});
+            }
+            
             var viewModel = new ProductViewModel
             {
                 Id = product.Id,
@@ -125,10 +136,13 @@ namespace MyStore.Controllers
                 Price = product.Price,
                 Files = product.Files,
                 Description = product.Description,
-                City = cities.Where(x => x.Id == product.CityId).Select(x => x.Name).FirstOrDefault()
+                City = cities.Where(x => x.Id == product.CityId).Select(x => x.Name).FirstOrDefault(),
+                Variants= product.Variants,
+                NamesSize= namesSize
             };
 
-            return View(viewModel);
+
+                return View(viewModel);
         }
 
         [Authorize]
@@ -160,7 +174,38 @@ namespace MyStore.Controllers
             var cat = categories.Select(x => new { Value = x.Id, Text = x.Name });
             SelectList listCategories = new SelectList(cat, "Value", "Text");
 
-            var viewModel = new CreateProductViewModel() { Files = fileList.ToList(), Cities = list,  Categories = listCategories};
+            var colors = _context.Colors.ToList();
+            var col = colors.Select(x => new { Value = x.Id, Text = x.Name });
+            SelectList listColors = new SelectList(col, "Value", "Text");
+            var listColors1 = listColors.ToList();
+            listColors1.Insert(0, new SelectListItem()
+            {
+                Value = null, // <=========== Here lies the problem...
+                Text = "None"
+            });
+
+
+            var sizes = _context.Sizes.ToList();
+            var siz = sizes.Select(x => new { Value = x.Id, Text = x.Name });
+            SelectList listSizes = new SelectList(siz, "Value", "Text");
+            var listSizes1 = listSizes.ToList();
+            listSizes1.Insert(0, new SelectListItem()
+            {
+                Value = null, // <=========== Here lies the problem...
+                Text = "None"
+            });
+
+            var variants = _context.ProductVariants.Where(x => x.ProductId == null && x.UserId == userGuid).ToList();
+
+            var viewModel = new CreateProductViewModel() 
+            { 
+                Files = fileList.ToList(),
+                Cities = list,
+                Categories = listCategories,
+                Sizes = listSizes1,
+                Colors= listColors1,
+                Variants= variants,
+            };
 
             return View(viewModel);
         }
@@ -177,8 +222,24 @@ namespace MyStore.Controllers
 
             Guid userId = new Guid(this.User.FindFirstValue(ClaimTypes.NameIdentifier));
             var newId = Guid.NewGuid();
-            await _productService.CreateAsync(newId, userId, viewModel.Name,
-            viewModel.Category, viewModel.Price, viewModel.Description, Int32.Parse(viewModel.SelectedCity ?? "0"), "");
+
+            var variants = _context.ProductVariants.Where(x=>x.ProductId == null && x.UserId == userId).ToList();
+
+            Domain.Product p = new Domain.Product 
+            { 
+                Id = newId,
+                UserId = userId,
+                Name = viewModel.Name,
+                Category = viewModel.Category,
+                Price = viewModel.Price,
+                Description = viewModel.Description, 
+                CityId = Int32.Parse(viewModel.SelectedCity ?? "0"), 
+                Img = "",
+                Deleted = false,
+                Variants = variants,
+                
+            };
+            await _productService.CreateAsync(p);
 
             //QRCodeGenerator qrGenerator = new QRCodeGenerator();
             //QRCodeData qrCodeData = qrGenerator.CreateQrCode("The text which should be encoded.", QRCodeGenerator.ECCLevel.Q);
@@ -460,6 +521,66 @@ namespace MyStore.Controllers
             Response.Headers.Add("Location", session.Url);
             return new StatusCodeResult(303);
         }
+
+        [Authorize]
+        [HttpPost("CreateVariant")]
+        [Authorize(AuthenticationSchemes = CookieAuthenticationDefaults.AuthenticationScheme)]
+        public async Task<IActionResult> CreateVariant(CreateProductViewModel viewModel)
+        {
+            if (!ModelState.IsValid)
+            {
+                ;// return await Create();
+            }
+
+            Guid userId = new Guid(this.User.FindFirstValue(ClaimTypes.NameIdentifier));
+            
+            ProductVariant productVariant = new ProductVariant()
+            {
+                Id = new Guid(),
+                ColorId = viewModel.VariantColorId,
+                Remarks = viewModel.VariantName,
+                SizeId = viewModel.VariantSizeId,
+                UserId= userId,
+                Price = viewModel.Price,
+                Isactive = true
+            };
+                _context.ProductVariants.Add(productVariant);
+                _context.SaveChanges();
+           
+
+            //QRCodeGenerator qrGenerator = new QRCodeGenerator();
+            //QRCodeData qrCodeData = qrGenerator.CreateQrCode("The text which should be encoded.", QRCodeGenerator.ECCLevel.Q);
+            //QRCode qrCode = new QRCode(qrCodeData);
+            //Bitmap qrCodeImage = qrCode.GetGraphic(20);
+            //wwait _fileService.UpdateAsync(newId);
+            return RedirectToAction("create","Products");
+        }
+
+        [Authorize]
+        [HttpGet("DeleteVariant")]
+        [Authorize(AuthenticationSchemes = CookieAuthenticationDefaults.AuthenticationScheme)]
+        public async Task<IActionResult> DeleteVariant(Guid id)
+        {
+            if (!ModelState.IsValid)
+            {
+                ;// return await Create();
+            }
+
+            Guid userId = new Guid(this.User.FindFirstValue(ClaimTypes.NameIdentifier));
+
+            var variant = _context.ProductVariants.FirstOrDefault(x => x.Id == id);
+            _context.Remove(variant);
+            _context.SaveChanges();
+
+
+            //QRCodeGenerator qrGenerator = new QRCodeGenerator();
+            //QRCodeData qrCodeData = qrGenerator.CreateQrCode("The text which should be encoded.", QRCodeGenerator.ECCLevel.Q);
+            //QRCode qrCode = new QRCode(qrCodeData);
+            //Bitmap qrCodeImage = qrCode.GetGraphic(20);
+            //wwait _fileService.UpdateAsync(newId);
+            return RedirectToAction("create", "Products");
+        }
+
     }
 public class CreateProduct
     {

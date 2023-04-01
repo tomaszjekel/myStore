@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using MyStore.Domain;
@@ -37,5 +38,15 @@ namespace MyStore.Models
         public List<FileDto> Files { get; set; }
 
         public string Description { get; set; }
+
+
+        public string VariantName { get; set; }
+        public IEnumerable<SelectListItem> Colors { get; set; }
+        public IEnumerable<SelectListItem> Sizes { get;set; }
+        public Guid VariantColorId { get; set; }
+        public Guid VariantSizeId { get; set; }
+        public decimal VariantPrice { get; set; }
+
+        public List<ProductVariant> Variants { get; set; }
     }
 }

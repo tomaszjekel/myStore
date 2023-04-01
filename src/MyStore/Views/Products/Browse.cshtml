@@ -39,7 +39,7 @@
                                 <div class="card-heading">
                                     <a data-toggle="collapse" data-target="#collapseOne">Categories</a>
                                 </div>
-                                <div id="collapseOne" class="collapse show" data-parent="#accordionExample">
+                                <div id="collapseOne" class="collapse show" data-parent="#accordionExample" aria-expanded="false">
                                     <div class="card-body">
                                         <div class="shop__sidebar__categories">
                                             <ul class="nice-scroll">
@@ -258,29 +258,41 @@
                                         <li><a href="#"><img src="img/icon/search.png" alt=""></a></li>
                                     </ul>*@
                                 </div>
-                                <div class="product__item__text">
-                                    <h6>@product.Name</h6>
-                    <a onclick="addCart('@product.Id')" class="add-cart">+ Add To Cart</a>
-                                    <div class="rating">
-                                        <i class="fa fa-star-o"></i>
-                                        <i class="fa fa-star-o"></i>
-                                        <i class="fa fa-star-o"></i>
-                                        <i class="fa fa-star-o"></i>
-                                        <i class="fa fa-star-o"></i>
+                                @if (product.Variants.Count>0)
+                                {
+                                    <div style="font-size: 15px;font-weight: 600;margin-bottom: 5px;"> 
+                                        <br>
+                                        <h6>@product.Name</h6>
+                                        <h5>@product.Price zł</h5>
                                     </div>
-                                    <h5>@product.Price zł</h5>
-                                    @*<div class="product__color__select">
-                                        <label for="pc-40">
-                                            <input type="radio" id="pc-40">
-                                        </label>
-                                        <label class="active black" for="pc-41">
-                                            <input type="radio" id="pc-41">
-                                        </label>
-                                        <label class="grey" for="pc-42">
-                                            <input type="radio" id="pc-42">
-                                        </label>
-                                    </div>*@
-                                </div>
+                                }
+                                else{
+
+                                    
+                                     <div class="product__item__text">
+                                        <h6>@product.Name</h6>
+                                        <a onclick="addCart('@product.Id')" class="add-cart">+ Add To Cart</a>
+                                        <div class="rating">
+                                            <i class="fa fa-star-o"></i>
+                                            <i class="fa fa-star-o"></i>
+                                            <i class="fa fa-star-o"></i>
+                                            <i class="fa fa-star-o"></i>
+                                            <i class="fa fa-star-o"></i>
+                                        </div>
+                                        <h5>@product.Price zł</h5>
+                                        @*<div class="product__color__select">
+                                            <label for="pc-40">
+                                                <input type="radio" id="pc-40">
+                                            </label>
+                                            <label class="active black" for="pc-41">
+                                                <input type="radio" id="pc-41">
+                                            </label>
+                                            <label class="grey" for="pc-42">
+                                                <input type="radio" id="pc-42">
+                                            </label>
+                                        </div>*@
+                                    </div>
+                                    }
                             </div>
                         </div>
                 }

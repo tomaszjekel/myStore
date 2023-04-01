@@ -24,6 +24,10 @@ namespace MyStore.Infrastructure.EF
         public DbSet<Province> Provinces { get; set; }
         public DbSet<Addresses> Addresses { get; set; }
         public DbSet<Category> Categories { get; set; }
+        public DbSet<ProductVariant> ProductVariants { get; set; }
+        public DbSet<Variant> Variants { get; set; }
+        public DbSet<Color> Colors { get; set; }
+        public DbSet<Size> Sizes { get; set; }
 
 
 

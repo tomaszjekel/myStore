@@ -115,16 +115,22 @@ namespace MyStore.Controllers
             return Json(new { qty = 0, price = 0 });
         }
 
-        public async Task<JsonResult> BuyQty(string id, int qty)
+        public async Task<JsonResult> BuyQty(string id, int qty, Guid? sizeId)
         {
-
-
             List<CartItem> cart;
             var prod = _context.Products.Where(p => p.Id == Guid.Parse(id)).Include(x => x.Files).FirstOrDefault();
             if (SessionHelper.GetObjectFromJson<List<Product>>(HttpContext.Session, "cart") == null)
             {
                 cart = new List<CartItem>();
-                cart.Add(new CartItem { ProductId = prod.Id, Img = prod.Files.FirstOrDefault().Name, ProductName = prod.Name, Quantity = qty, UnitPrice = prod.Price });
+                cart.Add(new CartItem 
+                { 
+                    ProductId = prod.Id,
+                    Img = prod.Files.FirstOrDefault().Name,
+                    ProductName = prod.Name,
+                    Quantity = qty,
+                    UnitPrice = prod.Price, 
+                    SizeId =sizeId
+                });
                 SessionHelper.SetObjectasJson(HttpContext.Session, "cart", cart);
             }
             else
@@ -137,7 +143,16 @@ namespace MyStore.Controllers
                 }
                 else
                 {
-                    cart.Add(new CartItem { ProductId = prod.Id, Img = prod.Files.FirstOrDefault().Name, ProductName = prod.Name, Quantity = qty, UnitPrice = prod.Price });
+                    cart.Add(
+                        new CartItem 
+                        { 
+                            ProductId = prod.Id,
+                            Img = prod.Files.FirstOrDefault().Name,
+                            ProductName = prod.Name,
+                            Quantity = qty,
+                            UnitPrice = prod.Price,
+                            SizeId =sizeId
+                        });
                 }
                 SessionHelper.SetObjectasJson(HttpContext.Session, "cart", cart);
 
