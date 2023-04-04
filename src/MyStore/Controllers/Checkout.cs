@@ -72,7 +72,7 @@ namespace MyStore.Controllers
                 CreatedAt = DateTime.Now,
                 Items = orderItemList,
                 TotalPrice = orderItemList.Sum(x => x.UnitPrice),
-                UserId = new Guid("b9d9cd48-27eb-46fb-adc6-9086261c8d18"),
+                UserId = new Guid(),
                 Address = adres,
                 Completed = false
             };
@@ -120,11 +120,12 @@ namespace MyStore.Controllers
 
                 },
                 Mode = "payment",
-                SuccessUrl = "http://localhost:5000/Checkout/complete?orderid="+orderid,
+                SuccessUrl ="https://tomo24.pl/Checkout/complete?orderid="+orderid,
                 CancelUrl = "http://localhost:5000/Home/cancel",
             };
-
-            var order = _context.Orders.Where(p => p.Id == new Guid(orderid)).Include(x => x.Items).FirstOrDefault();
+            
+           Guid g = Guid.Parse(orderid);
+            var order = _context.Orders.Where(p => p.Id == g).Include(x => x.Items).FirstOrDefault();
 
             foreach (var item in order.Items)
             {
@@ -133,7 +134,7 @@ namespace MyStore.Controllers
                 {
                     PriceData = new Stripe.Checkout.SessionLineItemPriceDataOptions
                     {
-                        UnitAmount = Convert.ToInt32(item.UnitPrice) * 100,//item.Quantity,
+                        UnitAmountDecimal = item.UnitPrice * 100,//item.Quantity,
                         Currency = "pln",
                         ProductData = new Stripe.Checkout.SessionLineItemPriceDataProductDataOptions
                         {
@@ -146,7 +147,22 @@ namespace MyStore.Controllers
                 };
             options.LineItems.Add(currentLineItem);
             }
+            var currentLineItemShipping = new Stripe.Checkout.SessionLineItemOptions
+            {
+                PriceData = new Stripe.Checkout.SessionLineItemPriceDataOptions
+                {
+                    UnitAmount = 15 * 100,//item.Quantity,
+                    Currency = "pln",
+                    ProductData = new Stripe.Checkout.SessionLineItemPriceDataProductDataOptions
+                    {
+                        Name = "Wysyłka",
 
+                        //Images = "images/"+item.
+                    },
+                },
+                Quantity = 1,
+            };
+            options.LineItems.Add(currentLineItemShipping);
             var service = new Stripe.Checkout.SessionService();
             Stripe.Checkout.Session session = service.Create(options);
             Response.Headers.Add("Location", session.Url);

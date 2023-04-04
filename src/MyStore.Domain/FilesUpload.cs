@@ -11,6 +11,7 @@ namespace MyStore.Domain
         public Guid? ProductId { get; set; }
         public string Name { get; private set; }
         public DateTime Data { get; private set; }
+        public bool? IsDefault { get; set; }
 
         private FilesUpload()
         {

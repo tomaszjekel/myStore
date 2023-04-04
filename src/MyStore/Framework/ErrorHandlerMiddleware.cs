@@ -23,7 +23,7 @@ namespace MyStore.Framework
             try
             {
                 _logger.LogInformation($"Request: {context.Request.Path}");
-                await _next(context);
+                 await _next(context);
             }
             catch (Exception ex)
             {

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 
 namespace MyStore.Domain
@@ -8,8 +9,10 @@ namespace MyStore.Domain
     public class Order
     {
         public Guid Id { get;  set; }
-        public Guid UserId { get;  set; }
-        public decimal TotalPrice { get;  set; }
+        public Guid? UserId { get;  set; }
+
+        [Column(TypeName = "decimal(10,2)")]
+        public decimal? TotalPrice { get;  set; }
         public DateTime CreatedAt { get;  set; }
         public IEnumerable<OrderItem> Items { get;  set; }
         public Addresses Address { get; set; }

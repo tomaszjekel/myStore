@@ -18,7 +18,21 @@
 <br />
 <br />
 
-    @foreach (var item in Model.Categories)
-    {
-        <button type="button" class="btn btn-info">@item.Name</button> <a href="@Url.Action("DeleteCategory", "Admin" , new { id = item.Id})">Delete</a>    
-    }
+    
+<table class="table">
+  <thead>
+    <tr>
+      <th scope="col">Name</th>
+      <th scope="col">Action</th>
+    </tr>
+  </thead>
+  <tbody>
+@foreach (var item in Model.Categories)
+{
+    <tr>
+    <th scope="row">@item.Name</th>
+    <td><a href="@Url.Action("DeleteCategory", "Admin" , new { id = item.Id})">Delete</a></td>
+    </tr>
+}
+  </tbody>
+</table>

@@ -60,7 +60,7 @@ namespace MyStore.Infrastructure.EF
         }
 
         public async Task CreateAsync(Product product)
-        {
+            {
             try
             {
 
@@ -73,7 +73,7 @@ namespace MyStore.Infrastructure.EF
                 await _context.SaveChangesAsync();
 
 
-            }
+                }
             catch(Exception ex) 
             {
                 ;

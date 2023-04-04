@@ -26,6 +26,7 @@ using Stripe;
 using Stripe.FinancialConnections;
 using MyStore.Infrastructure.EF;
 using System.Xml.Linq;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace MyStore.Controllers
 {
@@ -220,6 +221,10 @@ namespace MyStore.Controllers
                 return await Create();
             }
 
+            var fileDefault = _context.Files.Where(x=>x.Name == viewModel.DefaultImage).FirstOrDefault();
+            fileDefault.IsDefault = true;
+            _context.SaveChanges();
+
             Guid userId = new Guid(this.User.FindFirstValue(ClaimTypes.NameIdentifier));
             var newId = Guid.NewGuid();
 
@@ -284,6 +289,26 @@ namespace MyStore.Controllers
                 var cat = categories.Select(x => new { Value = x.Id, Text = x.Name });
                 SelectList listCategories = new SelectList(cat, "Value", "Text");
 
+                var colors = _context.Colors.ToList();
+                var col = colors.Select(x => new { Value = x.Id, Text = x.Name });
+                SelectList listColors = new SelectList(col, "Value", "Text");
+                var listColors1 = listColors.ToList();
+                listColors1.Insert(0, new SelectListItem()
+                {
+                    Value = null, // <=========== Here lies the problem...
+                    Text = "None"
+                });
+
+                var sizes = _context.Sizes.ToList();
+                var siz = sizes.Select(x => new { Value = x.Id, Text = x.Name });
+                SelectList listSizes = new SelectList(siz, "Value", "Text");
+                var listSizes1 = listSizes.ToList();
+                listSizes1.Insert(0, new SelectListItem()
+                {
+                    Value = null, // <=========== Here lies the problem...
+                    Text = "None"
+                });
+
                 EditProductViewModel edit = new EditProductViewModel
                 {
                     Id = product.Id,
@@ -293,7 +318,8 @@ namespace MyStore.Controllers
                     Files = product.Files.Select(x => new FileDto { Id = x.Id, Name = x.Name, ProductId = x.ProductId }).ToList(),
                     Category = product.Category,
                     Categories = listCategories.ToList(),
-                    Cities = list
+                    Cities = list,
+                    
                 };
                 if (product.CityId != 0)
                 {
@@ -348,8 +374,28 @@ namespace MyStore.Controllers
             //return RedirectToAction( productId.ToString(),"Products" );
             return RedirectToAction("edit", "Products", new { productId = productId });
             //return await Edit(productId);
-
         }
+
+        [Authorize]
+        [HttpGet("/DeleteByName/{imageName}/{productId}")]
+        public async Task<IActionResult> DeleteByName(string imageName, Guid productId)
+        {
+            Guid userId = new Guid(this.User.FindFirstValue(ClaimTypes.NameIdentifier));
+            var file = _context.Files.Where(x=>x.Name == imageName).FirstOrDefault();
+
+            var filesPath = Environment.GetEnvironmentVariable("UPLOAD_DIR");
+            System.IO.File.Delete(Path.Combine(filesPath, file.Id.ToString()));
+            System.IO.File.Delete(Path.Combine(filesPath, "min_" + file.Id));
+
+            _context.Files.Remove(file);
+            _context.SaveChanges();
+
+            //return RedirectToAction( productId.ToString(),"Products" );
+            return RedirectToAction("edit", "Products", new { productId = productId });
+            //return await Edit(productId);
+        }
+
+
 
         [Authorize]
         [HttpGet("/DeleteImage/{imageName}")]

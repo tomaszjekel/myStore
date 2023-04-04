@@ -29,7 +29,7 @@
 
         <div class="col-lg-3 col-sm-6">
             <div class="thumbnail">
-                <img class="img-responsive" src="../../images/min_@(imageName)" alt="Chania">
+                <img class="img-responsive" src="../../images/min_@(imageName)" width="180px">
                 <div class="caption">
                     <p>
                         <a asp-action="Delete" asp-route-productId="@Model.Id" asp-route-imageId="@image.Id" class="btn btn-danger" role="button">Delete</a>
@@ -138,17 +138,17 @@
 
 <div>
     <br />
-    @Html.ActionLink("Back to List", "browse")
+    @Html.ActionLink("Back to List", "EditProduct","Admin")
 </div>
 
 @section Scripts
 {
     <script>
 
-           function loadImages(files) {
+        function loadImages(files) {
             $.each(files, function (key, fileName) {
                 var hostname = location.protocol + '//' + location.hostname + (location.port ? ':' + location.port : '');
-                var img = $("<img />").attr('src', hostname + '/images/min_' + fileName)
+                var img = $("<img />").width("180px").attr('src', hostname + '/images/min_' + fileName)
 
                     .on('load', function () {
                         if (!this.complete || typeof this.naturalWidth == "undefined" || this.naturalWidth == 0) {
@@ -157,14 +157,16 @@
                             img.addClass("img-responsive");
                             var imagesDiv = $('<div />'); imagesDiv.addClass("col-lg-3 col-sm-6");
                             var thumbnail = $('<div />'); thumbnail.addClass("thumbnail");
-                            $("#imagesDiv").append(imagesDiv);
+                            $("#imagesDiv").after(imagesDiv);
                             imagesDiv.append(thumbnail);
                             thumbnail.append(img)
                             var caption = $('<div class="caption" />');
                             var button = $('<a class="btn btn-danger" role="button" />').text("Delete");
-                            button.attr("href", hostname + "/DeleteImage/" + fileName);
+                            button.attr("href", hostname + "/DeleteByName/" + fileName + "/@Model.Id" );
                             thumbnail.append(caption);
                             caption.append(button);
+                            //caption.append('<input class="form-check-input" type="radio" name="flexRadioDefault" id="' + fileName + '" />');
+                            //caption.append('<label class="form-check-label" for="flexRadioDefault1">Default</label>');
 
 
                             //$("#imagesDiv").append(img);

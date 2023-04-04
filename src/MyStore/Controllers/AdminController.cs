@@ -1,4 +1,5 @@
 ﻿using Google.Protobuf.WellKnownTypes;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using MyStore.Domain;
@@ -70,6 +71,7 @@ namespace MyStore.Controllers
             return View(model);
         }
 
+        [Authorize]
         public async Task<IActionResult> Category()
         {
 
@@ -81,7 +83,8 @@ namespace MyStore.Controllers
 
             return View(model);
         }
-        
+
+        [Authorize]
         [HttpPost("RegisterCategory")]
          public async Task<IActionResult> RegisterCategory(CategoriesViemModel addModel)
         {
@@ -98,8 +101,8 @@ namespace MyStore.Controllers
             return RedirectToAction("Category", "Admin");
         }
 
-        
-         public async Task<IActionResult> DeleteCategory(Guid id)
+        [Authorize]
+        public async Task<IActionResult> DeleteCategory(Guid id)
         {
 
             var category = _context.Categories.Where(x=>x.Id == id).FirstOrDefault();
@@ -126,7 +129,7 @@ namespace MyStore.Controllers
                     UserId = userGuid,
                     ProductUserId = p.UserId,
                     Name = p.Name,
-                    Category = p.Category,
+                    Category = _context.Categories.Where(x=>x.Id == new Guid(p.Category)).Select(x=>x.Name).FirstOrDefault(),
                     Price = p.Price,
                     Description = p.Description,
                     Files = p.Files

@@ -17,6 +17,7 @@
 </div>
 <br />
 
+<form id="myForm">
 <div class="row">
     <div id="imagesDiv">
     </div>
@@ -32,122 +33,169 @@
                     <p>
                         @*@(imageName)*@
                         <a href="@Url.Action(imageName,"DeleteImage")" class="btn btn-primary" role="button">Delete</a>
-
+                        <input class="form-check-input" type="radio" name="flexRadioDefault" id="@file.Name">
+                        <label class="form-check-label" for="flexRadioDefault1">
+                            Default
+                        </label>
                     </p>
                 </div>
             </div>
         </div>
     }
 </div>
+</form>
 
-<table class="table">
-  <thead>
-    <tr>
-      <th scope="col">#</th>
-      <th scope="col">Name</th>
-      <th scope="col">Color</th>
-      <th scope="col">Size</th>
-      <th scope="col">Price</th>
-      <th scope="col">Action</th>
+<div class="accordion" id="accordionExample">
+    <div class="accordion-item">
+        <h2 class="accordion-header" id="headingOne">
+            <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
+                Variants
+            </button>
+        </h2>
+        <div id="collapseOne" class="accordion-collapse collapse" aria-labelledby="headingOne" data-bs-parent="#accordionExample" style="width: 900px;">
+            <div class="accordion-body" style="width: 900px;">
+             <table class="table">
+              <thead>
+                <tr>
+                  <th scope="col">#</th>
+                  <th scope="col">Name</th>
+                  <th scope="col">Color</th>
+                  <th scope="col">Size</th>
+                  <th scope="col">Price</th>
+                  <th scope="col">Action</th>
       
-    </tr>
-  </thead>
-  <tbody>
-    @foreach (var variant in Model.Variants)
-    {
-     <tr>
-      <th scope="row"></th>
-      <td>@variant.Remarks </td>
-     <td><select asp-for="@variant.ColorId" asp-items="Model.Colors" class="form-control" ></select> </td>
-     <td><select asp-for="@variant.SizeId" asp-items="Model.Sizes" class="form-control" > </select> </td>
-     <td>@variant.Price </td>
-     <td><a asp-controller="Products" asp-action="DeleteVariant" asp-route-id="@variant.Id" class="btn btn-primary" role="button">Delete</a></td>
-    </tr>
-    }
+                </tr>
+              </thead>
+              <tbody>
+                @foreach (var variant in Model.Variants)
+                {
+                 <tr>
+                  <th scope="row"></th>
+                  <td>@variant.Remarks </td>
+                 <td><select asp-for="@variant.ColorId" asp-items="Model.Colors" class="form-control" ></select> </td>
+                 <td><select asp-for="@variant.SizeId" asp-items="Model.Sizes" class="form-control" > </select> </td>
+                 <td>@variant.Price </td>
+                 <td><a asp-controller="Products" asp-action="DeleteVariant" asp-route-id="@variant.Id" class="btn btn-primary" role="button">Delete</a></td>
+                </tr>
+                }
    
-  </tbody>
-</table>
+              </tbody>
+            </table>
 
-<div class="row">
-    <div class="col-lg-4 col-sm-4">
-        <form asp-action="CreateVariant" method="post">
-            <div asp-validation-summary="All"></div>
-            <div class="form-group">
-                <label asp-for="VariantName">Variant Name</label>
-                <input asp-for="VariantName" class="form-control" />
-                <span asp-validation-for="VariantName" class="text-danger"></span>
+            <div class="row">
+                <div class="col-lg-4 col-sm-4">
+                    <form asp-action="CreateVariant" method="post">
+                        <div asp-validation-summary="All"></div>
+                        <div class="form-group">
+                            <label asp-for="VariantName">Variant Name</label>
+                            <input asp-for="VariantName" class="form-control" />
+                            <span asp-validation-for="VariantName" class="text-danger"></span>
+                        </div>
+                         <div class="form-group">
+                            <label asp-for="VariantColorId">Variant Color</label>
+                            <select asp-for="VariantColorId" asp-items="Model.Colors" class="form-control"></select>
+                            <span asp-validation-for="VariantColorId" class="text-danger"></span>
+                        </div>
+                         <div class="form-group">
+                            <label asp-for="VariantSizeId">Variant Size</label>
+                            <select asp-for="VariantSizeId" asp-items="Model.Sizes" class="form-control"></select>
+                            <span asp-validation-for="VariantSizeId" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label asp-for="VariantPrice">Variant Price</label>
+                            <input asp-for="VariantPrice" class="form-control" />
+                            <span asp-validation-for="VariantPrice" class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <input type="submit" class="btn btn-success" value="Add Variant" />
+                        </div>
+                    </form>
+                </div>
             </div>
-             <div class="form-group">
-                <label asp-for="VariantColorId">Variant Color</label>
-                <select asp-for="VariantColorId" asp-items="Model.Colors" class="form-control"></select>
-                <span asp-validation-for="VariantColorId" class="text-danger"></span>
+        </div>
+    </div>
+</div>
+    <div class="accordion-item">
+        <h2 class="accordion-header" id="headingTwo">
+            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseTwo" aria-expanded="true" aria-controls="collapseTwo">
+                Product Detals
+            </button>
+        </h2>
+        <div id="collapseTwo" class="accordion-collapse collapse show" aria-labelledby="headingTwo" data-bs-parent="#accordionExample" style="width: 900px;">
+            <div class="accordion-body" style="width: 900px;">
+                <div class="row">
+                    <div class="col-md-10">
+                        <form asp-action="Create" method="post" id="CreateForm">
+                            <div asp-validation-summary="All"></div>
+                            <div class="form-group">
+                                <label asp-for="Name">@LocString["Name"]:</label>
+                                <input asp-for="Name" class="form-control " />
+                                <span asp-validation-for="Name" class="text-danger"></span>
+                            </div>
+
+                            <div class="form-group">
+                                <label asp-for="Description">@LocString["Description"]:</label>
+                                <textarea asp-for="Description" class="form-control" rows="5"></textarea>
+                                <span asp-validation-for="Description" class="text-danger"></span>
+                            </div>
+
+                            <div class="form-group">
+                                <label asp-for="Price">@LocString["Price"]:</label>
+                                <input  asp-for="Price" class="form-control" />
+                                <span asp-validation-for="Price" class="text-danger"></span>
+                            </div>
+                            <div class="form-group">
+                                <label asp-for="Category">@LocString["Category"]:</label>
+                                <select asp-for="Category" asp-items="Model.Categories" class="form-control"></select>
+                                <span asp-validation-for="Category" class="text-danger"></span>
+                            </div>
+                            <div class="form-group">
+                                @*<label asp-for="Cities">City:</label>
+                                @Html.DropDownListFor(m => m.SelectedCity, Model.Cities, "Wybierz", new { @class = "form-control" })
+                                <span asp-validation-for="Cities" class="text-danger"></span>*@
+                                <input type="hidden" id="DefaultImage" name="DefaultImage" value="" />
+                            </div>
+                            <div class="form-group">
+                                @*<a role="button" href="#" onclick="checkRadio()"  class="btn btn-success" value="@LocString["Create"]" >*@
+                                    <br />
+                                    <button type="button" onclick="checkRadio()" class="btn btn-success">Product add</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
             </div>
-             <div class="form-group">
-                <label asp-for="VariantSizeId">Variant Size</label>
-                <select asp-for="VariantSizeId" asp-items="Model.Sizes" class="form-control"></select>
-                <span asp-validation-for="VariantSizeId" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="VariantPrice">Variant Price</label>
-                <input asp-for="VariantPrice" class="form-control" />
-                <span asp-validation-for="VariantPrice" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" class="btn btn-success" value="Add Variant" />
-            </div>
-        </form>
+        </div>
     </div>
 </div>
 
-<div class="row">
-    <div class="col-lg-4 col-sm-4">
-        <form asp-action="Create" method="post">
-            <div asp-validation-summary="All"></div>
-            <div class="form-group">
-                <label asp-for="Name">@LocString["Name"]:</label>
-                <input asp-for="Name" class="form-control" />
-                <span asp-validation-for="Name" class="text-danger"></span>
-            </div>
 
-            <div class="form-group">
-                <label asp-for="Description">@LocString["Description"]:</label>
-                <textarea asp-for="Description" class="form-control" rows="5"></textarea>
-                <span asp-validation-for="Description" class="text-danger"></span>
-            </div>
 
-            <div class="form-group">
-                <label asp-for="Price">@LocString["Price"]:</label>
-                <input type="number" asp-for="Price" class="form-control" />
-                <span asp-validation-for="Price" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Category">@LocString["Category"]:</label>
-                <select asp-for="Category" asp-items="Model.Categories" class="form-control"></select>
-                <span asp-validation-for="Category" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Cities">City:</label>
-                @*@Html.LabelFor(model => model.Cities, "CityID", new { @class = "control-label col-md-2" })*@
-                @Html.DropDownListFor(m => m.SelectedCity, Model.Cities, "Wybierz", new { @class = "form-control" })
 
-                <span asp-validation-for="Cities" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" class="btn btn-success" value="@LocString["Create"]" />
-            </div>
-        </form>
-    </div>
-</div>
+
+
 @section Scripts
 {
     <script>
+
+        function checkRadio(){
+            $('input:radio').each(function () {
+            if ($(this).prop('checked')) {
+                    var myId = $(this).attr('id')
+                    $("#DefaultImage").val(myId);
+                    $('form#CreateForm').submit();
+            }else{
+                alert("Select default image");
+            }
+        });
+        }
+
         //loadImages();
      //   $(document).ready(function () {
 
         function loadImages(files) {
             $.each(files, function (key, fileName) {
                 var hostname = location.protocol + '//' + location.hostname + (location.port ? ':' + location.port : '');
-                var img = $("<img />").attr('src', hostname + '/images/min_' + fileName)
+                var img = $("<img />").width("180px").attr('src', hostname + '/images/min_' + fileName)
 
                     .on('load', function () {
                         if (!this.complete || typeof this.naturalWidth == "undefined" || this.naturalWidth == 0) {
@@ -156,7 +204,7 @@
                             img.addClass("img-responsive");
                             var imagesDiv = $('<div />'); imagesDiv.addClass("col-lg-3 col-sm-6");
                             var thumbnail = $('<div />'); thumbnail.addClass("thumbnail");
-                            $("#imagesDiv").append(imagesDiv);
+                            $("#imagesDiv").after(imagesDiv);
                             imagesDiv.append(thumbnail);
                             thumbnail.append(img)
                             var caption = $('<div class="caption" />');
@@ -164,6 +212,8 @@
                             button.attr("href", hostname + "/DeleteImage/" + fileName);
                             thumbnail.append(caption);
                             caption.append(button);
+                            caption.append('<input class="form-check-input" type="radio" name="flexRadioDefault" id="'+fileName+'" />');
+                            caption.append('<label class="form-check-label" for="flexRadioDefault1">Default</label>');
 
 
                             //$("#imagesDiv").append(img);

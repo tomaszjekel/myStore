@@ -20,11 +20,11 @@
 
     <div class="col-lg-3 col-sm-6">
             <div class="thumbnail">
-                <img class="img-responsive" src="../images/min_@(imageName)"  width="320" height="240   ">
+                <img class="img-responsive" src="../images/min_@(imageName)"  height="120" >
                 <div class="caption">
-                    <h4>@product.Name</h4>
+                    <p>@product.Name</p>
                     <p>@product.Category</p>
-                    <p>@product.Price $</p>
+                    <p>@product.Price zł</p>
                     <p>
                         <a href="@Url.Action("Edit", "Products" , new { productId = product.Id})"
                            class="btn btn-primary" role="button">@LocString["Details"]</a>

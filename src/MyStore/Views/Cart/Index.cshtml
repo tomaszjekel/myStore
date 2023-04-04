@@ -5,11 +5,11 @@
         <div class="row">
             <div class="col-lg-12">
                 <div class="breadcrumb__text">
-                    <h4>Shopping Cart</h4>
+                    <h4>Koszyk</h4>
                     <div class="breadcrumb__links">
                         <a href="@Url.Action("index", "Home")">Home</a>
-                        <a href="@Url.Action("browse", "Products")">Shop</a>
-                        <span>Shopping Cart</span>
+                        <a href="@Url.Action("browse", "Products")">Sklep</a>
+                        <span>Koszyk</span>
                     </div>
                 </div>
             </div>
@@ -78,12 +78,12 @@
                 <div class="row">
                     <div class="col-lg-6 col-md-6 col-sm-6">
                         <div class="continue__btn">
-                            <a href="@Url.Action("browse", "Products")">Continue Shopping</a>
+                            <a href="@Url.Action("browse", "Products")">Kontynułuj zakupy</a>
                         </div>
                     </div>
                     <div class="col-lg-6 col-md-6 col-sm-6">
                         <div class="continue__btn update__btn">
-                            <a href="@Url.Action("index", "Cart")"><i class="fa fa-spinner"></i> Update cart</a>
+                            <a href="@Url.Action("index", "Cart")"><i class="fa fa-spinner"></i> Odśwież koszyk</a>
                         </div>
                     </div>
                 </div>
@@ -99,12 +99,13 @@
                 <div class="cart__total">
                     <h6>Cart total</h6>
                     <ul>
-                        <li>Subtotal <span class="price">$ 169.50</span></li>
+                        <li>Suma<span class="price">$ 169.50</span></li>
                         <li>Total <span class="price">$ 169.50</span></li>
+                        <li>Wysyłka <span>+ 15 zł</span></li>
                     </ul>
                     @if (count != 0)
                     {
-                        <a href="@Url.Action("index", "Checkout")" class="primary-btn">Proceed to checkout</a>
+                        <a href="@Url.Action("index", "Checkout")" class="primary-btn">Złóż zamówienie</a>
                         
                     }
                 </div>
@@ -121,8 +122,8 @@
                 
 
                
-<a asp-controller="Products" asp-action="Browse" class="btn btn-sm btn-info" >Continue Shoping</a>
-<a asp-controller="Checkout" asp-action="Index" class="btn btn-sm btn-outline-success">Checkout</a>
+@*<a asp-controller="Products" asp-action="Browse" class="btn btn-sm btn-info" >Continue Shoping</a>
+<a asp-controller="Checkout" asp-action="Index" class="btn btn-sm btn-outline-success">Checkout</a>*@
 <script>
 
 </script>

@@ -10,10 +10,10 @@
         <div class="row">
             <div class="col-lg-12">
                 <div class="breadcrumb__text">
-                    <h4 id="titleName">Shop</h4>
+                    <h4 id="titleName">Sklep</h4>
                     <div class="breadcrumb__links">
                         <a href="../Products/Browse">Home</a>
-                        <span>Shop</span>
+                        <span>Sklep</span>
                     </div>
                 </div>
             </div>
@@ -236,7 +236,7 @@
     {
 
 
-        var imageName = product?.Files?.FirstOrDefault()?.Name??"";
+        var imageName = product?.Files?.Where(x=>x.IsDefault==true).FirstOrDefault()?.Name??"";
 
 
                         @*@if (product.UserId == product.ProductUserId)
@@ -271,7 +271,7 @@
                                     
                                      <div class="product__item__text">
                                         <h6>@product.Name</h6>
-                                        <a onclick="addCart('@product.Id')" class="add-cart">+ Add To Cart</a>
+                                        <a onclick="addCart('@product.Id')" class="add-cart">+ Dodaj do koszyka</a>
                                         <div class="rating">
                                             <i class="fa fa-star-o"></i>
                                             <i class="fa fa-star-o"></i>

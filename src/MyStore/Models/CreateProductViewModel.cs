@@ -18,8 +18,8 @@ namespace MyStore.Models
         public string Category { get; set; }
         
         [Required]
-        [Range(1,100000)]
-        //[DataType(DataType.Currency)]
+        [Range(1, 100000)]
+        [DataType(DataType.Currency)]
         public decimal Price { get; set; }
 
         
@@ -48,5 +48,7 @@ namespace MyStore.Models
         public decimal VariantPrice { get; set; }
 
         public List<ProductVariant> Variants { get; set; }
+
+        public string DefaultImage { get; set; }
     }
 }

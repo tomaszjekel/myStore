@@ -165,11 +165,12 @@
 </section>
 
 }else{
-    <p>Success</p>
+   @* <p>Success</p>*@
     <form action="@Url.Action("CreateCheckoutSession1", "Checkout")" method="POST">
         <p> Złożono zamówienie nr @Model.AllOrder.Id</p>
         <input type="hidden" id="orderid" name="orderid" value="@Model.AllOrder.Id" />
-        <button type="submit"> Opłać zamówienie </button>
+        <button type="submit" class="site-btn">Opłać zamówienie</button>
+        <br /><br /><br /><br /><br />
     </form>
     
 }

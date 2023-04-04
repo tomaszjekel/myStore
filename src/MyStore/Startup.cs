@@ -81,6 +81,11 @@ namespace MyStore
 
             services.Configure<StripeSettings>(Configuration.GetSection("Stripe"));
 
+            services.Configure<RequestLocalizationOptions>(options =>
+            {
+                options.DefaultRequestCulture = new RequestCulture("en-US");
+            });
+
             // StripeConfiguration.SetApiKey("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");
         }
 

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MyStore.Domain
 {
@@ -10,7 +11,8 @@ namespace MyStore.Domain
         public string Name { get;  set; }
         public string Category { get;  set; }
         public string Description { get;  set; }
-        public decimal Price { get;  set; }
+        [Column(TypeName = "decimal(10,2)")]
+        public decimal? Price { get;  set; }
         public List<FilesUpload> Files { get; set; }
         public List<ProductVariant> Variants { get; set; }
         public string Img { get; set; }

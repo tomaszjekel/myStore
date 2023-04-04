@@ -13,7 +13,7 @@ namespace MyStore.Models
         public Guid ProductUserId { get; set; }
         public string Name { get; set; }
         public string Category { get; set; }
-        public decimal Price { get; set; }
+        public decimal? Price { get; set; }
         public string Description { get; set; }
         public List<FilesUpload> Files { get; set; }
         public List<ProductVariant> Variants { get; set; }
