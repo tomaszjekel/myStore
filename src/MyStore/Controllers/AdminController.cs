@@ -38,10 +38,10 @@ namespace MyStore.Controllers
             { 
                 pageIndex= 1;
             }  
-                var orders = _context.Orders.Include(x => x.Address).Include(x => x.Items);
+                var orders = _context.Orders.Include(x => x.Address).Where(x=>x.Completed==true).Include(x => x.Items).OrderByDescending(x=>x.CreatedAt);
                 var orders1 = await PaginatedList<Order>.CreateAsync(orders, pageIndex, 10);
 
-                decimal count = _context.Orders.Count() / 10;
+                decimal count = _context.Orders.Include(x => x.Address).Where(x => x.Completed == true).Count() / 10;
                 var countM = _context.Orders.Count() % 10;
                 if (countM > 0)
                 {
@@ -62,7 +62,7 @@ namespace MyStore.Controllers
         public async Task<IActionResult> Order(Guid order)
         {
 
-            var orderMain = _context.Orders.Where(x => x.Id == order).FirstOrDefault();
+            var orderMain = _context.Orders.Where(x => x.Id == order).Include(x=>x.Address).Include(x=>x.Items).FirstOrDefault();
             AdminOrderViewModelcs model = new AdminOrderViewModelcs
             {
                 order = orderMain

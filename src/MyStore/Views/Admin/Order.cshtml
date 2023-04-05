@@ -1,4 +1,31 @@
 ﻿@model AdminOrderViewModelcs
 
 
- Id : @Model.order.Id
+ Id : @Model.order.Id 
+ <br />
+ <table class="table">
+  <thead>
+    <tr>
+      <th scope="col">Nazwa produktu</th>
+      <th scope="col">Ilość</th>
+    </tr>
+  </thead>
+  <tbody>
+@foreach (var item in Model.order.Items)
+{
+    <tr>
+        <th scope="row">
+            <a href="@Url.Action("Details", "Products" , new { id = item.ProductId})">@item.ProductName</a>
+        </th>
+    <td>@item.Quantity</td>
+
+    </tr>
+}
+  </tbody>
+</table>
+
+<h4>Adres</h4>
+<p>@Model.order.Address.FistName @Model.order.Address.LastName</p>
+<p>@Model.order.Address.Address @Model.order.Address.Address1</p>
+<p>@Model.order.Address.Postcode @Model.order.Address.City</p>
+<p>@Model.order.Address.Country @Model.order.Address.Email</p>
