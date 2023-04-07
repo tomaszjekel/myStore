@@ -37,10 +37,16 @@ namespace MyStore.Controllers
             List<CartItem> cart = SessionHelper.GetObjectFromJson<List<CartItem>>(HttpContext.Session, "cart");
             for (int i = 0; i < cart.Count; i++)
             {
+                if(sizeId== null)
+                    if (cart[i].ProductId.Equals(Id))
+                    {
+                        return i;
+                    }
+                    
                 if (cart[i].ProductId.Equals(Id) && cart[i].SizeId.Equals(sizeId))
-                {
-                    return i;
-                }
+                    {
+                        return i;
+                    }
             }
             return -1;
         }
@@ -104,16 +110,8 @@ namespace MyStore.Controllers
                 }
                 else
                 {
-                    if (cart[index].Quantity >= prod.Quantity)
-                    {
-                        return Json(
-                            new
-                            {
-                                qty = cart.Sum(item => item.Quantity),
-                                price = cart.Sum(item => item.UnitPrice * item.Quantity),
-                                maxSizeQuantity = prod.Quantity
-                            });
-                    }else   
+                    
+                    
                         cart.Add(
                             new CartItem 
                             {
