@@ -13,8 +13,7 @@ namespace MyStore.Domain
         public decimal? UnitPrice { get;  set; }
         public decimal? TotalPrice => Quantity * UnitPrice;
         public string Size { get; set; }
-  
+        public Guid? SizeId { get; set; }
 
-        
     }
 }

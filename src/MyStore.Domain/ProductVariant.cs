@@ -16,6 +16,7 @@ namespace MyStore.Domain
         public decimal? Price { get; set; }
         public bool? Isactive { get; set; }
         public Guid? UserId { get; set; }
+        public int? Quantity { get; set; }
 
     }
 }

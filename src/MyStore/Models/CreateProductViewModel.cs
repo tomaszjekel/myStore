@@ -22,7 +22,7 @@ namespace MyStore.Models
         [DataType(DataType.Currency)]
         public decimal Price { get; set; }
 
-        
+        public int? Quantity { get; set; }
         public IEnumerable<SelectListItem> Categories { get; set; }
             //new List<SelectListItem>
             //{
@@ -46,9 +46,11 @@ namespace MyStore.Models
         public Guid VariantColorId { get; set; }
         public Guid VariantSizeId { get; set; }
         public decimal VariantPrice { get; set; }
-
+        public int? VariantQuantity { get; set; }
         public List<ProductVariant> Variants { get; set; }
 
         public string DefaultImage { get; set; }
+
+
     }
 }

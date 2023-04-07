@@ -17,7 +17,7 @@ namespace MyStore.Domain
         public List<ProductVariant> Variants { get; set; }
         public string Img { get; set; }
         public int CityId { get; set; }
-        public int Quantity { get; set; }
+        public int? Quantity { get; set; }
         public bool Deleted { get; set; }
 
 

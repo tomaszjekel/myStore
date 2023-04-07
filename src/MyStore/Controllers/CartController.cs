@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
 namespace MyStore.Controllers
 {
@@ -31,12 +32,12 @@ namespace MyStore.Controllers
             }
             return View();
         }
-        private int IsExist(Guid Id)
+        private int IsExist(Guid Id, Guid? sizeId)
         {
             List<CartItem> cart = SessionHelper.GetObjectFromJson<List<CartItem>>(HttpContext.Session, "cart");
             for (int i = 0; i < cart.Count; i++)
             {
-                if (cart[i].ProductId.Equals(Id))
+                if (cart[i].ProductId.Equals(Id) && cart[i].SizeId.Equals(sizeId))
                 {
                     return i;
                 }
@@ -70,20 +71,58 @@ namespace MyStore.Controllers
             if (SessionHelper.GetObjectFromJson<List<Product>>(HttpContext.Session, "cart") == null)
             {
                 cart = new List<CartItem>();
-                cart.Add(new CartItem { ProductId = prod.Id, Img = prod.Files.FirstOrDefault().Name, ProductName = prod.Name, Quantity = 1, UnitPrice = prod.Price });
+                if (prod.Quantity == 0)
+                {
+                    return Json(
+                        new
+                        {
+                            qty = cart.Sum(item => item.Quantity),
+                            price = cart.Sum(item => item.UnitPrice * item.Quantity),
+                            maxSizeQuantity = prod.Quantity
+                        });
+                }
+                else
+                    cart.Add(new CartItem { ProductId = prod.Id, Img = prod.Files.FirstOrDefault().Name, ProductName = prod.Name, Quantity = 1, UnitPrice = prod.Price });
                 SessionHelper.SetObjectasJson(HttpContext.Session, "cart", cart);
             }
             else
-            {
+            {   
                 cart = SessionHelper.GetObjectFromJson<List<CartItem>>(HttpContext.Session, "cart");
-                int index = IsExist(Guid.Parse(id));
+                int index = IsExist(Guid.Parse(id), null);
                 if (index != -1)
                 {
-                    cart[index].Quantity++;
+                    if(cart[index].Quantity >= prod.Quantity)
+                    {
+                        return Json(
+                            new { 
+                                qty = cart.Sum(item => item.Quantity),
+                                price = cart.Sum(item => item.UnitPrice * item.Quantity),
+                                maxSizeQuantity = prod.Quantity
+                            });
+                    }else
+                        cart[index].Quantity++;
                 }
                 else
                 {
-                    cart.Add(new CartItem { ProductId = prod.Id, Img = prod.Files.FirstOrDefault().Name, ProductName = prod.Name, Quantity = 1, UnitPrice = prod.Price });
+                    if (cart[index].Quantity >= prod.Quantity)
+                    {
+                        return Json(
+                            new
+                            {
+                                qty = cart.Sum(item => item.Quantity),
+                                price = cart.Sum(item => item.UnitPrice * item.Quantity),
+                                maxSizeQuantity = prod.Quantity
+                            });
+                    }else   
+                        cart.Add(
+                            new CartItem 
+                            {
+                                ProductId = prod.Id,
+                                Img = prod.Files.FirstOrDefault().Name,
+                                ProductName = prod.Name,
+                                Quantity = 1, 
+                                UnitPrice = prod.Price 
+                            });
                 }
                 SessionHelper.SetObjectasJson(HttpContext.Session, "cart", cart);
 
@@ -94,7 +133,7 @@ namespace MyStore.Controllers
         public IActionResult Remove(Guid Id)
         {
             List<CartItem> cart = SessionHelper.GetObjectFromJson<List<CartItem>>(HttpContext.Session, "cart");
-            int index = IsExist(Id);
+            int index = IsExist(Id, null);
             cart.RemoveAt(index);
             SessionHelper.SetObjectasJson(HttpContext.Session, "cart", cart);
             return RedirectToAction("Index");
@@ -118,59 +157,123 @@ namespace MyStore.Controllers
         public async Task<JsonResult> BuyQty(string id, int qty, Guid? sizeId)
         {
             List<CartItem> cart;
-            var prod = _context.Products.Where(p => p.Id == Guid.Parse(id)).Include(x => x.Files).FirstOrDefault();
+            var prod = _context.Products.Where(p => p.Id == Guid.Parse(id)).Include(x => x.Files).Include(x=>x.Variants).FirstOrDefault();
+            var productQuantity = prod.Variants.Where(x => x.SizeId == sizeId).Select(x => x.Quantity).FirstOrDefault();
+            if(productQuantity == null)
+            {
+                productQuantity = prod.Quantity;
+            }
             if (SessionHelper.GetObjectFromJson<List<Product>>(HttpContext.Session, "cart") == null)
             {
                 cart = new List<CartItem>();
-                cart.Add(new CartItem 
-                { 
-                    ProductId = prod.Id,
-                    Img = prod.Files.FirstOrDefault().Name,
-                    ProductName = prod.Name,
-                    Quantity = qty,
-                    UnitPrice = prod.Price, 
-                    Size =_context.Sizes.Where(x=>x.Id == sizeId).Select(x=>x.Name).FirstOrDefault(),
-                });
-                SessionHelper.SetObjectasJson(HttpContext.Session, "cart", cart);
+                
+                if (qty > productQuantity)
+                {
+                    return Json(
+                        new
+                        {
+                            qty = cart.Sum(item => item.Quantity),
+                            price = cart.Sum(item => item.UnitPrice * item.Quantity),
+                            maxSizeQuantity = productQuantity
+                        });
+                }
+                else
+                {
+                    cart.Add(new CartItem 
+                    { 
+                        ProductId = prod.Id,
+                        Img = prod.Files.FirstOrDefault().Name,
+                        ProductName = prod.Name,
+                        Quantity = qty,
+                        UnitPrice = prod.Price, 
+                        Size =_context.Sizes.Where(x=>x.Id == sizeId).Select(x=>x.Name).FirstOrDefault(),
+                        SizeId = sizeId
+                    });
+                    SessionHelper.SetObjectasJson(HttpContext.Session, "cart", cart);
+                }
             }
             else
             {
                 cart = SessionHelper.GetObjectFromJson<List<CartItem>>(HttpContext.Session, "cart");
-                int index = IsExist(Guid.Parse(id));
+                int index = IsExist(Guid.Parse(id), sizeId);
                 if (index != -1)
                 {
-                    cart[index].Quantity+=qty;
+
+                    if (cart[index].Quantity+qty > productQuantity)
+                    {
+                        return Json(
+                            new { 
+                                qty = cart.Sum(item => item.Quantity), 
+                                price = cart.Sum(item => item.UnitPrice * item.Quantity), 
+                                maxSizeQuantity = productQuantity
+                            });
+                    }else
+                        cart[index].Quantity+=qty;
                 }
                 else
                 {
-                    cart.Add(
-                        new CartItem 
-                        { 
-                            ProductId = prod.Id,
-                            Img = prod.Files.FirstOrDefault().Name,
-                            ProductName = prod.Name,
-                            Quantity = qty,
-                            UnitPrice = prod.Price,
-                            Size = _context.Sizes.Where(x => x.Id == sizeId).Select(x => x.Name).FirstOrDefault(),
-                        });
+                    if (qty > productQuantity)
+                    {
+                        return Json(
+                            new
+                            {
+                                qty = cart.Sum(item => item.Quantity),
+                                price = cart.Sum(item => item.UnitPrice * item.Quantity),
+                                maxSizeQuantity = productQuantity
+                            });
+                    }else
+                        cart.Add(
+                            new CartItem 
+                            { 
+                                ProductId = prod.Id,
+                                Img = prod.Files.FirstOrDefault().Name,
+                                ProductName = prod.Name,
+                                Quantity = qty,
+                                UnitPrice = prod.Price,
+                                Size = _context.Sizes.Where(x => x.Id == sizeId).Select(x => x.Name).FirstOrDefault(),
+                                SizeId = sizeId
+                            });
                 }
                 SessionHelper.SetObjectasJson(HttpContext.Session, "cart", cart);
 
             }
             //List<Product> cart1 = SessionHelper.GetObjectFromJson<List<Product>>(HttpContext.Session, "cart");
-            return Json(new { qty = cart.Sum(item => item.Quantity), price = cart.Sum(item => item.UnitPrice * item.Quantity) });
+            return Json(
+                new { 
+                    qty = cart.Sum(item => item.Quantity), 
+                    price = cart.Sum(item => item.UnitPrice * item.Quantity),
+                    maxSizeQuantity = -1
+                });
         }
 
-        public async Task<JsonResult> AddQtyCard(string id, int qty)
+        public async Task<JsonResult> ChangeQtyCard(string id, int qty, string sizeId)
         {
-           var cart = SessionHelper.GetObjectFromJson<List<CartItem>>(HttpContext.Session, "cart");
-           cart.Where(x=>x.ProductId.ToString()==id).FirstOrDefault().Quantity = qty;
+            var cart = SessionHelper.GetObjectFromJson<List<CartItem>>(HttpContext.Session, "cart");
+            var product = _context.Products.Where(x => x.Id == Guid.Parse(id)).Include(x=>x.Variants).FirstOrDefault();
+            var productQuantity = product.Variants.Where(x => x.SizeId == Guid.Parse(sizeId)).Select(x => x.Quantity).FirstOrDefault();
+            if(productQuantity == null) {
+                productQuantity = product.Quantity;
+            }
+            if(qty > productQuantity)
+            {
+                return Json(
+                new
+                {
+                    qty = cart.Sum(item => item.Quantity),
+                    price = cart.Sum(item => item.UnitPrice * item.Quantity),
+                    maxSizeQuantity = productQuantity
+                });
+            }else
+                cart.Where(x=>x.ProductId.ToString()==id).FirstOrDefault().Quantity = qty;
+
             SessionHelper.SetObjectasJson(HttpContext.Session, "cart", cart);
 
-
-
-
-            return Json(new { qty = cart.Sum(item => item.Quantity), price = cart.Sum(item => item.UnitPrice * item.Quantity) });
+            return Json(
+                new {
+                    qty = cart.Sum(item => item.Quantity), 
+                    price = cart.Sum(item => item.UnitPrice * item.Quantity),
+                    maxSizeQuantity = -1
+                });
         }
     }
 }

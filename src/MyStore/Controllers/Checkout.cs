@@ -60,6 +60,7 @@ namespace MyStore.Controllers
                    Quantity = cart[i].Quantity,
                    Id = new Guid(),
                    Size= cart[i].Size,
+                   SizeId= cart[i].SizeId,
                 };
                 
                 orderItemList.Add(cartItem);
@@ -173,8 +174,22 @@ namespace MyStore.Controllers
         public IActionResult Complete(string orderid)
         {
             var order = _context.Orders.Where(p => p.Id == new Guid(orderid)).Include(x => x.Items).FirstOrDefault();
+
             order.Completed = true;
             _context.Entry(order).State = EntityState.Modified;
+            _context.SaveChanges();
+
+            foreach(var item in order.Items)
+            {
+                var product = _context.Products.Where(x => x.Id == item.ProductId).Include(x => x.Variants).FirstOrDefault();
+                if(item.SizeId != null)
+                    product.Variants.Where(x=>x.SizeId ==item.SizeId).FirstOrDefault().Quantity -= item.Quantity;
+                else
+                    product.Quantity -= item.Quantity;
+                    
+                _context.Update(product);
+            }
+
             _context.SaveChanges();
 
             List<CartItem> cart1 = new List<CartItem>();

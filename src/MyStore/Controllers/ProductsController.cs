@@ -122,7 +122,7 @@ namespace MyStore.Controllers
             var cities = await _productService.GetCities();
             
             List<Domain.Size> namesSize = new List<Domain.Size>();
-            foreach(var n in product.Variants)
+            foreach(var n in product.Variants.Where(x=>x.Quantity != 0))
             {
                 var name = _context.Sizes.Where(x => x.Id == n.SizeId).FirstOrDefault().Name;
                 var value = _context.Sizes.Where(y => y.Id == n.SizeId).FirstOrDefault().Id;
@@ -242,6 +242,7 @@ namespace MyStore.Controllers
                 Img = "",
                 Deleted = false,
                 Variants = variants,
+                Quantity = viewModel.Quantity,
                 
             };
             await _productService.CreateAsync(p);
@@ -588,7 +589,8 @@ namespace MyStore.Controllers
                 SizeId = viewModel.VariantSizeId,
                 UserId= userId,
                 Price = viewModel.Price,
-                Isactive = true
+                Isactive = true,
+                Quantity= viewModel.VariantQuantity
             };
                 _context.ProductVariants.Add(productVariant);
                 _context.SaveChanges();

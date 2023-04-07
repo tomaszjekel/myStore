@@ -9,7 +9,7 @@
     <meta name="keywords" content="Moda męska Male Fashion buty spodnie ubranie modne cool jeans bluza bluzy koszulka koszulki skarpety bielizna marynarka pasek old school vintage wystój wnetrz retro">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Male-Fashion | tomo24.pl</title>
+    <title>Male-FashionMale-Fashion | tomo24.pl</title>
 
 
 
@@ -99,8 +99,8 @@
                 <div class="col-lg-6 col-md-6">
                     <nav class="header__menu mobile-menu">
                         <ul>
-                            <li class="active"><a asp-area="" asp-controller="Home" asp-action="index">Home</a></li>
-                            <li><a asp-area="" asp-controller="Products" asp-action="browse">Sklep</a></li>
+                            <li id="lihome" class="active"><a asp-area="" asp-controller="Home" asp-action="index">Home</a></li>
+                            <li id="lishop"><a asp-area="" asp-controller="Products" asp-action="browse">Sklep</a></li>
                             <li>
                                 <a href="#">Pages</a>
                                 <ul class="dropdown">
@@ -283,24 +283,42 @@
                     //$("#more").after(html);
                     $(".price").html(html.price + " PLN");
                     $(".qtyCart").text(html.qty);
-
-                }
-            });
-
-            $.confirm({
-                title: '',
-                content: 'Produkt dodano do koszyka',
-                type: 'green',
-                typeAnimated: true,
-                buttons: {
-                    tryAgain: {
-                        text: 'Ok',
-                        btnClass: 'btn-green',
-                        action: function () {
-                        }
-                    },
-                    close: function () {
+                    if (html.maxSizeQuantity > -1) {
+                        $.confirm({
+                            title: '',
+                            content: 'Nie wystarczająca ilość produktu',
+                            type: 'green',
+                            typeAnimated: true,
+                            buttons: {
+                                tryAgain: {
+                                    text: 'Maksymalna ilość sztuk w magazynie <br /> to ' + html.maxSizeQuantity,
+                                    btnClass: 'btn-green',
+                                    action: function () {
+                                    }
+                                },
+                                close: function () {
+                                }
+                            }
+                        });
+                    }else{
+                         $.confirm({
+                            title: '',
+                            content: 'Produkt dodano do koszyka',
+                            type: 'green',
+                            typeAnimated: true,
+                            buttons: {
+                                tryAgain: {
+                                    text: 'Ok',
+                                    btnClass: 'btn-green',
+                                    action: function () {
+                                    }
+                                },
+                                close: function () {
+                                }
+                            }
+                        });
                     }
+
                 }
             });
         }
@@ -352,39 +370,54 @@
   
         });
 
-        function delQtyCard(id, name) {
+        function delQtyCard(id, name, sizeId) {
             var qty = $('#'+name).val();
             if(qty == 1){
                 qty =1;
             }else{
                 qty = qty -1;
             }
-            $.ajax({
-                type: "GET",
-                url: "@Url.Action("AddQtyCard", "Cart")",
-                data: { 'id': id, 'qty': qty },
-                methasync: true,
-                success: function (html) {
-                    //$("#more").after(html);
-                    $(".price").html(html.price + " PLN");
-                    $(".qtyCart").text(html.qty);
-
-                }
-            });
+            changeQtyCard(id, qty, sizeId);
         }
 
-         function addQtyCard(id, name) {
+         function addQtyCard(id, name, sizeId) {
             var qty = $('#'+name).val();
             qty = parseInt(qty) +1;
+            changeQtyCard(id,qty, sizeId);
+        }
+
+        function changeQtyCard(id, qty, sizeId){
             $.ajax({
                 type: "GET",
-                url: "@Url.Action("AddQtyCard", "Cart")",
-                data: { 'id': id, 'qty': qty },
+                url: "@Url.Action("ChangeQtyCard", "Cart")",
+                data: { 
+                        'id': id, 
+                        'qty': qty, 
+                        'sizeId':sizeId
+                },
                 methasync: true,
                 success: function (html) {
                     //$("#more").after(html);
                     $(".price").html(html.price + " PLN");
                     $(".qtyCart").text(html.qty);
+                    if (html.maxSizeQuantity > -1) {
+                        $.confirm({
+                            title: '',
+                            content: 'Nie wystarczająca ilość produktu',
+                            type: 'green',
+                            typeAnimated: true,
+                            buttons: {
+                                tryAgain: {
+                                    text: 'Maksymalna ilość sztuk w magazynie <br /> to ' + html.maxSizeQuantity,
+                                    btnClass: 'btn-green',
+                                    action: function () {
+                                    }
+                                },
+                                close: function () {
+                                }
+                            }
+                        });
+                    }
 
                 }
             });
@@ -398,10 +431,27 @@
                     data: { 'id': id, 'qty': qty, 'sizeId': size },
                     methasync: true,
                     success: function (html) {
-                        //$("#more").after(html);
+                        
                         $(".price").html(html.price + " PLN");
                         $(".qtyCart").text(html.qty);
-
+                        if (html.maxSizeQuantity>-1) {
+                            $.confirm({
+                                title: '',
+                                content: 'Nie wystarczająca ilość produktu',
+                                type: 'green',
+                                typeAnimated: true,
+                                buttons: {
+                                    tryAgain: {
+                                        text: 'Maksymalna ilość sztuk w magazynie <br /> to ' + html.maxSizeQuantity,
+                                        btnClass: 'btn-green',
+                                        action: function () {
+                                        }
+                                    },
+                                    close: function () {
+                                    }
+                                }
+                            });
+                        }
                     }
                 });
         }

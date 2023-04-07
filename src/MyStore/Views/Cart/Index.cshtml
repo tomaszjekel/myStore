@@ -56,9 +56,9 @@
                                             <div class="quantity">
 
                                                 <div class="pro-qty-2">
-                                                    <span class="fa fa-angle-left dec qtybtn" onClick="delQtyCard('@item.ProductId', 'prodQty@(count)' )")></span>   
+                                                    <span class="fa fa-angle-left dec qtybtn" onClick="delQtyCard('@item.ProductId', 'prodQty@(count)', '@item.SizeId')")></span>   
                                                     <input id="prodQty@(count)" type="text" value="@item.Quantity">
-                                                    <span class="fa fa-angle-right inc qtybtn" onClick="addQtyCard('@item.ProductId', 'prodQty@(count)' )"></span>
+                                                    <span class="fa fa-angle-right inc qtybtn" onClick="addQtyCard('@item.ProductId', 'prodQty@(count)', '@item.SizeId')"></span>
                                                 </div>
                                             </div>
                                         </td>

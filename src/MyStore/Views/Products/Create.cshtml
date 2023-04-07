@@ -61,7 +61,7 @@
                   <th scope="col">Name</th>
                   <th scope="col">Color</th>
                   <th scope="col">Size</th>
-                  <th scope="col">Price</th>
+                  <th scope="col">Quantity</th>
                   <th scope="col">Action</th>
       
                 </tr>
@@ -74,7 +74,7 @@
                   <td>@variant.Remarks </td>
                  <td><select asp-for="@variant.ColorId" asp-items="Model.Colors" class="form-control" ></select> </td>
                  <td><select asp-for="@variant.SizeId" asp-items="Model.Sizes" class="form-control" > </select> </td>
-                 <td>@variant.Price </td>
+                 <td>@variant.Quantity </td>
                  <td><a asp-controller="Products" asp-action="DeleteVariant" asp-route-id="@variant.Id" class="btn btn-primary" role="button">Delete</a></td>
                 </tr>
                 }
@@ -106,6 +106,12 @@
                             <input asp-for="VariantPrice" class="form-control" />
                             <span asp-validation-for="VariantPrice" class="text-danger"></span>
                         </div>
+                            <div class="form-group">
+                                <label asp-for="Quantity">Quantity</label>
+                                <input asp-for="Quantity" class="form-control" />
+                                <span asp-validation-for="Quantity" class="text-danger"></span>
+                            </div>
+                            <br />
                         <div class="form-group">
                             <input type="submit" class="btn btn-success" value="Add Variant" />
                         </div>
@@ -148,6 +154,11 @@
                                 <label asp-for="Category">@LocString["Category"]:</label>
                                 <select asp-for="Category" asp-items="Model.Categories" class="form-control"></select>
                                 <span asp-validation-for="Category" class="text-danger"></span>
+                            </div>
+                            <div class="form-group">
+                                <label asp-for="Quantity">Ilość</label>
+                                <input asp-for="Quantity" class="form-control" />
+                                <span asp-validation-for="Quantity" class="text-danger"></span>
                             </div>
                             <div class="form-group">
                                 @*<label asp-for="Cities">City:</label>
