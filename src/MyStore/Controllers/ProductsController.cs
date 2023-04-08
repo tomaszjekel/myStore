@@ -321,7 +321,9 @@ namespace MyStore.Controllers
                     Categories = listCategories.ToList(),
                     Cities = list,
                     Variants=product.Variants,
-                    Quantity=product.Quantity
+                    Quantity=product.Quantity,
+                    Colors= listColors1.ToList(),
+                    Sizes=listSizes1.ToList(),
                     
                 };
                 if (product.CityId != 0)

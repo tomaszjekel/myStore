@@ -187,17 +187,18 @@
 @section Scripts
 {
     <script>
-
+        var checked;
         function checkRadio(){
             $('input:radio').each(function () {
             if ($(this).prop('checked')) {
+                    checked=true;
                     var myId = $(this).attr('id')
                     $("#DefaultImage").val(myId);
                     $('form#CreateForm').submit();
-            }else{
+                }
+            });
+            if (!checked)
                 alert("Select default image");
-            }
-        });
         }
 
         //loadImages();
