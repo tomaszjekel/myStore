@@ -114,6 +114,7 @@ namespace MyStore.Infrastructure.EF
             product.Description = p.Description;
             product.Category = p.Category;
             product.CityId = p.CityId;
+            product.Quantity= p.Quantity;
 
             _context.Entry(product).State = EntityState.Modified;
             _context.SaveChanges();
