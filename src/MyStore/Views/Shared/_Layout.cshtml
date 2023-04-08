@@ -352,19 +352,13 @@
                 }
             });
             
-            if(!hasSize)
-            {
-                buyQty(id);
+            if(size !== ""){
+                buyQty(id)
             }
             else
-            {
-                if(size !== ""){
-                    buyQty(id)
-                }
-                else
-                alert("Select size");
+            alert("Select size");
             }
-        }
+                
         
         $( ".target" ).change(function() {
   

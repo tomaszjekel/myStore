@@ -14,6 +14,7 @@ namespace MyStore.Models
         public string Name { get; set; }
         public string Category { get; set; }
         public decimal? Price { get; set; }
+        public int? Quantity { get; set; }
         public string Description { get; set; }
         public List<FilesUpload> Files { get; set; }
         public List<ProductVariant> Variants { get; set; }

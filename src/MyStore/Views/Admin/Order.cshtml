@@ -7,6 +7,7 @@
   <thead>
     <tr>
       <th scope="col">Nazwa produktu</th>
+      <th scope="col">Rozmiar</th>
       <th scope="col">Ilość</th>
     </tr>
   </thead>
@@ -17,6 +18,7 @@
         <th scope="row">
             <a href="@Url.Action("Details", "Products" , new { id = item.ProductId})">@item.ProductName</a>
         </th>
+        <td>@item.Size</td>
     <td>@item.Quantity</td>
 
     </tr>

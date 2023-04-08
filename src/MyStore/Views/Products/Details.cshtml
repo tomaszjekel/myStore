@@ -99,16 +99,27 @@
 
                     
                         <div class="product__details__option">
-                            @if (Model.NamesSize.Count() > 0)
+                            @if (Model.Variants.Count() > 0)
                             {
                                 <div class="product__details__option__size">
                                     <span>Size:</span>
-                                    @foreach (var size in @Model.NamesSize)
+                                    @foreach (var variant in Model.Variants)
                                     {
-                                        <label for="@size.Name">
-                                            @size.Name
-                                            <input type="radio" id="@size.Id">
-                                        </label>
+                                        if (variant.Quantity == 0)
+                                        {
+                                            <label for="@variant.Remarks" style="color:#d5e0e0">
+                                                @variant.Remarks
+                                                <input type="radio" id="@variant.SizeId">
+                                            </label>
+                                        }
+                                        else
+                                        {
+                                            <label for="@variant.Remarks">
+                                                @variant.Remarks
+                                                <input type="radio" id="@variant.SizeId">
+                                            </label>
+                                            
+                                        }
                                     }
                                     @*   <label class="active" for="xl">
                                     xl

@@ -122,7 +122,7 @@ namespace MyStore.Controllers
             var cities = await _productService.GetCities();
             
             List<Domain.Size> namesSize = new List<Domain.Size>();
-            foreach(var n in product.Variants.Where(x=>x.Quantity != 0))
+            foreach(var n in product.Variants/*.Where(x=>x.Quantity != 0)*/)
             {
                 var name = _context.Sizes.Where(x => x.Id == n.SizeId).FirstOrDefault().Name;
                 var value = _context.Sizes.Where(y => y.Id == n.SizeId).FirstOrDefault().Id;
@@ -320,6 +320,8 @@ namespace MyStore.Controllers
                     Category = product.Category,
                     Categories = listCategories.ToList(),
                     Cities = list,
+                    Variants=product.Variants,
+                    Quantity=product.Quantity
                     
                 };
                 if (product.CityId != 0)
@@ -353,7 +355,8 @@ namespace MyStore.Controllers
                     Category = editModel.Category,
                     CityId = Int32.Parse(editModel.SelectedCity ?? "0"),
                     Description = editModel.Description,
-                    Price = editModel.Price
+                    Price = editModel.Price,
+                    Quantity= editModel.Quantity
                 };
                 await _productService.UpdateProduct(p);
 

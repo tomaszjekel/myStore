@@ -107,6 +107,7 @@
 	--------------------- */
     $(".product__color__select label, .shop__sidebar__size label, .product__details__option__size label").on('click', function () {
         $(".product__color__select label, .shop__sidebar__size label, .product__details__option__size label").removeClass('active');
+        if ($(this).css("color") !='rgb(213, 224, 224)')
         $(this).addClass('active');
     });
 

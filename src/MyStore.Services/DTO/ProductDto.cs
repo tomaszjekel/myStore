@@ -15,6 +15,7 @@ namespace MyStore.Services.DTO
         public List<FilesUpload> Files { get; set; }
         public List<ProductVariant> Variants { get; set; }
         public int CityId { get; set; }
+        public int? Quantity { get; set; }
 
     }
 }

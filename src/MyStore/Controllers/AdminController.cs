@@ -132,7 +132,9 @@ namespace MyStore.Controllers
                     Category = _context.Categories.Where(x=>x.Id == new Guid(p.Category)).Select(x=>x.Name).FirstOrDefault(),
                     Price = p.Price,
                     Description = p.Description,
-                    Files = p.Files
+                    Files = p.Files,
+                    Quantity= p.Quantity,
+                    
                 });
             //if (userGuid != Guid.Empty && name !="all")
             //    viewModels = viewModels.Where(c => c.ProductUserId == userGuid);
