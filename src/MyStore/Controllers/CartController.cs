@@ -271,7 +271,10 @@ namespace MyStore.Controllers
                     maxSizeQuantity = productQuantity
                 });
             }else
-                cart.Where(x=>x.ProductId.ToString()==id && x.SizeId == new Guid( sizeId)).FirstOrDefault().Quantity = qty;
+                if(sizeId!=null)
+                    cart.Where(x=>x.ProductId.ToString()==id && x.SizeId == new Guid( sizeId)).FirstOrDefault().Quantity = qty;
+                else
+                    cart.Where(x => x.ProductId.ToString() == id).FirstOrDefault().Quantity = qty;
 
             SessionHelper.SetObjectasJson(HttpContext.Session, "cart", cart);
 
