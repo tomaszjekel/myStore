@@ -156,7 +156,7 @@ namespace MyStore.Controllers
         {
             List<CartItem> cart;
             var prod = _context.Products.Where(p => p.Id == Guid.Parse(id)).Include(x => x.Files).Include(x=>x.Variants).FirstOrDefault();
-            var productQuantity = prod.Variants.Where(x => x.SizeId == sizeId).FirstOrDefault().Quantity;
+            var productQuantity = prod.Variants.Where(x => x.SizeId == sizeId).Select(x=>x.Quantity).FirstOrDefault();
             if(productQuantity == null)
             {
                 productQuantity = prod.Quantity;
