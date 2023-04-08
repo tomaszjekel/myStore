@@ -110,8 +110,7 @@ namespace MyStore.Controllers
                 }
                 else
                 {
-                    
-                    
+                    if(prod.Quantity != 0)
                         cart.Add(
                             new CartItem 
                             {
@@ -121,6 +120,16 @@ namespace MyStore.Controllers
                                 Quantity = 1, 
                                 UnitPrice = prod.Price 
                             });
+                    else
+                    {
+                        return Json(
+                            new
+                            {
+                                qty = cart.Sum(item => item.Quantity),
+                                price = cart.Sum(item => item.UnitPrice * item.Quantity),
+                                maxSizeQuantity = prod.Quantity
+                            });
+                    }
                 }
                 SessionHelper.SetObjectasJson(HttpContext.Session, "cart", cart);
 

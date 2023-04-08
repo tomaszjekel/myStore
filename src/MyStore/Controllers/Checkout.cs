@@ -17,7 +17,8 @@ namespace MyStore.Controllers
     public class CheckoutController : Controller
     {
         private readonly MyStoreContext _context;
-        public CheckoutController(MyStoreContext context) {
+        public CheckoutController(MyStoreContext context)
+        {
             _context = context;
         }
 
@@ -32,20 +33,21 @@ namespace MyStore.Controllers
                 return View(model);
             }
 
-            Addresses adres = new Addresses {
-                Address=model.Address,
-                Address1= model.Address1,
-                City=model.City,
-                Country=model.Country,
-                Email=model.Email,
-                FistName=model.FirstName,
-                Id= new Guid(),
-                LastName=model.LastName,
-                OrderNotes=model.OrderNotes,
-                Phone=model.Phone,
-                Postcode=model.Postcode,
-                State=model.State
-                
+            Addresses adres = new Addresses
+            {
+                Address = model.Address,
+                Address1 = model.Address1,
+                City = model.City,
+                Country = model.Country,
+                Email = model.Email,
+                FistName = model.FirstName,
+                Id = new Guid(),
+                LastName = model.LastName,
+                OrderNotes = model.OrderNotes,
+                Phone = model.Phone,
+                Postcode = model.Postcode,
+                State = model.State
+
             };
 
 
@@ -54,15 +56,15 @@ namespace MyStore.Controllers
             {
                 var cartItem = new OrderItem
                 {
-                   ProductId = cart[i].ProductId,
-                   ProductName = cart[i].ProductName,
-                   UnitPrice = cart[i].UnitPrice,
-                   Quantity = cart[i].Quantity,
-                   Id = new Guid(),
-                   Size= cart[i].Size,
-                   SizeId= cart[i].SizeId,
+                    ProductId = cart[i].ProductId,
+                    ProductName = cart[i].ProductName,
+                    UnitPrice = cart[i].UnitPrice,
+                    Quantity = cart[i].Quantity,
+                    Id = new Guid(),
+                    Size = cart[i].Size,
+                    SizeId = cart[i].SizeId,
                 };
-                
+
                 orderItemList.Add(cartItem);
             }
 
@@ -85,7 +87,7 @@ namespace MyStore.Controllers
 
             //SessionHelper.SetObjectasJson(HttpContext.Session, "cart", cart1);
 
-            model.AllOrder= order;
+            model.AllOrder = order;
             ViewBag.Order = "OK";
             return View(model);
         }
@@ -121,11 +123,11 @@ namespace MyStore.Controllers
 
                 },
                 Mode = "payment",
-                SuccessUrl ="https://tomo24.pl/Checkout/complete?orderid="+orderid,
+                SuccessUrl = "https://tomo24.pl/Checkout/complete?orderid=" + orderid,
                 CancelUrl = "http://localhost:5000/Home/cancel",
             };
-            
-           Guid g = Guid.Parse(orderid);
+
+            Guid g = Guid.Parse(orderid);
             var order = _context.Orders.Where(p => p.Id == g).Include(x => x.Items).FirstOrDefault();
 
             foreach (var item in order.Items)
@@ -140,13 +142,13 @@ namespace MyStore.Controllers
                         ProductData = new Stripe.Checkout.SessionLineItemPriceDataProductDataOptions
                         {
                             Name = item.ProductName,
-                            
+
                             //Images = "images/"+item.
                         },
                     },
                     Quantity = item.Quantity,
                 };
-            options.LineItems.Add(currentLineItem);
+                options.LineItems.Add(currentLineItem);
             }
             var currentLineItemShipping = new Stripe.Checkout.SessionLineItemOptions
             {
@@ -179,14 +181,22 @@ namespace MyStore.Controllers
             _context.Entry(order).State = EntityState.Modified;
             _context.SaveChanges();
 
-            foreach(var item in order.Items)
+            foreach (var item in order.Items)
             {
                 var product = _context.Products.Where(x => x.Id == item.ProductId).Include(x => x.Variants).FirstOrDefault();
-                if(item.SizeId != null)
-                    product.Variants.Where(x=>x.SizeId ==item.SizeId).FirstOrDefault().Quantity -= item.Quantity;
+                if (item.SizeId != null)
+                {
+                    product.Variants.Where(x => x.SizeId == item.SizeId).FirstOrDefault().Quantity -= item.Quantity;
+                    if (product.Variants.Where(x => x.SizeId == item.SizeId).Select(x => x.Quantity).FirstOrDefault() < 0)
+                        product.Variants.Where(x => x.SizeId == item.SizeId).FirstOrDefault().Quantity = 0;
+                }
                 else
+                {
                     product.Quantity -= item.Quantity;
-                    
+                    if (product.Quantity < 0)
+                        product.Quantity = 0;
+                }
+
                 _context.Update(product);
             }
 
@@ -194,6 +204,10 @@ namespace MyStore.Controllers
 
             List<CartItem> cart1 = new List<CartItem>();
             SessionHelper.SetObjectasJson(HttpContext.Session, "cart", cart1);
+            return RedirectToAction("Completed", "Checkout"); ;
+        }
+        public IActionResult Completed()
+        {
             return View();
         }
     }
