@@ -51,26 +51,36 @@
                   <th scope="col">Name</th>
                   <th scope="col">Color</th>
                   <th scope="col">Size</th>
-                  <th scope="col">Quantity</th>
-                  <th scope="col">Action</th>
+            <th scope="col">Order</th>
+            <th scope="col">Quantity</th>
+            <th scope="col">Action</th>
       
                 </tr>
               </thead>
               <tbody>
                 @foreach (var variant in Model.Variants)
                 {
-                 <tr>
-                  <th scope="row"></th>
-                  <td>@variant.Remarks </td>
-                 <td><select asp-for="@variant.ColorId" asp-items="Model.Colors" class="form-control" ></select> </td>
-                 <td><select asp-for="@variant.SizeId" asp-items="Model.Sizes" class="form-control" > </select> </td>
-                 <td>@variant.Quantity </td>
-                 <td><a asp-controller="Products" asp-action="DeleteVariant" asp-route-id="@variant.Id" class="btn btn-primary" role="button">Delete</a></td>
-                </tr>
-                }
+            
+
+                         <tr>
+                          <th scope="row"></th>
+                          <td>@variant.Remarks </td>
+                         <td><select asp-for="@variant.ColorId" asp-items="Model.Colors" class="form-control" ></select> </td>
+                         <td><select asp-for="@variant.SizeId" asp-items="Model.Sizes" class="form-control" > </select> </td>
+                        <td>@variant.Order </td>
+                        <td>@variant.Quantity </td>
+                <td>
+                    <a asp-controller="Products" asp-action="DeleteVariant" asp-route-id="@variant.Id" asp-route-productId="@variant.ProductId" class="btn btn-danger" role="button">Delete</a>
+                            <a asp-controller="Products" asp-action="EditVariant" asp-route-id="@variant.Id" asp-route-productId="@variant.ProductId" class="btn btn-primary" role="button">Edit</a>
+                </td>
+                        
+                     </tr>
+
+        }
    
               </tbody>
             </table>
+            <a asp-controller="Products" asp-action="EditVariant" asp-route-productId="@Model.Id" class="btn btn-primary" role="button">Add</a>
 
 
 <form asp-action="Edit" method="post">

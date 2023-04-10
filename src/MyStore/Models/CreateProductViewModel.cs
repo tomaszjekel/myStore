@@ -51,6 +51,6 @@ namespace MyStore.Models
 
         public string DefaultImage { get; set; }
 
-
+        public int? Order { get; set; }
     }
 }

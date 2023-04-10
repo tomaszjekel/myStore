@@ -103,7 +103,7 @@
                             {
                                 <div class="product__details__option__size">
                                     <span>Size:</span>
-                                    @foreach (var variant in Model.Variants)
+                                    @foreach (var variant in Model.Variants.OrderBy(x=>x.Order))
                                     {
                                         if (variant.Quantity == 0)
                                         {

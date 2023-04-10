@@ -17,6 +17,7 @@ namespace MyStore.Domain
         public bool? Isactive { get; set; }
         public Guid? UserId { get; set; }
         public int? Quantity { get; set; }
+        public int? Order { get; set; }
 
     }
 }

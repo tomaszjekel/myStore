@@ -27,6 +27,8 @@ using Stripe.FinancialConnections;
 using MyStore.Infrastructure.EF;
 using System.Xml.Linq;
 using static System.Net.Mime.MediaTypeNames;
+using Microsoft.CodeAnalysis;
+using Microsoft.EntityFrameworkCore;
 
 namespace MyStore.Controllers
 {
@@ -595,7 +597,8 @@ namespace MyStore.Controllers
                 UserId= userId,
                 Price = viewModel.Price,
                 Isactive = true,
-                Quantity= viewModel.VariantQuantity
+                Quantity= viewModel.VariantQuantity,
+                Order = viewModel.Order
             };
                 _context.ProductVariants.Add(productVariant);
                 _context.SaveChanges();
@@ -612,7 +615,7 @@ namespace MyStore.Controllers
         [Authorize]
         [HttpGet("DeleteVariant")]
         [Authorize(AuthenticationSchemes = CookieAuthenticationDefaults.AuthenticationScheme)]
-        public async Task<IActionResult> DeleteVariant(Guid id)
+        public async Task<IActionResult> DeleteVariant(Guid? id, Guid? productId)
         {
             if (!ModelState.IsValid)
             {
@@ -624,16 +627,113 @@ namespace MyStore.Controllers
             var variant = _context.ProductVariants.FirstOrDefault(x => x.Id == id);
             _context.Remove(variant);
             _context.SaveChanges();
-
-
-            //QRCodeGenerator qrGenerator = new QRCodeGenerator();
-            //QRCodeData qrCodeData = qrGenerator.CreateQrCode("The text which should be encoded.", QRCodeGenerator.ECCLevel.Q);
-            //QRCode qrCode = new QRCode(qrCodeData);
-            //Bitmap qrCodeImage = qrCode.GetGraphic(20);
-            //wwait _fileService.UpdateAsync(newId);
-            return RedirectToAction("create", "Products");
+            if(productId == null)
+                return RedirectToAction("create", "Products");
+            else
+                return RedirectToAction("Edit", "Products", new { productId = productId });
         }
 
+        [Authorize]
+        [HttpGet("EditVariant")]
+        [Authorize(AuthenticationSchemes = CookieAuthenticationDefaults.AuthenticationScheme)]
+        public async Task<IActionResult> EditVariant(Guid? id, Guid? productId)
+        {
+            Guid userId = new Guid(this.User.FindFirstValue(ClaimTypes.NameIdentifier));
+
+            var colors = _context.Colors.ToList();
+            var col = colors.Select(x => new { Value = x.Id, Text = x.Name });
+            SelectList listColors = new SelectList(col, "Value", "Text");
+            var listColors1 = listColors.ToList();
+            listColors1.Insert(0, new SelectListItem()
+            {
+                Value = null, // <=========== Here lies the problem...
+                Text = "None"
+            });
+
+
+            var sizes = _context.Sizes.ToList();
+            var siz = sizes.Select(x => new { Value = x.Id, Text = x.Name });
+            SelectList listSizes = new SelectList(siz, "Value", "Text");
+            var listSizes1 = listSizes.ToList();
+            listSizes1.Insert(0, new SelectListItem()
+            {
+                Value = null, // <=========== Here lies the problem...
+                Text = "None"
+            });
+
+            EditVariantViewModel editVariantViewModel;
+            if (id != null)
+            {
+                var variant = _context.ProductVariants.FirstOrDefault(x => x.Id == id);
+                editVariantViewModel = new EditVariantViewModel
+                {
+                    Id = variant.Id,
+                    ProductId= variant.ProductId,
+                    VariantName = variant.Remarks,
+                    VariantColorId = variant.ColorId,
+                    VariantSizeId = variant.SizeId,
+                    VariantPrice = variant.Price,
+                    VariantQuantity = variant.Quantity,
+                    Colors = listColors1,
+                    Sizes = listSizes1,
+                    Order= variant.Order,
+                };
+            }
+            else
+            {
+                editVariantViewModel = new EditVariantViewModel
+                {
+                   
+                    ProductId =productId,
+                    Colors = listColors1,
+                    Sizes = listSizes1,
+                };
+            }
+
+            return View(editVariantViewModel);
+        }
+
+        [Authorize]
+        [HttpPost("EditVariant")]
+        [Authorize(AuthenticationSchemes = CookieAuthenticationDefaults.AuthenticationScheme)]
+        public async Task<IActionResult> EditVariant(EditVariantViewModel editVariantViewModel)
+        {
+            Guid userId = new Guid(this.User.FindFirstValue(ClaimTypes.NameIdentifier));
+            if (editVariantViewModel.Id != null)
+            {
+                var variant = _context.ProductVariants.FirstOrDefault(x => x.Id == editVariantViewModel.Id);
+
+                variant.SizeId = editVariantViewModel.VariantSizeId;
+                variant.Price = editVariantViewModel.VariantPrice;
+                variant.Quantity = editVariantViewModel.VariantQuantity;
+                variant.ColorId = editVariantViewModel.VariantColorId;
+                variant.Order = editVariantViewModel.Order;
+
+                _context.Update(variant);
+                _context.SaveChanges();
+            }
+            else
+            {
+                List<ProductVariant> productVariantList;
+                var product = _context.Products.Where(x => x.Id == editVariantViewModel.ProductId).Include(x=>x.Variants).FirstOrDefault();
+                
+                productVariantList = product.Variants;
+                productVariantList.Add(new ProductVariant { 
+                    ProductId = product.Id,
+                    Remarks = editVariantViewModel.VariantName,
+                    SizeId = editVariantViewModel?.VariantSizeId,
+                    Price = editVariantViewModel?.VariantPrice,
+                    Quantity = editVariantViewModel?.VariantQuantity,
+                    ColorId= editVariantViewModel?.VariantColorId,
+                    Order = editVariantViewModel.Order
+                });
+                product.Variants = productVariantList;
+                _context.Update(product);
+                _context.SaveChanges();
+            }
+                
+            return RedirectToAction("Edit", "Products", new { productId = editVariantViewModel.ProductId });
+        }
     }
 public class CreateProduct
     {
