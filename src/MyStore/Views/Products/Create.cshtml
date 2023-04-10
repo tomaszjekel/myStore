@@ -75,8 +75,8 @@
                   <td>@variant.Remarks </td>
                  <td><select asp-for="@variant.ColorId" asp-items="Model.Colors" class="form-control" ></select> </td>
                  <td><select asp-for="@variant.SizeId" asp-items="Model.Sizes" class="form-control" > </select> </td>
-                 <td>@variant.Order </td>
                  <td>@variant.Quantity </td>
+                 <td>@variant.Order </td>
 
                  <td><a asp-controller="Products" asp-action="DeleteVariant" asp-route-id="@variant.Id" class="btn btn-primary" role="button">Delete</a></td>
                 </tr>
