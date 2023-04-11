@@ -12,8 +12,8 @@
                 <div class="breadcrumb__text">
                     <h4 id="titleName">Sklep</h4>
                     <div class="breadcrumb__links">
-                        <a href="../Products/Browse">Home</a>
-                        <span>Sklep</span>
+                        <a href="@Url.Action("Index", "Home")">Home</a>
+                        <span> <a style="color: #b7b7b7" href="@Url.Action("browse", "Products")">Sklep</a></span>
                     </div>
                 </div>
             </div>
@@ -28,8 +28,8 @@
             <div class="col-lg-3">
                 <div class="shop__sidebar">
                     <div class="shop__sidebar__search">
-                        <form action="#">
-                            <input type="text" placeholder="Search...">
+                        <form action="@Url.Action("BrowseByName", "Products")">
+                            <input id="keyword" name="keyword" type="text" placeholder="Search...">
                             <button type="submit"><span class="icon_search"></span></button>
                         </form>
                     </div>
@@ -263,7 +263,7 @@
                                     <div style="font-size: 15px;font-weight: 600;margin-bottom: 5px;"> 
                                         <br>
                                         <h6>@product.Name</h6>
-                                        <h5>@product.Price zł</h5>
+                                        <h5 style="font-weight:700">@product.Price zł</h5>
                                     </div>
                                 }
                                 else{

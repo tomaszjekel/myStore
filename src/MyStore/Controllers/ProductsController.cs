@@ -91,6 +91,52 @@ namespace MyStore.Controllers
             return View(newModel);
         }
 
+        [HttpGet("BrowseByName")]
+        public async Task<IActionResult> BrowseByName(string keyword, int? pageIndex, Guid userId, Guid? category)
+        {
+            ViewBag.Shop = "Shop";
+            Guid userGuid;
+            Guid.TryParse(this.User.FindFirstValue(ClaimTypes.NameIdentifier), out userGuid);
+            var products = await _productService.BrowseByUserId(keyword, pageIndex, userId, category);
+
+
+            var viewModels = products.Select(p =>
+                new ProductViewModel
+                {
+                    Id = p.Id,
+                    UserId = userGuid,
+                    ProductUserId = p.UserId,
+                    Name = p.Name,
+                    Category = p.Category,
+                    Price = p.Price,
+                    Description = p.Description,
+                    Files = p.Files,
+                    Variants = p.Variants,
+                });
+            //if (userGuid != Guid.Empty && name !="all")
+            //    viewModels = viewModels.Where(c => c.ProductUserId == userGuid);
+
+            ProductNewViewModel newModel = new ProductNewViewModel();
+            newModel.Catgories = _context.Categories.ToList();
+
+            newModel.Category = category;
+            if (category != null)
+            {
+                newModel.Count = _context.Products.Where(x => x.Category == category.ToString() && x.Deleted == false).Count();
+            }
+            else
+            {
+                newModel.Count = products.Count();
+            }
+            newModel.Products = viewModels.ToList();
+            newModel.HasNextPage = products.HasNextPage;
+            newModel.HasPreviousPage = products.HasPreviousPage;
+            newModel.PageIndex = products.PageIndex;
+            newModel.TotalPages = products.TotalPages;
+
+            return View(newModel);
+        }
+
         [HttpGet("browseAll")]
         public async Task<IActionResult> BrowseAll(string name)
         {
