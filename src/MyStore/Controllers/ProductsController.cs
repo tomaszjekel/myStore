@@ -46,15 +46,26 @@ namespace MyStore.Controllers
         }
 
         [HttpGet("browse")]
-        public async Task<IActionResult> Browse(string keyword, int? pageIndex, Guid userId, Guid? category)
+        public async Task<IActionResult> Browse(string keyword, int? pageIndex, Guid userId, Guid? category, int? startPrice, int? endPrice)
         {
             ViewBag.Shop = "Shop";
             Guid userGuid;
             Guid.TryParse(this.User.FindFirstValue(ClaimTypes.NameIdentifier), out userGuid);
             var products = await _productService.BrowseByUserId(keyword, pageIndex, userId, category);
+            //products = (PaginatedList<Domain.Product>)products.Where(x => x.Price >= startPrice && x.Price <= endPrice);
 
+            IEnumerable<Domain.Product> viewModels;
+            if (startPrice != null)
+            {
+                if (endPrice == 0)
+                    viewModels = products.Where(x => x.Price >= startPrice);
+                else
+                    viewModels = products.Where(x => x.Price >= startPrice && x.Price <= endPrice);
+            }
+            else
+                viewModels = products;
 
-            var viewModels = products.Select(p =>
+            var productViewModel = viewModels.Select(p =>
                 new ProductViewModel
                 {
                     Id = p.Id,
@@ -80,13 +91,15 @@ namespace MyStore.Controllers
             }
             else
             {
-                newModel.Count = _context.Products.Where(x=>x.Deleted== false).Count();
+                newModel.Count = viewModels.Where(x=>x.Deleted== false).Count();
             }
-            newModel.Products = viewModels.ToList();
+            newModel.Products = productViewModel.ToList();
             newModel.HasNextPage = products.HasNextPage;
             newModel.HasPreviousPage = products.HasPreviousPage;
             newModel.PageIndex = products.PageIndex;
             newModel.TotalPages = products.TotalPages;
+            newModel.StartPrice = startPrice;
+            newModel.EndPrice = endPrice;
 
             return View(newModel);
         }

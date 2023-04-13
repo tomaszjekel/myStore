@@ -38,39 +38,179 @@
                         <div id="accordion" class="accordion">
                             <div class="card mb-0" style="border: 0px solid rgba(0,0,0,.125);">
                                 <div class="card-header collapsed" data-toggle="collapse" href="#collapseOne">
-                                    <a class="card-title" style="font-weight: 700;font-size: 16px;text-transform: uppercase;">
+                                    <a class="card-title" style="font-weight: 700;font-size: 16px;">
                                         Categories
                                     </a>
                                 </div>
-                                <div id="collapseOne" class="card-body collapse" data-parent="#accordion">
-                                    <p>
-                                        @foreach (var cat in Model.Catgories)
-                                        {
-                                            if (cat.Id.ToString() == Model.Category.ToString())
+                                @if (Model.StartPrice == null)
+                                {
+                                    <div id="collapseOne" class="card-body collapse show" data-parent="#accordion">
+                                        <p>
+                                            @foreach (var cat in Model.Catgories)
                                             {
-                                                <a style="color: #ce0000;" href="@Url.Action("Browse", "Products" , new { category = cat.Id})">@cat.Name</a>
+                                                if (cat.Id.ToString() == Model.Category.ToString())
+                                                {
+                                                    <a style="color: #ce0000;" href="@Url.Action("Browse", "Products" , new { category = cat.Id})">@cat.Name</a>
 
-                                                <br />
+                                                    <br />
+                                                }
+                                                else
+                                                {
+                                                    <a style="color: #b7b7b7;" href="@Url.Action("Browse", "Products" , new { category = cat.Id})">@cat.Name</a><br />
+                                                }
                                             }
-                                            else
+                                        </p>
+                                    </div>
+                                }else
+                                {
+                                    <div id="collapseOne" class="card-body collapse hide" data-parent="#accordion">
+                                        <p>
+                                            @foreach (var cat in Model.Catgories)
                                             {
-                                               <a style="color: #b7b7b7;" href="@Url.Action("Browse", "Products" , new { category = cat.Id})">@cat.Name</a><br />
+                                                if (cat.Id.ToString() == Model.Category.ToString())
+                                                {
+                                                    <a style="color: #ce0000;" href="@Url.Action("Browse", "Products" , new { category = cat.Id})">@cat.Name</a>
+
+                                                    <br />
+                                                }
+                                                else
+                                                {
+                                                    <a style="color: #b7b7b7;" href="@Url.Action("Browse", "Products" , new { category = cat.Id})">@cat.Name</a>
+
+                                                    <br />
+                                                }
                                             }
-                                        }
-                                    </p>
-                                </div>
-                                @*<div class="card-header collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo">
-                                    <a class="card-title">
-                                        Item 2
+                                        </p>
+                                    </div>
+                                }
+                                <div class="card-header collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo">
+                                    <a class="card-title" style="font-weight: 700;font-size: 16px;">
+                                        Cena
                                     </a>
                                 </div>
-                                <div id="collapseTwo" class="card-body collapse" data-parent="#accordion">
-                                    <p>
-                                        Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt
-                                        aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat
-                                        craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus labore sustainable VHS.
-                                    </p>
-                                </div>
+                                @if (Model.StartPrice != null)
+                                {
+
+
+                                    <div id="collapseTwo" class="card-body collapse show" data-parent="#accordion">
+                                        <p>
+                                            <div class="shop__sidebar__price">
+                                                <ul>
+                                                    @if (Model.StartPrice == 0 && Model.EndPrice == 50)
+                                                    {
+                                                        <li><a style="color: #ce0000;" href="@Url.Action("Browse", "Products" , new { startPrice = 0, endPrice = 50})">zł0.00 - zł50.00</a></li>
+                                                    }
+                                                    else
+                                                    {
+                                                        <li><a href="@Url.Action("Browse", "Products" , new { startPrice = 0, endPrice = 50})">zł0.00 - zł50.00</a></li>
+                                                    }
+                                                    @if (Model.StartPrice == 50 && Model.EndPrice == 100)
+                                                    {
+                                                        <li><a style="color: #ce0000;" href="@Url.Action("Browse", "Products" , new { startPrice = 50, endPrice = 100})">zł50.00 - zł100.00</a></li>
+                                                    }
+                                                    else
+                                                    {
+                                                        <li><a href="@Url.Action("Browse", "Products" , new { startPrice = 50, endPrice = 100})">zł50.00 - zł100.00</a></li>
+                                                    }
+                                                    @if (Model.StartPrice == 100 && Model.EndPrice == 150)
+                                                    {
+                                                        <li><a style="color: #ce0000;" href="@Url.Action("Browse", "Products" , new { startPrice = 100, endPrice = 150})">zł100.00 - zł150.00</a></li>
+                                                    }
+                                                    else
+                                                    {
+                                                        <li><a href="@Url.Action("Browse", "Products" , new { startPrice = 100, endPrice = 150})">zł100.00 - zł150.00</a></li>
+                                                    }
+                                                    @if (Model.StartPrice == 150 && Model.EndPrice == 200)
+                                                    {
+                                                        <li><a style="color: #ce0000;" href="@Url.Action("Browse", "Products" , new { startPrice = 150, endPrice = 200})">zł150.00 - zł200.00</a></li>
+                                                    }
+                                                    else
+                                                    {
+                                                        <li><a href="@Url.Action("Browse", "Products" , new { startPrice = 150, endPrice = 200})">zł150.00 - zł200.00</a></li>
+                                                    }
+                                                    @if (Model.StartPrice == 200 && Model.EndPrice == 250)
+                                                    {
+                                                        <li><a style="color: #ce0000;" href="@Url.Action("Browse", "Products" , new { startPrice = 200, endPrice = 250})">zł200.00 - zł250.00</a></li>
+                                                    }
+                                                    else
+                                                    {
+                                                        <li><a href="@Url.Action("Browse", "Products" , new { startPrice = 200, endPrice = 250})">zł200.00 - zł250.00</a></li>
+                                                    }
+                                                    @if (Model.StartPrice == 250 && Model.EndPrice == 0)
+                                                    {
+                                                        <li><a style="color: #ce0000;" href="@Url.Action("Browse", "Products" , new { startPrice = 250, endPrice = 0})">zł250+</a></li>
+                                                    }
+                                                    else
+                                                    {
+                                                        <li><a href="@Url.Action("Browse", "Products" , new { startPrice = 250, endPrice = 0})">zł250+</a></li>
+                                                    }
+                                                </ul>
+                                            </div>
+
+                                        </p>
+                                    </div>
+                                }
+                                else
+                                {
+                                    <div id="collapseTwo" class="card-body collapse hide" data-parent="#accordion">
+                                        <p>
+                                            <div class="shop__sidebar__price">
+                                                <ul>
+                                                    @if (Model.StartPrice == 0 && Model.EndPrice == 50)
+                                                    {
+                                                        <li><a style="color: #ce0000;" href="@Url.Action("Browse", "Products" , new { startPrice = 0, endPrice = 50})">zł0.00 - zł50.00</a></li>
+                                                    }
+                                                    else
+                                                    {
+                                                        <li><a href="@Url.Action("Browse", "Products" , new { startPrice = 0, endPrice = 50})">zł0.00 - zł50.00</a></li>
+                                                    }
+                                                    @if (Model.StartPrice == 50 && Model.EndPrice == 100)
+                                                    {
+                                                        <li><a style="color: #ce0000;" href="@Url.Action("Browse", "Products" , new { startPrice = 50, endPrice = 100})">zł50.00 - zł100.00</a></li>
+                                                    }
+                                                    else
+                                                    {
+                                                        <li><a href="@Url.Action("Browse", "Products" , new { startPrice = 50, endPrice = 100})">zł50.00 - zł100.00</a></li>
+                                                    }
+                                                    @if (Model.StartPrice == 100 && Model.EndPrice == 150)
+                                                    {
+                                                        <li><a style="color: #ce0000;" href="@Url.Action("Browse", "Products" , new { startPrice = 100, endPrice = 150})">zł100.00 - zł150.00</a></li>
+                                                    }
+                                                    else
+                                                    {
+                                                        <li><a href="@Url.Action("Browse", "Products" , new { startPrice = 100, endPrice = 150})">zł100.00 - zł150.00</a></li>
+                                                    }
+                                                    @if (Model.StartPrice == 150 && Model.EndPrice == 200)
+                                                    {
+                                                        <li><a style="color: #ce0000;" href="@Url.Action("Browse", "Products" , new { startPrice = 150, endPrice = 200})">zł150.00 - zł200.00</a></li>
+                                                    }
+                                                    else
+                                                    {
+                                                        <li><a href="@Url.Action("Browse", "Products" , new { startPrice = 150, endPrice = 200})">zł150.00 - zł200.00</a></li>
+                                                    }
+                                                    @if (Model.StartPrice == 200 && Model.EndPrice == 250)
+                                                    {
+                                                        <li><a style="color: #ce0000;" href="@Url.Action("Browse", "Products" , new { startPrice = 200, endPrice = 250})">zł200.00 - zł250.00</a></li>
+                                                    }
+                                                    else
+                                                    {
+                                                        <li><a href="@Url.Action("Browse", "Products" , new { startPrice = 200, endPrice = 250})">zł200.00 - zł250.00</a></li>
+                                                    }
+                                                    @if (Model.StartPrice == 250 && Model.EndPrice == 0)
+                                                    {
+                                                        <li><a style="color: #ce0000;" href="@Url.Action("Browse", "Products" , new { startPrice = 250, endPrice = 0})">zł250+</a></li>
+                                                    }
+                                                    else
+                                                    {
+                                                        <li><a href="@Url.Action("Browse", "Products" , new { startPrice = 250, endPrice = 0})">zł250+</a></li>
+                                                    }
+                                                </ul>
+                                            </div>
+
+                                        </p>
+                                    </div>
+                                }
+                                @*
                                 <div class="card-header collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapseThree">
                                     <a class="card-title">
                                         Item 3
@@ -87,42 +227,30 @@
                     </div>
 
 
-                    <div class="shop__sidebar__accordion">
+                    @*<div class="shop__sidebar__accordion">
                         <div class="accordion" id="accordionExample">
                             <div class="card">
                                 <div class="card-heading">
                                     <a data-toggle="collapse" data-target="#collapseOne">Categories</a>
                                 </div>
-                                <div id="collapseOne" class="collapse show" data-parent="#accordionExample" aria-expanded="false">
+                                <div id="collapseOne" class="collapse hide" data-parent="#accordionExample" aria-expanded="false">
                                     <div class="card-body">
                                         <div class="shop__sidebar__categories">
                                             <ul class="nice-scroll">
-                                             @foreach (var cat in Model.Catgories)
-                                            {
-                                                    if(cat.Id.ToString() == Model.Category.ToString())
-                                                    {
-                                                        <li><a style="color: #ce0000;" href="@Url.Action("Browse", "Products" , new { category = cat.Id})">@cat.Name</a></li>
-                                                    }
-                                                    else
-                                                    {
-                                                        <li><a style="color: #b7b7b7;" href="@Url.Action("Browse", "Products" , new { category = cat.Id})">@cat.Name</a></li>
-                                                    }
-                                                }
-                                            
-                                            @*    <li><a href="#">Women (20)</a></li>
+                                                <li><a href="#">Women (20)</a></li>
                                                 <li><a href="#">Bags (20)</a></li>
                                                 <li><a href="#">Clothing (20)</a></li>
                                                 <li><a href="#">Shoes (20)</a></li>
                                                 <li><a href="#">Accessories (20)</a></li>
                                                 <li><a href="#">Kids (20)</a></li>
                                                 <li><a href="#">Kids (20)</a></li>
-                                                <li><a href="#">Kids (20)</a></li>*@
+                                                <li><a href="#">Kids (20)</a></li>
                                             </ul>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                           @* <div class="card">
+                            <div class="card">
                                 <div class="card-heading">
                                     <a data-toggle="collapse" data-target="#collapseTwo">Branding</a>
                                 </div>
@@ -256,9 +384,9 @@
                                         </div>
                                     </div>
                                 </div>
-                            </div>*@
+                            </div>
                         </div>
-                    </div>
+                    </div>*@
                 </div>
             </div>
             <div class="col-lg-9">

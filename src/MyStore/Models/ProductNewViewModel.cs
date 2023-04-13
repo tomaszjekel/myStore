@@ -19,6 +19,8 @@ namespace MyStore.Models
         public int TotalPages { get; set; }
         public int PageCount { get; set; }
         public int Count { get; set; }
+        public int? StartPrice { get; set; }
+        public int? EndPrice { get; set; }
 
 
 
