@@ -39,7 +39,7 @@ namespace MyStore.Infrastructure.EF
                 var products = _context.Products.Where(x => x.UserId == userId && x.Deleted == false).Include(x => x.Files).Include(x=>x.Variants).AsNoTracking();
                 if (!string.IsNullOrWhiteSpace(name))
                 {
-                    products = products.Where(x => x.Name.Contains(name) && x.UserId == userId).Include(x => x.Files).Include(x => x.Variants);
+                    products = products.Where(x => x.Name.ToLower().Contains(name.ToLower()) && x.UserId == userId).Include(x => x.Files).Include(x => x.Variants);
                 }
 
                 return products;
@@ -49,7 +49,7 @@ namespace MyStore.Infrastructure.EF
                 var products = _context.Products.Where(x=>x.Deleted==false).Include(x => x.Files).Include(x => x.Variants).AsNoTracking();
                 if (!string.IsNullOrWhiteSpace(name))
                 {
-                    products = products.Where(x => x.Name.ToLower().Contains(name)).Include(x => x.Files).Include(x => x.Variants).AsNoTracking();
+                    products = products.Where(x => x.Name.ToLower().Contains(name.ToLower())).Include(x => x.Files).Include(x => x.Variants).AsNoTracking();
                 }
                 if (category != null)
                 {

@@ -9,7 +9,7 @@
     {
 
 
-        var imageName = product?.Files?.FirstOrDefault()?.Name ?? "";
+        var imageName = product?.Files?.Where(x=>x.IsDefault == true).FirstOrDefault()?.Name ?? "";
 
 
         @*@if (product.UserId == product.ProductUserId)
