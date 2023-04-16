@@ -21,6 +21,6 @@ namespace MyStore.Services
         Task UpdateProduct(Product p);
         Task DeleteProduct(Guid productId, Guid userId);
         Task<List<Cities>> GetCities();
-           
+        Task<PaginatedList<Product>> BrowseByPrice(string name, int? pageIndex, int? startPrice, int? stopPrice);
     }
 }

@@ -46,7 +46,7 @@ namespace MyStore.Controllers
         }
 
         [HttpGet("browse")]
-        public async Task<IActionResult> Browse(string keyword, int? pageIndex, Guid userId, Guid? category, int? startPrice, int? endPrice)
+        public async Task<IActionResult> Browse(string keyword, int? pageIndex, Guid userId, Guid? category)
         {
             ViewBag.Shop = "Shop";
             Guid userGuid;
@@ -55,15 +55,8 @@ namespace MyStore.Controllers
             //products = (PaginatedList<Domain.Product>)products.Where(x => x.Price >= startPrice && x.Price <= endPrice);
 
             IEnumerable<Domain.Product> viewModels;
-            if (startPrice != null)
-            {
-                if (endPrice == 0)
-                    viewModels = products.Where(x => x.Price >= startPrice);
-                else
-                    viewModels = products.Where(x => x.Price >= startPrice && x.Price <= endPrice);
-            }
-            else
-                viewModels = products;
+            
+            viewModels = products;
 
             var productViewModel = viewModels.Select(p =>
                 new ProductViewModel
@@ -98,8 +91,6 @@ namespace MyStore.Controllers
             newModel.HasPreviousPage = products.HasPreviousPage;
             newModel.PageIndex = products.PageIndex;
             newModel.TotalPages = products.TotalPages;
-            newModel.StartPrice = startPrice;
-            newModel.EndPrice = endPrice;
 
             return View(newModel);
         }
@@ -168,6 +159,52 @@ namespace MyStore.Controllers
 
 
             return View(viewModels);
+        }
+
+        [HttpGet("BrowseByPrice")]
+        public async Task<IActionResult> BrowseByPrice(string keyword, int? pageIndex, Guid userId, Guid? category, int? startPrice, int? endPrice)
+        {
+            ViewBag.Shop = "Shop";
+            Guid userGuid;
+            Guid.TryParse(this.User.FindFirstValue(ClaimTypes.NameIdentifier), out userGuid);
+            var products = await _productService.BrowseByPrice(keyword, pageIndex, startPrice, endPrice);
+           
+
+            IEnumerable<Domain.Product> viewModels;
+            
+                viewModels = products;
+
+            var productViewModel = viewModels.Select(p =>
+                new ProductViewModel
+                {
+                    Id = p.Id,
+                    UserId = userGuid,
+                    ProductUserId = p.UserId,
+                    Name = p.Name,
+                    Category = p.Category,
+                    Price = p.Price,
+                    Description = p.Description,
+                    Files = p.Files,
+                    Variants = p.Variants,
+                });
+            //if (userGuid != Guid.Empty && name !="all")
+            //    viewModels = viewModels.Where(c => c.ProductUserId == userGuid);
+
+            ProductNewViewModel newModel = new ProductNewViewModel();
+            newModel.Catgories = _context.Categories.ToList();
+
+            
+            newModel.Count = viewModels.Where(x => x.Deleted == false).Count();
+            
+            newModel.Products = productViewModel.ToList();
+            newModel.HasNextPage = products.HasNextPage;
+            newModel.HasPreviousPage = products.HasPreviousPage;
+            newModel.PageIndex = products.PageIndex;
+            newModel.TotalPages = products.TotalPages;
+            newModel.StartPrice = startPrice;
+            newModel.EndPrice = endPrice;
+
+            return View(newModel);
         }
 
         [HttpGet("details/{id}")]

@@ -6,8 +6,10 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
 using MyStore.Domain;
 using MyStore.Domain.Repositories;
+using MyStore.Infrastructure.EF;
 using MyStore.Services.DTO;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.PixelFormats;
@@ -21,14 +23,16 @@ namespace MyStore.Services
         private readonly IUserRepository _userRepository;
         private readonly IMapper _mapper;
         private readonly IFileService _fileService;
-        
+        private readonly MyStoreContext _context;
+
         public ProductService(IProductRepository productRepository, IUserRepository userRepository, IFileService fileService,
-                IMapper mapper)
+                IMapper mapper, MyStoreContext context)
         {
             _productRepository = productRepository;
             _userRepository = userRepository;
             _fileService = fileService;
             _mapper = mapper;
+            _context = context;
         }
         
         public async Task<ProductDto> GetAsync(Guid id)
@@ -66,6 +70,27 @@ namespace MyStore.Services
 
             var Products = await PaginatedList<Product>.CreateAsync(
                   products, pageIndex ?? 1, pageSize);
+
+            return Products;
+
+        }
+
+        public async Task<PaginatedList<Product>> BrowseByPrice(string name, int? pageIndex, int? startPrice, int? endPrice)
+        {
+            IQueryable<Product> p;
+            
+            
+            if (endPrice == 0)
+                p = _context.Products.Where(x => x.Price >= startPrice && x.Deleted == false).Include(x=>x.Variants);
+            else
+                p = _context.Products.Where(x => x.Price >= startPrice && x.Price <= endPrice && x.Deleted == false).Include(x => x.Variants);
+            
+            
+               
+            int pageSize = 9;
+
+            var Products = await PaginatedList<Product>.CreateAsync(
+                  p, pageIndex ?? 1, pageSize);
 
             return Products;
 

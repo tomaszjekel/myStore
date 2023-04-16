@@ -115,7 +115,7 @@ namespace MyStore.Controllers
                             new CartItem 
                             {
                                 ProductId = prod.Id,
-                                Img = prod.Files.FirstOrDefault().Name,
+                                Img = prod.Files.Where(x=>x.IsDefault == true).FirstOrDefault().Name,
                                 ProductName = prod.Name,
                                 Quantity = 1, 
                                 UnitPrice = prod.Price 
