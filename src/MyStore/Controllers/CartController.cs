@@ -189,7 +189,7 @@ namespace MyStore.Controllers
                     cart.Add(new CartItem 
                     { 
                         ProductId = prod.Id,
-                        Img = prod.Files.FirstOrDefault().Name,
+                        Img = prod.Files.Where(x => x.IsDefault == true).FirstOrDefault().Name,
                         ProductName = prod.Name,
                         Quantity = qty,
                         UnitPrice = prod.Price, 
@@ -233,7 +233,7 @@ namespace MyStore.Controllers
                             new CartItem 
                             { 
                                 ProductId = prod.Id,
-                                Img = prod.Files.FirstOrDefault().Name,
+                                Img = prod.Files.Where(x => x.IsDefault == true).FirstOrDefault().Name,
                                 ProductName = prod.Name,
                                 Quantity = qty,
                                 UnitPrice = prod.Price,
