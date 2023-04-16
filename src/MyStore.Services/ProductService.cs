@@ -81,9 +81,11 @@ namespace MyStore.Services
             
             
             if (endPrice == 0)
-                p = _context.Products.Where(x => x.Price >= startPrice && x.Deleted == false).Include(x=>x.Variants);
+                p = _context.Products.Where(x => x.Price >= startPrice && x.Deleted == false).
+                    Include(x=>x.Variants).Include(x=>x.Files);
             else
-                p = _context.Products.Where(x => x.Price >= startPrice && x.Price <= endPrice && x.Deleted == false).Include(x => x.Variants);
+                p = _context.Products.Where(x => x.Price >= startPrice && x.Price <= endPrice && x.Deleted == false)
+                    .Include(x => x.Variants).Include(x => x.Files);
             
             
                
